@@ -1,0 +1,3 @@
+In this exprtiment one set of dots in the shape of a walking man will be displayed. Please PRESS and HOLD the pedal corresponding the walker's walking direction you saw.
+
+Press any key if you understood the instructions above and begin the experiment. Otherwise press ESCAPE to quit!
