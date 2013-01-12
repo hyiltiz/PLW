@@ -11,6 +11,6 @@ function tactileStimuli(tTrack, dioOut)
         case 1
             putvalue(dioOut, 2);% the left foot touches the ground.
         case 2
-            putvalue(dioOut, 4);% the right foot touches the ground
+            putvalue(dioOut, 8);% the right foot touches the ground
     end
 end
