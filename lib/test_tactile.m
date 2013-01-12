@@ -7,13 +7,13 @@ putvalue(dioOut,2); % clear zero:0; left foot:2; right foot:4
 
 getvalue(dioIn);
 switch  sum(getvalue(dioIn))
-    case 1
-        response=1; % right response
-    case 2
-        response=0;
-    case 3
-        response=2; % left response
-end
-disp(' ');
-disp(' ');
-disp(response);
+  case 1
+    response=1; % right response
+  case 2
+    response=0;
+  case 3
+    response=2; % left response
+  end
+  disp(' ');
+  disp(' ');
+  disp(response);

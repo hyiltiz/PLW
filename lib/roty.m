@@ -16,9 +16,9 @@
 % Copyright (C) 1993-2002, by Peter I. Corke
 
 function r = roty(t)
-	ct = cos(t);
-	st = sin(t);
-	r =    [ct	0	st	0
-		0	1	0	0
-		-st	0	ct	0
-		0	0	0	1];
+  ct = cos(t);
+  st = sin(t);
+  r =    [ct	0	st	0
+  0	1	0	0
+  -st	0	ct	0
+  0	0	0	1];
