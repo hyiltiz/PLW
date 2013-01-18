@@ -82,11 +82,12 @@ function [vTrack tTrack] = genTrack(Trialsequence, Track, lefttouch, righttouch,
     tmp = xtouch + thenvterrflp;  %the stimuli instances, move the touchground baseline
     xTrack = theTrack;
     %         for i = 1:thentdurflp  % tmp is changing in every loop
-    if isempty(find(tmp < 0))
+    
+    if isempty(find(tmp <= 0))
       %good
     else
-      tmp = [tmp; tmp(tmp < 0 ) + length(theTrack)];
-      tmp(tmp < 0 ) = []; % does not begins before beginnig
+      tmp = [tmp; tmp(tmp <= 0 ) + length(theTrack)];
+      tmp(tmp <= 0 ) = []; % does not begins before beginnig
       %             tmp(tmp < 0) = 1; % does not begins before beginnig
     end
     if isempty(find(tmp > length(theTrack) ))

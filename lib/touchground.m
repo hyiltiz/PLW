@@ -15,15 +15,19 @@ function [leftfoot rightfoot] = touchground(dotx, init, pace, floop)
   % Find the touching ground point
   leftfoot = find(X(1:end-2, 1) > X(2:end-1, 1) & X(2:end-1, 1) < X(3:end, 1)) + 1;
   rightfoot = find(X(1:end-2, 2) > X(2:end-1, 2) & X(2:end-1, 2) < X(3:end, 2)) + 1;
+  if isempty(leftfoot); X=-X;leftfoot = find(X(1:end-2, 1) > X(2:end-1, 1) & X(2:end-1, 1) < X(3:end, 1)) + 1;end;
+  if isempty(rightfoot);X=-X;rightfoot = find(X(1:end-2, 2) > X(2:end-1, 2) & X(2:end-1, 2) < X(3:end, 2)) + 1;end;
+  
   %% Clean the mess up described above
   % I have found by looking at many plots of it that the unwanted solution of
   % the leftfoot is always has a up-going pitch just before it. So check for it.
-  % If there is, then this is the unwanted thing. The right foot has a
+  % If there is , then this is the unwanted thing. The right foot has a
   % up-going one next to it.
   flag = 0;  %true if touch ground point is almost at the beginning
   if rightfoot(end) + 2 > length(X)
     X = [X; X(end,:)];      %duplicate the last one. It is just for the checking below.
   end
+  save bad;
   if leftfoot(1) -2 < 1
     X = [X(1,:); X];        %the first one rather.
     leftfoot = leftfoot + 1;

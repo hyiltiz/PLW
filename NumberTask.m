@@ -14,7 +14,7 @@ function NumberTask(is_once_on)
   mode.many_on       = 1;  % the task is the majority of dots the participant saw
   mode.debug_on      = 0;  % default is 0; 1 is not to use full screen, and skip the synch test
   if nargin > 0
-    mode.once_on       = 1;  % only one trial, used for demostration before experiment
+    mode.once_on       = is_once_on;  % only one trial, used for demostration before experiment
   else
     mode.once_on       = 0;  % only one trial, used for demostration before experiment
 
