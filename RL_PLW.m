@@ -289,6 +289,7 @@ try
             % and here comes the walkers
             RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 0 0], [-conf.xshift 0], data.maxdot);
             RLonePLW(w,data.initPosition(2) + data.paceRate(2)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx1, data.doty1, data.moveDirection(flow.Trial, :), [0 255 0], [conf.xshift 0], data.maxdot1);
+            Screen('DrawingFinished', w); % no further drawing commands will follow before Screen('Flip')
             
             % here comes their footsteps
             if mode.tactile_on
@@ -311,9 +312,9 @@ try
             
             % Flip the visual stimuli on the screen, along with timing
             % old = render.vlb;
-            % render.vlb = Screen('Flip', w, render.vlb + conf.flpi);
+            render.vlb = Screen('Flip', w, render.vlb + (1-0.5)*conf.flpi);%use the center of the interval
             % Display(old, render.vlb, render.vlb - old, length(data.Track),length(data.tTrack));
-            Screen('Flip', w);
+            % Screen('Flip', w);
             toc;
             tic;
         end

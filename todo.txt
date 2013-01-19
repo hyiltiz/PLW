@@ -98,8 +98,10 @@ Why MATLAB/linux is crashing everytime, complaining some MEX problem? DotRotDemo
 and Windows MATLAB is just all right
 
 Deadly bug! the experiment is two times longer than it meant to. Fixed immediately, it is in the round() function. Always wrap all the things inside a round(), not parts of the components!
+Fixed AT LAST! Use the center of the flip interval for Flip refresh in PTB.
 
 Use a more optimized method for solveInit() in stripData();
+No need for this, actually. Mark Solved here.
 
 "Remaining" Screen is taking much longer than expected!
 Done! (issue about the next Flip!)
