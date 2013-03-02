@@ -1,8 +1,8 @@
-function [tex, dstRect] = addNoise(w, wsize, Track, noisescale, T, isGreyMask, lagFlip)
+function [tex, dstRect] = addNoise(w, wsize, Track, noisescale, T, isGreyMask, lagFlip, kill_dot)
   % create the noise, using buffer
 
   %isGreyMask = 0;
-  %lagFlip = 3;
+  %lagFlip = 3
   isSkip = 1;
   if ~isSkip
     screens=Screen('Screens');
@@ -18,6 +18,7 @@ function [tex, dstRect] = addNoise(w, wsize, Track, noisescale, T, isGreyMask, l
   % rectSize = 4;
   % objRect = SetRect(0,0, rectSize, rectSize);
 
+  % kill_dot=.1;
   t = .2;
   r = .8;
   % objRect = SetRect(t * wsize(3), t *  wsize(4), r * wsize(3), r * wsize(4));
@@ -36,9 +37,17 @@ function [tex, dstRect] = addNoise(w, wsize, Track, noisescale, T, isGreyMask, l
   Screen('BlendFunction', w, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   colorCell={[255 0 0],[0 255 255]};
-  for f = 1:round(T/lagFlip);
-    coloredNoiseCell{f} = coloredNoiseMatrix(rectSize, rectSize,colorCell, .01);
+  
+  
+  coloredNoiseCell{1} = coloredNoiseMatrix(rectSize, rectSize,colorCell, .01);
+  for f = 2:round(T/lagFlip);
+      %recreate kill_dot percent of the dots per frame
+      new_dots=rand(size(coloredNoiseCell{f-1},1),size(coloredNoiseCell{f-1},2))<kill_dot;
+      tmp_colorspace=coloredNoiseMatrix(rectSize, rectSize,colorCell, .01);
+      coloredNoiseCell{f} = coloredNoiseCell{f-1};
+      coloredNoiseCell{f}(repmat(new_dots,[1 1 3]))=tmp_colorspace(repmat(new_dots,[1 1 3]));
   end
+  
   colorLoop=lagloop(1:round(T/lagFlip), lagFlip);
 
   tex = zeros(1, length(Track));

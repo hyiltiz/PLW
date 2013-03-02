@@ -1,6 +1,18 @@
-function new = updateStruct(old, new)
-  % update the Sturcture with new field values
+function  test()
+%isGreyMask = 0;
+lagFlip = 3;
+isSkip = 0;
+if ~isSkip
+    screens=Screen('Screens');
+    screenNumber=max(screens);
+    [w,wsize]=Screen('OpenWindow',screenNumber,0,[ 1,1,801,601],[]);
+    % [w,wsize]=Screen('OpenWindow',screenNumber,0);
+    noisescale = .15;
+    Track = 1:261;
+    T=50;
+    isGreyMask=0;
+end
 
-  for i=1:length(fieldnames(old))
-    setfield(new, fieldnames(old){i}, getfield(old, fieldnames(old){i}))
-  end
+[tex, dstRect] = addNoise(w, wsize, Track, noisescale, T, isGreyMask, lagFlip);
+sca
+end

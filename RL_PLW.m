@@ -63,10 +63,11 @@ function RL_PLW(conf, mode)
   conf.waitFixationScreen =  .8+rand*0.2; % '+' time randomized
   conf.scale1             =  20;          % PLW's visual scale, more the bigger
   conf.noisescale         =  .14;         % the width of the noise dots, and the default PLW dot width is 7
+  conf.kill_dotr          =  .1;          % ratio at which to kill dotr percent of dots
   % conf.exptime          =  45;          % experiment is 45min long
 
   % state control variables
-  mode.mirror_on          = 1;  % use mirror rather that spectacles for binacular rivalry
+  mode.mirror_on          = 0;  % use mirror rather that spectacles for binacular rivalry
   mode.inout_on           = 0;  % use incoming and outgoing PLWs for demo
   mode.many_on            = 0;  % the task is the majority of dots the participant saw
   mode.greyNoise_on       = 0;  % do not use the original grey noise
@@ -198,9 +199,11 @@ function RL_PLW(conf, mode)
       % do not create noise, we do not need them if using mirrors
     else
       %% create the noise, using buffer
-      render.noiseloopT = 50;
+      % impossible to iterate on a smaller loop, since the loop has direction :(
+      % render.noiseloopT = 50;
+      render.noiseloopT = length(data.Track);
       render.noiseloop = modloop(1:length(data.Track), render.noiseloopT);
-      [tex, render.dstRect] = addNoise(w, render.wsize, data.Track,conf.noisescale, render.noiseloopT, mode.greyNoise_on, conf.lagFlip);
+      [tex, render.dstRect] = addNoise(w, render.wsize, data.Track,conf.noisescale, render.noiseloopT, mode.greyNoise_on, conf.lagFlip, conf.kill_dotr);
     end
 
     %% Instructions
