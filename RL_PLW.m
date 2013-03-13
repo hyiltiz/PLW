@@ -68,6 +68,7 @@ function RL_PLW(conf, mode)
 
   % state control variables
   mode.mirror_on          = 0;  % use mirror rather that spectacles for binacular rivalry
+  mode.baseline_on        = 0;  % baseline trial, without visual stimuli
   mode.inout_on           = 0;  % use incoming and outgoing PLWs for demo
   mode.many_on            = 0;  % the task is the majority of dots the participant saw
   mode.greyNoise_on       = 0;  % do not use the original grey noise
@@ -301,9 +302,11 @@ function RL_PLW(conf, mode)
         end
 
 
-        % and here comes the walkers
-        RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 0 0], [-conf.xshift 0], data.maxdot);
-        RLonePLW(w,data.initPosition(2) + data.paceRate(2)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx1, data.doty1, data.moveDirection(flow.Trial, :), [0 255 0], [conf.xshift 0], data.maxdot);
+        if mode.baseline_on
+          % and here comes the walkers
+          RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 0 0], [-conf.xshift 0], data.maxdot);
+          RLonePLW(w,data.initPosition(2) + data.paceRate(2)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx1, data.doty1, data.moveDirection(flow.Trial, :), [0 255 0], [conf.xshift 0], data.maxdot);
+        end
         Screen('DrawingFinished', w); % no further drawing commands will follow before Screen('Flip')
 
         % here comes their footsteps
