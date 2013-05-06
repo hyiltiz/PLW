@@ -67,11 +67,11 @@ function RL_PLW(conf, mode)
   % conf.exptime          =  45;          % experiment is 45min long
 
   % state control variables
-  mode.mirror_on          = 0;  % use mirror rather that spectacles for binacular rivalry
+  mode.mirror_on          = 1;  % use mirror rather that spectacles for binacular rivalry
   mode.baseline_on        = 0;  % baseline trial, without visual stimuli
   mode.inout_on           = 0;  % use incoming and outgoing PLWs for demo
   mode.many_on            = 0;  % the task is the majority of dots the participant saw
-  mode.greyNoise_on       = 0;  % do not use the original grey noise
+  mode.greyNoise_on       = 1;  % do not use the original grey noise
   mode.english_on         = 1;  % use English for Instructions etc., 0 for Chinese(not supported for now!)
   mode.regenerate_on      = 1;  % mode.regenerate_on data for experiment, rather than using the saved one
   mode.once_on            = 1;  % only one trial, used for demostration before experiment
@@ -246,12 +246,12 @@ function RL_PLW(conf, mode)
         %   data.Track = 1:round(length(data.dotx));% 2 for accuracy, and data.loopPeriod for period
         [data.lefttouch, data.righttouch] = touchground(data.dotx0, data.initPosition(1), data.paceRate(1), data.Track);     %for the index when PLW touches ground
       else
-          % do not generate, use the previously saved data(not enabled by default)
-          load RL_PLW_data;
-          %where we have two PLWs, and quicker pace than 3 maybe too quick
-          %             data.paceRate = Randi(2,[2 1]);
-          data.paceRate = repmat(Randi(2), [2 1]);
-          data.initPosition = Randi(round(data.loopPeriod/4),[2 1]);
+        % do not generate, use the previously saved data(not enabled by default)
+        load RL_PLW_data;
+        %where we have two PLWs, and quicker pace than 3 maybe too quick
+        % data.paceRate = Randi(2,[2 1]);
+        data.paceRate = repmat(Randi(2), [2 1]);
+        data.initPosition = Randi(round(data.loopPeriod/4),[2 1]);
       end
 
       conf.xshift = (round(rand)*2-1) * conf.xshift;
@@ -303,6 +303,8 @@ function RL_PLW(conf, mode)
 
 
         if mode.baseline_on
+            % do not show the PLWs
+        else
           % and here comes the walkers
           RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 0 0], [-conf.xshift 0], data.maxdot);
           RLonePLW(w,data.initPosition(2) + data.paceRate(2)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx1, data.doty1, data.moveDirection(flow.Trial, :), [0 255 0], [conf.xshift 0], data.maxdot);
@@ -331,6 +333,7 @@ function RL_PLW(conf, mode)
         % Flip the visual stimuli on the screen, along with timing
         % old = render.vlb;
         render.vlb = Screen('Flip', w, render.vlb + (1-0.5)*conf.flpi);%use the center of the interval
+        % recordImage(flow.Flip,10,'Mirror',w,render.wsize)
         % Display(old, render.vlb, render.vlb - old, length(data.Track),length(data.tTrack));
         % Screen('Flip', w);
         toc;

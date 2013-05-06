@@ -10,7 +10,7 @@ function PLWviewer(varargin)
   %   Merged in onePLW, PLWtransform modification to optimaze code
   %   by Hormetjan, Department of Psychology, Peking University
   %% Input Control
-  error(nargchk(0,3,nargin));
+  error(nargchk(0,4,nargin));
   % [~,args,nargs] = axescheck(varargin{:});
   addpath('./data', './lib', './resources');
 
@@ -34,9 +34,9 @@ function PLWviewer(varargin)
   readData = PLWread(filename);
 
   % calculate the discrete dots along each limb
-  readData.thet = 0;  %to rotate along the first axis
-  readData.xyzseq = [1 3 2];  %to rotate across xyz
-  [dotx doty] = PLWtransform(readData, scale1, imagex, -1);
+      readData.thet = 30;  %to rotate along the first axis
+      readData.xyzseq = [1 3 2];  %to rotate across xyz
+      [dotx, doty] = PLWtransform(readData, scale1, imagex, -1);
 
   %% Make display
   figure;
@@ -81,7 +81,7 @@ function PLWviewer(varargin)
   if is_Octave
     % Octave, does not support getframe;
   else
-    movie2avi(F,sprintf('%s.pl2.avi',filename),'fps',20,'compression','None');
+%     movie2avi(F,sprintf('%s.pl2.avi',filename),'fps',20,'compression','None');
   end
   close;
 end
