@@ -2,8 +2,8 @@
 %   Written by Lihan Chen, Ph.D, Department of Psychology, Peking University
 %   Merged in onePLW, PLWtransform, PLWsound modification to optimaze code
 %   by Hormetjan, Department of Psychology, Peking University
+addpath('./data', './lib', './resources');
 
-clear all;
 Trials =[];% for recording results
 % key definitions
 KbName('UnifyKeyNames')
@@ -98,7 +98,7 @@ try
                 
                 %Here comes the sound
                 [y, Fs, nbits] = wavread('footsteps.wav');
-                y = PLWsound(y);  %make transformation for sound
+                y = PLWsound(y,1,1);  %make transformation for sound
                 PsychPortAudio('FillBuffer', pahandle, y);
                 PsychPortAudio('Start', pahandle, 1, 0, 0);
                 
@@ -132,35 +132,45 @@ try
                         WaitSecs(0.02);
                 end
                 if isquit, break, end
-                if ~isresponse  %well get response then, better late than never
-                        Trials(k,3) = GetSecs-iniTimer;
-                        Trials(k,1) = Trialsequence(k);
-                        Trials(k,2) = keyCode(leftArrow) + keyCode(rightArrow)*2 + keyCode(upArrow)*3 + keyCode(downArrow)*4;
-                        PsychPortAudio('Stop', pahandle, 2);    %stop sound with discarding process
-                        isresponse = 1;
+                while ~isresponse  %well get response then, better late than never
+                        [~, keyCode] = KbWait; %wait for the response
+                        if keyCode(leftArrow) || keyCode(rightArrow)
+                                Trials(k,3) = GetSecs-iniTimer;
+                                Trials(k,1) = Trialsequence(k);
+                                Trials(k,2) = keyCode(leftArrow) + keyCode(rightArrow)*2 + keyCode(upArrow)*3 + keyCode(downArrow)*4;
+                                PsychPortAudio('Stop', pahandle, 2);    %stop sound with discarding process
+                                isresponse = 1;
+                        end
                 end
                 
                 Screen('FillRect',w,0);
                 Screen('Flip', w);
                 
         end;
-        save([Subinfo{1} '.mat'],'Trials', 'theta');
+        save(['data/' Subinfo{1} '.mat'],'Trials', 'theta');
         DrawFormatted Text(w, sprintf(['Experiment was successful!\n' ...
                 'Thanks for your participating.\n\n' ...
                 'Press any key to ESCAPE ']), 'center', 'center', [255, 255, 255]);
         Screen('Flip', w);
         KbStrokeWait;
-catch
+catch ME
         Screen('CloseAll');
         PsychPortAudio('Close');
         Priority(0);
         ShowCursor;
         ListenChar(0);
-        whatswrong = lasterror;
+        disp(ME);
         disp('');
-        whatswrong.message
-        whatswrong.stack.line
-        whatswrong.stack.file
+        for k=1:length(ME.stack)
+                ME.stack(k)
+        end
+        disp(getReport(ME));
+        
+        %         whatswrong = lasterror;
+        %         disp('');
+        %         whatswrong.message
+        %         whatswrong.stack.line
+        %         whatswrong.stack.file
 end
 Screen('CloseAll');
 PsychPortAudio('Close');

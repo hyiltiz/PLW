@@ -12,6 +12,7 @@ function PLWviewer(varargin)
 %% Input Control
 error(nargchk(0,3,nargin));
 [~,args,nargs] = axescheck(varargin{:});
+addpath('./data', './lib', './resources');
 
 filename = '07_01.data3d.txt';% input data file
 scale1 = 20;
