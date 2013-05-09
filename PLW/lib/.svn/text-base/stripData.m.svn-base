@@ -58,6 +58,6 @@ end;
 data = rmfield(data, uselessfield);
 
 newmatfileName = ['data/', 'Small_', matfile];
-save(newmatfileName,'conf', 'Subinfo','flow','mode','data', 'Response', 'Condition');
+save('-7', newmatfileName,'conf', 'Subinfo','flow','mode','data', 'Response', 'Condition');
 disp([newmatfileName ' created successfully!']);
 end

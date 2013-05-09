@@ -363,6 +363,7 @@ catch
     ShowCursor;
     ListenChar(0);
     psychrethrow(psychlasterror);
+    format short;
     
 end
 
@@ -374,5 +375,6 @@ ListenChar(0);
 
 % save data for testing for the last experiment
 save data/test.mat
+format short;
 Display('Experiment was successful!');
 end

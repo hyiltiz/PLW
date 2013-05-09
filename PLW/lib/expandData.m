@@ -51,5 +51,5 @@ if isfield(data, 'init')  % dotx and such can be regenerated
 end
 
 matfile = matfile(7:end);  % strip the prefix Small
-save(['data/', 'Expanded_', matfile],'Trials','conf', 'Subinfo','flow','mode','data', 'Response', 'Condition');
+save('-7', ['data/', 'Expanded_', matfile],'Trials','conf', 'Subinfo','flow','mode','data', 'Response', 'Condition');
 end
