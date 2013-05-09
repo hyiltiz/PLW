@@ -28,6 +28,12 @@ switch Trialsequence
     case 4  % baseline: no tactile
         % no stimuli
 end
+% disp('+++++++++++++++++++++++++length of tTrack:++++++++++++++++');
+% disp(length(vTrack));
+% disp(length(tTrack));
+% disp(length(Track));
+% 
+% disp('+++++++++++++++++++++++++length of tTrack:++++++++++++++++');
 
 % random beginning of tactile stimuli
 flpi = 0.02;
@@ -40,7 +46,7 @@ tTrack(1:after_n_ini) = 0;  % erease the useless beginning
     function xTrack = adjustTrack(xtouch, theTrack, type, thenvterrflp, thentdurflp)
         tmp = xtouch + thenvterrflp;  %the stimuli instances, move the touchground baseline
         xTrack = theTrack;
-        for i = 1:thentdurflp  % tmp is changing in every loop
+%         for i = 1:thentdurflp  % tmp is changing in every loop
             if isempty(find(tmp < 0))
                 %good
             else
@@ -57,6 +63,6 @@ tTrack(1:after_n_ini) = 0;  % erease the useless beginning
             end
             xTrack(tmp) = type;  % left touch stimuli
             tmp = tmp + thentdurflp/abs(thentdurflp);
-        end
+%         end
     end
 end

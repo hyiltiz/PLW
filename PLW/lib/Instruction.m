@@ -1,10 +1,10 @@
-function Instruction(filename, w, wsize, debug_mode, english_on, kb, time)
+function Instruction(filename, w, wsize, debug_mode, english_on, kb, time,skipFile, tactile_on)
 % Print instructions in instruction file.
 
 isSkip = 1;
 if ~isSkip
-english_on = 1;
-debug_mode = 1;
+    english_on = 1;
+    debug_mode = 1;
 end
 
 % use instructions for RL_PLW() if the filename is not given.
@@ -22,20 +22,24 @@ end
 % end
 
 % Read some text file:
-[fd msg] = fopen(['./resources/' filename], 'rt');
-if fd==-1
-    error(sprintf(['Could not open the %s file in ./resources directory! ' msg], filename));
-end
-
-mytext = '';
-tl = fgets(fd);
-lcount = 0;
-while (tl~=-1) & (lcount < 48)
-    mytext = [mytext tl];
+if skipFile
+    mytext = filename;
+else
+    [fd msg] = fopen(['./resources/' filename], 'rt');
+    if fd==-1
+        error(sprintf(['Could not open the %s file in ./resources directory! ' msg], filename));
+    end
+    
+    mytext = '';
     tl = fgets(fd);
-    lcount = lcount + 1;
+    lcount = 0;
+    while (tl~=-1) & (lcount < 48)
+        mytext = [mytext tl];
+        tl = fgets(fd);
+        lcount = lcount + 1;
+    end
+    fclose(fd);
 end
-fclose(fd);
 mytext = [mytext char(10)];
 
 % disp(mytext);
@@ -71,12 +75,26 @@ DrawFormattedText(w, mytext, textbox(3), textbox(4), [255 255 255], lenghth);
 Screen('FrameRect', w, 0, bbox);
 Screen('Flip',w);
 
-% wait for any key press to go on, unless breaking out by calling ESC
-[~, keyCode] = KbStrokeWait([], time);
-
-if keyCode(kb.escapeKey) %quit program
-    sca;
-    error('Experiment aborted manually!');
-end
-
+if tactile_on
+    dioIn=digitalio('parallel','LPT1'); % DAQ, open the LPT1 port
+    addline(dioIn,10:12,'in'); % for footswitch input.
+    secs = -inf;
+    ini = GetSecs;
+    while secs - ini < time
+        if sum(getvalue(dioIn)) ~= 2 % play if not pressed pedal
+            return;
+        end
+        
+        % Wait for .01 to prevent system overload.
+        secs = WaitSecs('YieldSecs', .01);
+    end
+else
+    % wait for any key press to go on, unless breaking out by calling ESC
+    [~, keyCode] = KbStrokeWait([], time);
+    
+    if keyCode(kb.escapeKey) %quit program
+        sca;
+        error('Experiment aborted manually!');
+    end
+    
 end

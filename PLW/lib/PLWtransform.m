@@ -1,4 +1,4 @@
-function [dotx doty] = PLWtransform(readData, scale1, imagex)
+function [dotx doty init] = PLWtransform(readData, scale1, imagex, init)
 %PLWtransform for PLW display. Makes transformation for displayed dots.
 %[dotx doty] = PLWtransfor(readData, scale1, imagex)
 jointspos = readData.jointspos;
@@ -40,8 +40,10 @@ end;
 % missing = 0;
 % dotx = dotx(1:end-missing, :);
 % doty = doty(1:end-missing, :);
-
+if init == -1
 init = round(rand * 130/4) + 1;
+end
+
 dotx = dotx(init : init + 130 * 2, :);
 doty = doty(init : init + 130 * 2, :);
 

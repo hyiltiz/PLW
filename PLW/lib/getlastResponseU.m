@@ -35,7 +35,7 @@ else  % use keyboard then
         if keyCode(kb.leftArrow) || keyCode(kb.rightArrow)
             Trials(nresp,3) = GetSecs-iniTimer;
             Trials(nresp,1) = Trialsequence(k);
-            Trials(nresp,2) = keyCode(kb.leftArrow) + keyCode(kb.rightArrow)*2 + keyCode(kb.upArrow)*3 + keyCode(kb.downArrow)*4;
+            Trials(nresp,2) = keyCode(kb.rightArrow) + keyCode(kb.leftArrow)*2 + keyCode(kb.upArrow)*3 + keyCode(kb.downArrow)*4;
             Trials(nresp,[4 5]) = moveDirection(k, :);  % direction of walkers
         Trials(nresp,6) = k;
         Trials(nresp,7) = iniTactile;

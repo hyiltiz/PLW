@@ -1,15 +1,13 @@
 function Subinfo= getSubInfo()
-    if ~ IsOctave
         promptParameters = {'Subject Name', 'Age', 'Gender (F or M?)','Handedness (L or R)'};
-        defaultParameters = {'PL_PLW_default', '25','F', 'R'};
+        defaultParameters = {'RL_PLW_default', '23','F', 'R'};
+    if ~ IsOctave
         Subinfo = inputdlg(promptParameters, 'Subject Info  ', 1, defaultParameters);
         if isempty(Subinfo)
             error('Subject information not entered!');
         end;
     else
         % This is for octave
-        promptParameters = {'Subject Name', 'Age', 'Gender (F or M?)','Handedness (L or R)'};
-        defaultParameters = {'PL_PLW_default', '25','F', 'R'};
         %Subinfo = inputdlg(promptParameters, 'Subject Info  ', 1, defaultParameters);
         Subinfo = cell(length(defaultParameters));
         for i = 1 : length(promptParameters)

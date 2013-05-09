@@ -33,7 +33,8 @@ Screen('BlendFunction', w, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 tex = zeros(1, length(Track));
 for f = 1:T;
-    tex(f)=Screen('MakeTexture',w, 127*randn(rectSize, rectSize) + 128);
+    %     tex(f)=Screen('MakeTexture',w, 127*randn(rectSize, rectSize) + 128);
+    tex(f)=Screen('MakeTexture',w, 80*randn(rectSize, rectSize) + 128);
 end
 
 if ~isSkip

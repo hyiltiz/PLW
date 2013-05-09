@@ -69,6 +69,8 @@ and Windows MATLAB is just all right
 ============
 Deadly bug! the experiment is two times longer than it meant to. Fixed immediately, it is in the round() function. Always wrap all the things inside a round(), not parts of the components!
 Fixed (as described above!)
+Does not seems fixed, at least it seems fucking bad.
+Lihan Chen suggested to clear the time tracking in Screen('Flip'): we'd better NOT DO THAT!!!
 ============
 1. Found out that the bug reported above has not been fixed YET!
 Fix this!
@@ -80,4 +82,19 @@ Before many_on experiment, they were told to RESPOND "LEFT" TO MANY OF THE
 
   adjust these two *D.mat files!
   read ./data/readme.txt file for more details!
+===========
+two bugs above not fixed.
+all the data files in *M.mat task uses an inverse case as the ones reported above (for integrity)
 
+Gaoxiang/*.mat and majie01-Dec-2012buggy(partial).mat did not finish the last remaining trial, due to a program crash caused by 'indexing problems in genTrack()->adjustTrack()->xTrack
+They need to add this little piece!
+Done! (run addupLast() for them!)
+
+wrap the candies like ./first
+Done!
+==========
+bugs not yet fixed:
+Why MATLAB/linux is crashing everytime, complaining some MEX problem? DotRotDemo() is not crashing it, Octave/GNU is not, neither...
+and Windows MATLAB is just all right
+
+Deadly bug! the experiment is two times longer than it meant to. Fixed immediately, it is in the round() function. Always wrap all the things inside a round(), not parts of the components!
