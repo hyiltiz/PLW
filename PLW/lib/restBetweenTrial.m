@@ -21,7 +21,6 @@ if ~isSkip
 end
 
 if restcount == pertrial
-    WaitSecs(3);
     if english_on
         Display(resttime);
         Instruction('restBetweenTrial_text_en.txt', w, wsize, debug_mode, english_on, kb, resttime, skipFile, tactile_on);

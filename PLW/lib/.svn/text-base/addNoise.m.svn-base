@@ -1,6 +1,8 @@
-function [tex, dstRect] = addNoise(w, wsize, Track, noisescale, T)
+function [tex, dstRect] = addNoise(w, wsize, Track, noisescale, T, isGreyMask, lagFlip)
 % create the noise, using buffer
 
+%isGreyMask = 0;
+%lagFlip = 3;
 isSkip = 1;
 if ~isSkip
     screens=Screen('Screens');
@@ -9,6 +11,8 @@ if ~isSkip
     % [w,wsize]=Screen('OpenWindow',screenNumber,0);
     noisescale = .15;
     Track = 1:261;
+    T=50;
+    isGreyMask=0;
 end
 
 % rectSize = 4;
@@ -31,10 +35,20 @@ dstRect=CenterRectOnPoint(objRect, xc, yc);
 % Enable alpha blending for smoothed points:
 Screen('BlendFunction', w, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+colorCell={[255 0 0],[0 255 255]};
+for f = 1:round(T/lagFlip);
+coloredNoiseCell{f} = coloredNoiseMatrix(rectSize, rectSize,colorCell, .01);
+end
+colorLoop=lagloop(1:round(T/lagFlip), lagFlip);
+
 tex = zeros(1, length(Track));
 for f = 1:T;
     %     tex(f)=Screen('MakeTexture',w, 127*randn(rectSize, rectSize) + 128);
-    tex(f)=Screen('MakeTexture',w, 80*randn(rectSize, rectSize) + 128);
+    if isGreyMask
+      tex(f)=Screen('MakeTexture',w, 80*randn(rectSize, rectSize) + 128);
+  else
+    tex(f)=Screen('MakeTexture',w, coloredNoiseCell{colorLoop(f)});
+  end
 end
 
 if ~isSkip

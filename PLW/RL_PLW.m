@@ -21,7 +21,7 @@
 
 function RL_PLW(conf, mode)
 %% this code to generate pointlight display using 3D coordinates file
-%   Written by Lihan Chen, Ph.D, Department of Psychology, Peking University
+%   Originally written by Lihan Chen, Ph.D, Department of Psychology, Peking University
 %   Merged in onePLW, PLWtransform, PLWsound modification to optimaze code
 %   by Hormetjan, Department of Psychology, Peking University,March 2012
 %   Wrote all the functions in directory ./lib, Hormetjan, June 2012
@@ -32,12 +32,14 @@ function RL_PLW(conf, mode)
 %   Documented by Hormetjan, July 2012
 %   Added accurate timing support by Hormetjan, Oct 2012
 %   Adjusted for experimental needs, Oct 2012
+%   Added some other features, please check svn repository for detail.
 %   For the latest source code, please contact hyiltiz@gmail.com
 %   For Documentation of the program, please read README.txt file that
 %   comdes with the program, to have a better understanding of the way the
 %   program was written.
 
 addpath('./data', './lib', './resources');
+format long;
 data.visualfilename = '07_01.data3d.txt'; % visaul data resource file
 data.instruct_filename = 'RL_Instruction_en.txt'; % instructions text file
 
@@ -53,6 +55,7 @@ conf.trialdur           =  70;          % duration time for every trial
 conf.repetitions        =  5;           % repetition time of a condition
 conf.resttime           =  30;          % rest for 30s
 conf.restpertrial       =  1;           % every x trial a rest
+conf.lagFlip            =  2;           % every x Flip change a noise
 conf.ntdurflp           =  1;           % tactile duration time: n * conf.flpi
 conf.nvterrflp          =  15;          % visual-tactile error time: n * conf.flpi
 conf.waitBetweenTrials  =  .8+rand*0.2; % wait black screen between Trials, random
@@ -63,6 +66,7 @@ conf.noisescale         =  .14;         % the width of the noise dots, and the d
 
 % state control variables
 mode.many_on       = 0;  % the task is the majority of dots the participant saw
+mode.greyNoise_on  = 0;  % do not use the original grey noise
 mode.english_on    = 1;  % use English for Instructions etc., 0 for Chinese(not supported for now!)
 mode.regenerate_on = 1;  % mode.regenerate_on data for experiment, rather than using the saved one
 mode.once_on       = 0;  % only one trial, used for demostration before experiment
@@ -72,14 +76,14 @@ mode.debug_on      = 1;  % default is 0; 1 is not to use full screen, and skip t
 
 % evaluate the input arguments of this function
 if nargin > 0
-updateStruct(render.conf, conf);
-updateStruct(render.mode, mode);
+conf = updateStruct(render.conf, conf)
+mode = updateStruct(render.mode, mode)
 end
 
 if mode.debug_on
     conf.repetitions = 1;
     conf.resttime = 5;
-    conf.trialdur = 3;
+    conf.trialdur = 13;
 end
 
 % randomized sample exp. conditions and trial sequences variables
@@ -117,7 +121,7 @@ try
     HideCursor;
     ListenChar(2);
     if mode.debug_on
-        Screen('Preference','SkipSyncTests', 3);
+        Screen('Preference','SkipSyncTests', 0);
     else
         Screen('Preference','SkipSyncTests', 0);
     end
@@ -172,7 +176,7 @@ try
     %% create the noise, using buffer, thus better than addNoise_old
     render.noiseloopT = 50;
     render.noiseloop = modloop(1:length(data.Track), render.noiseloopT);
-    [tex, render.dstRect] = addNoise(w, render.wsize, data.Track,conf.noisescale, render.noiseloopT);
+    [tex, render.dstRect] = addNoise(w, render.wsize, data.Track,conf.noisescale, render.noiseloopT, mode.greyNoise_on);
     %     [tex, render.dstRect] = addNoise_no_fixed_sqr(w, render.wsize, data.Track,conf.noisescale);
     
     %% Instructions
@@ -196,8 +200,8 @@ try
     
     %% Here begins our trial
     for k = 1:length(flow.Trialsequence)
-        flow.Trial = k;
         tic;
+        flow.Trial = k;
         % rest every couple trial once
         if flow.Trial > 1
             showLeftTrial(flow.Trialsequence, flow.Trial, w, render.wsize, mode.debug_on, mode.english_on, render.kb, 1, mode.tactile_on);
@@ -275,8 +279,10 @@ try
             if mode.RT_on; if flow.isresponse; break; end; end
             
             % Flip the visual stimuli on the screen, along with timing
-            %             render.vlb = Screen('Flip', w, render.vlb + conf.flpi);
-            Screen('Flip', w);
+            old = render.vlb;
+            render.vlb = Screen('Flip', w, render.vlb + conf.flpi);
+            Display(old, render.vlb, render.vlb - old, length(data.Track),length(data.tTrack));
+            %Screen('Flip', w);
             toc;
             tic;
         end
@@ -290,7 +296,7 @@ try
         % Get the remaining last response
         [Trials, flow.prestate, flow.response, render.iniTimer, flow.isquit, flow.isresponse, flow.nresp ]  = getlastResponseU(mode.tactile_on, render.iniTimer, render.dioIn, flow.prestate, flow.response, flow.Trialsequence, flow.Trial, data.moveDirection, render.kb, flow.isresponse, flow.isquit, Trials, flow.nresp, data.paceRate', data.iniTactile );
         
-        if mode.once_on; error('finished!'); end
+        if mode.once_on; error('Preparation Finished! (No worries. This is no bug, buddy.)'); end
     end;
     
     % End of experiment
@@ -334,4 +340,4 @@ ListenChar(0);
 % save data for testing for the last experiment
 save data/test.mat
 Display('Experiment was successful!');
-% end
+end

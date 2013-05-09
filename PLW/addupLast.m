@@ -37,11 +37,11 @@ function addupLast()
 %   comdes with the program, to have a better understanding of the way the
 %   program was written.
 
-name = 'this.mat'
-%name = 'chenbiqingD30-Nov-2012buggy(partial).mat'
+% name = 'this.mat'
+% name = 'chenbiqingD30-Nov-2012buggy(partial).mat'
 %name = 'GaoXiangD01-Dec-2012buggy(partial).mat'
 %name = 'liuchenglongD01-Dec-2012buggy(partial).mat'
-%name = 'majieD01-Dec-2012buggy(partial).mat'
+name = 'majieD01-Dec-2012buggy(partial).mat'
 
 addpath('./data', './lib', './resources');
 data.visualfilename = '07_01.data3d.txt'; % visaul data resource file
@@ -126,11 +126,11 @@ try
         % Generate the data for plotting Point Light Walkers
         data.readData.thet = 0;  %to rotate along the first axis
         data.readData.xyzseq = [1 3 2];  %axis rotation, [1 3 2] by default
-        [data.dotx  data.doty ] = PLWtransform(data.readData, conf.scale1, conf.imagex);
+        [data.dotx  data.doty ] = PLWtransform(data.readData, conf.scale1, conf.imagex, -1);
         
         data.readData.xyzseq = [1 3 2];  %to rotate across xyz
         data.readData.thet = 180;  %to rotate along the first axis
-        [data.dotx1 data.doty1] = PLWtransform(data.readData, conf.scale1, conf.imagex);
+        [data.dotx1 data.doty1] = PLWtransform(data.readData, conf.scale1, conf.imagex, -1);
     end
     
     render.screens=Screen('screens');
@@ -194,7 +194,6 @@ try
         tic;
         % rest every couple trial once
         if flow.Trial > 1
-          Display(mode);
             showLeftTrial(flow.Trialsequence, flow.Trial, w, render.wsize, mode.debug_on, mode.english_on, render.kb, 1, mode.tactile_on);
         end
         flow.restcount = restBetweenTrial(flow.restcount, conf.resttime, conf.restpertrial, w, render.wsize, mode.debug_on, mode.english_on, render.kb, 0, mode.tactile_on);
@@ -261,7 +260,6 @@ try
             if ~mode.tactile_on; render.dioIn = false; end
             
             % get the response
-            Display(flow.Trial);
             [Trials, flow.prestate, flow.response, render.iniTimer, flow.isquit,...
                 flow.isresponse, flow.nresp ] = getResponseU(mode.tactile_on, ...
                 render.iniTimer, render.dioIn, flow.prestate, ...

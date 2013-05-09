@@ -87,6 +87,7 @@ if tactile_on
         
         % Wait for .01 to prevent system overload.
         secs = WaitSecs('YieldSecs', .01);
+        manualAbort(kb);
     end
 else
     % wait for any key press to go on, unless breaking out by calling ESC

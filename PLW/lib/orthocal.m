@@ -1,8 +1,5 @@
-%I do not get what whis function does!====================%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%   Ortho projection
-%%%%%%%%%%%%%%%%==========================================%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 function [coef1, coef2]=orthocal(theta, x1,y1,z1,framenum,jointsnum)
+%%   Ortho projection
 theta = theta*pi/180;
 % theta= -pi/6;%(90+120)*pi/180;                   %theta is called the azimuth angle.
 phi= pi/2;%-20*pi/180;                 %phi is the complement of the angle of elevation.

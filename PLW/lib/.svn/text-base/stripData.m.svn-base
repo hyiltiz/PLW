@@ -1,24 +1,3 @@
-## Copyright (C) 2012 ھۆرمەتجان يىلتىز
-## 
-## This program is free software; you can redistribute it and/or modify
-## it under the terms of the GNU General Public License as published by
-## the Free Software Foundation; either version 3 of the License, or
-## (at your option) any later version.
-## 
-## This program is distributed in the hope that it will be useful,
-## but WITHOUT ANY WARRANTY; without even the implied warranty of
-## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-## GNU General Public License for more details.
-## 
-## You should have received a copy of the GNU General Public License
-## along with Octave; see the file COPYING.  If not, see
-## <http://www.gnu.org/licenses/>.
-
-## stripData
-
-## Author: ھۆرمەتجان يىلتىز <hyiltiz@ThPad>
-## Created: 2012-12-07
-
 function [ ret ] = stripData (matfile)
 % this function aims at minimizing the collected data yet keeping all the valueable info.
 % use for storing the data
@@ -26,9 +5,9 @@ function [ ret ] = stripData (matfile)
 
 addpath('./data/');
 try
-  load(matfile);
+    load(matfile);
 catch
-  return; %do not do anything if the .mat-file doesn't exist.
+    return; %do not do anything if the .mat-file doesn't exist.
 end
 
 indxcol = 6; % the column used for indexing the trials in variable Trials
@@ -43,9 +22,9 @@ Condition = Trials([true; any(diff(Trials(:,indxcol)),2)],stat);  %remember only
 %Condition(:,5) = iniTactile;
 %Condition(:,[6 7]) = paceRate;
 
-%Response = Trials(:,dynam); 
-for i=1:max(Trials(:,indxcol)); 
-  Response{i} = Trials(Trials(:,indxcol)==i, dynam);
+%Response = Trials(:,dynam);
+for i=1:max(Trials(:,indxcol));
+    Response{i} = Trials(Trials(:,indxcol)==i, dynam);
 end;
 % See below for meanings of each colomns in Response;
 %Response{i} = k; the k.th trial
@@ -56,9 +35,64 @@ clear Trials;
 tmp=fieldnames(data);
 uselessfield={'readData'};
 if isfield(data, 'init')  % dotx and such can be regenerated
-          uselessfield = [uselessfield; tmp(strmatch('dot', tmp))];
-end
+    uselessfield = [uselessfield; tmp(strmatch('dot', tmp))];
+else
+    data.init = solveInit(0, data.dotx, conf, data);
+    %Display('Second');
+    data.init1= solveInit(180,data.dotx1, conf, data);
+    if ~isempty(data.init) & ~isempty(data.init1)
+        uselessfield = [uselessfield; tmp(strmatch('dot', tmp))];
+    end
+end;
+% plot(a);
+
+%     clear a;
+%     data.readData.thet=180; data.readData.xyzseq = [1 3 2];
+%     for i=1:round(130/4)+1;
+%         [x y init] = PLWtransform(data.readData, conf.scale1, conf.imagex, i);
+%         a(i,:) = diff([mean(data.dotx1(:, [10 13]) - x(:,[10 13]))],1);
+%     end;
+
 data = rmfield(data, uselessfield);
 
 save(['data/', 'Small_', matfile],'conf', 'Subinfo','flow','mode','data', 'Response', 'Condition');
+
+    function init = solveInit(theta, dotx, conf, data)
+        data.readData.thet=theta; data.readData.xyzseq = [1 3 2]; dot = dotx;
+        % [x y init] = PLWtransform(data.readData, conf.scale1, conf.imagex, 1);
+        % firstPoint = diff([mean(dot(:, [10 13]) - x(:,[10 13]))], 1);
+        % crit = round(1 - firstPoint/.17); %solved by simple linear math. Search the init around crit
+        % beginend = [crit-5 crit+5];
+        % if beginend(1)<=0 ;
+        %     beginend(1)=1;
+        % end
+        %
+        % if beginend(2) > round(130/4);
+        %     beginend(2) = round(130/4);
+        % end
+        %
+        %
+        % for i= beginend(1):beginend(2)
+        %     [x y init] = PLWtransform(data.readData, conf.scale1, conf.imagex, i);
+        %     a(i,:) = diff([mean(dot(:, [10 13]) - x(:,[10 13]))],1);
+        %     keyboard;
+        %     if ~isempty(find(a < 1e-10 & a > -1e-10));
+        %         init = find(a < 1e-10 & a > -1e-10);
+        %         init = init(1);
+        %         Display('Found!', init);
+        %         break;
+        %     end
+        % end;
+        
+        clear a;
+        for i=1:round(130/4)+1;
+            [x y init] = PLWtransform(data.readData, conf.scale1, conf.imagex, i);
+            a(i,:) = diff([mean(dot(:, [10 13]) - x(:,[10 13]))],1);
+        end;
+        if ~isempty(find(a < 1e-10 & a > -1e-10));
+            init = find(a < 1e-10 & a > -1e-10);
+            init = init(1);
+            Display('Found!', init);
+        end
+    end
 end

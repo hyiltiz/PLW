@@ -16,9 +16,9 @@ if ~isSkip
 end
 
 if english_on
-    Instruction(['Remaining ', num2str(length(Trialsequence) - theTrial + 1), '.'], w, wsize, debug_mode, english_on, kb, .3, skipFile, tactile_on);
+    Instruction(['Remaining ', num2str(length(Trialsequence) - theTrial + 1), '.'], w, wsize, debug_mode, english_on, kb, 2, skipFile, tactile_on);
 else
-    Instruction(['还有 ', num2str(length(Trialsequence) - theTrial), '试次。'], w, wsize, debug_mode, english_on, kb, .3, skipFile, tactile_on);
+    Instruction(['还有 ', num2str(length(Trialsequence) - theTrial), '试次。'], w, wsize, debug_mode, english_on, kb, 2, skipFile, tactile_on);
 end
 end
 
