@@ -37,24 +37,24 @@ VARIABLES DEFINITION USED IN THE MAIN FUNCTION RL_PLW()
 mode switch to control the mode of program should run in.
 mode:
 
-english_on          
-tactile_on          
-debug_on          
-audio_on            
-regenerate_on          
+english_on
+tactile_on
+debug_on
+audio_on
+regenerate_on
 
 ##########################################################
 configuration for changing experiment conditions
 conf:
 
-ntdurflp            
-nvterrflp           
-repetitions         
-scale1              
-imagex              
-waitBetweenTrials   
-waitFixationScreen  
-flpi                
+ntdurflp
+nvterrflp
+repetitions
+scale1
+imagex
+waitBetweenTrials
+waitFixationScreen
+flpi
 
 
 ##########################################################
@@ -65,51 +65,59 @@ flow:
 
 theTrial
 theFlip
-isresponse          
-response            
-prestate            
-isquit              
-Trialsequence       
+isresponse
+response
+prestate
+isquit
+Trialsequence
 
 ##########################################################
 control rendering visual and auditory stimuli:
 render:
 
-kb                  
-screenNumber        
-screens             
-wsize               
-ifi                 
-vlb                
-cx                  
-cy                  
-w                   
-dstRect             
-dioIn               
-dioOut              
-iniTimer            
+kb
+screenNumber
+screens
+wsize
+ifi
+vlb
+cx
+cy
+w
+dstRect
+dioIn
+dioOut
+iniTimer
 
 ##########################################################
 data construction for rendering:
 data:
 
-filename            
-lefttouch           
-righttouch          
-moveDirection       
-paceRate            
-readData            
-Track               
-tTrack              
-vTrack              
-initPosition        
-dotx                
-dotx1               
-doty                
-doty1               
-T                   
+filename
+lefttouch
+righttouch
+moveDirection
+paceRate
+readData
+Track
+tTrack
+vTrack
+initPosition
+dotx
+dotx1
+doty
+doty1
+T
 
 ##########################################################
 data collected and intended to be analyzed later:
-Subinfo             
-Trials              
+Subinfo
+Trials
+      Trials(:,1) is the trial type. Since all the conditions is purely randomized, this value is does not effect anything.
+      Trials(:,2) is the response type of the participant; 1 indicating right, while 2 left, and 0 both or none.
+      Trials(:,3) is duration time of the response in corresopnding Trials(:,2)
+      Trials(:,4) is the heading of the red PLW, which can be used when comparing to the response type in Trials(:,2). 0 indicates heading (walking direction) is towards right, while 1 is left. The other PLW's heading is always in opposite direction.
+      Trials(:,5) is the upright-inverse type of the red PLW. 0 means the red PLW is upright, while 1 is upside-down. The other PLW is in align with the red PLW.
+      Trials(:,6) is the number of the trial, begins from 1
+      Trials(:,7) is the initial tactile stimuli type. Definition is the same with response in Trials(:,2), 1 indicating right, while 2 left, and 0 is baseline, without tactile
+      Trials(:,8) is the frame pitch, representing the walking speed. 1 is 130 frames per loop (which is full loop) while 2 is 130/2 frames per loop.

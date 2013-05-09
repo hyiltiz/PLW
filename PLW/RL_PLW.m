@@ -14,12 +14,12 @@
 % along with this program; see the file COPYING.  If not, see
 % <http://www.gnu.org/licenses/>.
 
-% RL_PLW(scale1, english_on)
+% RL_PLW()
 
 % Author: Hormetjan Yiltiz  hyiltiz@gmail.com
 % Created: 2012-10-17
 
-function RL_PLW()
+% function RL_PLW()
 %% this code to generate pointlight display using 3D coordinates file
 %   Written by Lihan Chen, Ph.D, Department of Psychology, Peking University
 %   Merged in onePLW, PLWtransform, PLWsound modification to optimaze code
@@ -42,33 +42,35 @@ data.visualfilename = '07_01.data3d.txt'; % visaul data resource file
 data.instruct_filename = 'RL_Instruction_en.txt'; % instructions text file
 
 % time setting vatiables
-conf.flpi               =  0.02;        % each frame is set to 20ms (the monitor's flip interval is 16.7ms)
+conf.flpi               =  0.01;        % each frame is set to 20ms (the monitor's flip interval is 16.7ms)
 conf.trialdur           =   70;         % duration time for every trial
+conf.repetitions        =  5;           % repetition time of a condition
 conf.ntdurflp           =  1;           % tactile duration time: n * conf.flpi
 conf.nvterrflp          =  15;          % visual-tactile error time: n * conf.flpi
 conf.waitBetweenTrials  =  .8+rand*0.2; % wait black screen between Trials, random
 conf.waitFixationScreen =  .8+rand*0.2; % '+' time randomized
-conf.repetitions        =  5;           % repetition time of a condition
 conf.scale1             =  20;          % PLW's visual scale, more the bigger
 conf.noisescale         =  .14;         % the width of the noise dots, and the default PLW dot width is 7
 conf.resttime           =  30;          % rest for 30s
-conf.restpertrial       =  5;           % every 5 trial a rest
+conf.restpertrial       =  1;           % every 5 trial a rest
 % conf.exptime          =  45;          % experiment is 45min long
 
 % state control variables
-mode.regenerate_on = 1;  % mode.regenerate_on data for experiment, rather than using the saved one
-mode.debug_on      = 1;  % do ont use full screen, and skip the synch test
-mode.audio_on      = 0;  % set audio stimuli on
+mode.debug_on      = 0;  % default is 0; 1 is not to use full screen, and skip the synch test
 mode.english_on    = 1;  % use English for Instructions etc., 0 for Chinese(not supported for now!)
-mode.RT            = 1;  % Reaction time mode, this is not to be changed!
+mode.many_on       = 1;  % the task is the majority of dots the participant saw
+mode.regenerate_on = 1;  % mode.regenerate_on data for experiment, rather than using the saved one
+mode.audio_on      = 0;  % set audio stimuli on
+mode.RT_on         = 0  ;  % Reaction time mode, this is not to be changed!
 
 % randomized sample exp. conditions and trial sequences variables
 % condition type:4; recording results in 5 culumns
 if mode.debug_on
     conf.repetitions = 2;
     conf.resttime = 3;
+    conf.trialdur = 10;
 end
-[flow.Trialsequence Trials] = genTrial(conf.repetitions, 6);
+[flow.Trialsequence Trials] = genTrial(conf.repetitions, 9);
 
 % unified key definitions
 render.kb = keyDefinition();
@@ -93,6 +95,8 @@ try
     
     %% Get Subject information
     Subinfo = getSubInfo();
+    % create directory for saving date
+    mkdir(Subinfo{1});
     %% initialization
     HideCursor;
     ListenChar(2);
@@ -139,14 +143,14 @@ try
     
     % Variables used across trials
     if mode.debug_on; conf.exptime = 5; end
-%     data.Track = 1:round(conf.exptime*60/(conf.flpi * data.loopPeriod * 8 * conf.repetitions) * length(data.dotx));        % 2 for less longer stimuli
-data.Track = 1: round(conf.trialdur / (conf.flpi * length(data.dotx))) * length(data.dotx);
-
-
-    flow.prestate = 0;
-    flow.response = 0;
-    flow.nresp    = 1;
-    flow.restcount= 0;
+    %     data.Track = 1:round(conf.exptime*60/(conf.flpi * data.loopPeriod * 8 * conf.repetitions) * length(data.dotx));        % 2 for less longer stimuli
+    data.Track = 1: round(conf.trialdur / (conf.flpi * length(data.dotx))) * length(data.dotx);
+    
+    
+    flow.prestate = 0;  % the last reponse until now
+    flow.response = 0;  % the current current response, just after the last response
+    flow.nresp    = 1;  % the total number of response recorded
+    flow.restcount= 0;  % the number of trials from last rest
     Priority(MaxPriority(w));
     
     %% create the noise, using buffer, thus better than addNoise_old
@@ -158,10 +162,21 @@ data.Track = 1: round(conf.trialdur / (conf.flpi * length(data.dotx))) * length(
     %% Instructions
     %     RL_Instruction(w, mode.debug_on, mode.english_on, render.kb);
     if ~mode.english_on
-        data.instruct_filename = 'RL_Instruction_zh.txt';
+        if ~mode.many_on
+            data.instruct_filename = 'RL_Instruction_zh.txt';
+        else
+            data.instruct_filename = 'RL_Instruction_many_zh.txt';
+        end
+    else
+        if ~mode.many_on
+            data.instruct_filename = 'RL_Instruction_en.txt';
+        else
+            data.instruct_filename = 'RL_Instruction_many_en.txt';
+        end
     end
-    Instruction(data.instruct_filename, w, render.wsize, mode.debug_on, mode.english_on, render.kb, inf);
     
+    
+    Instruction(data.instruct_filename, w, render.wsize, mode.debug_on, mode.english_on, render.kb, inf);
     
     %% Here begins our trial
     for k = 1:length(flow.Trialsequence)
@@ -173,20 +188,20 @@ data.Track = 1: round(conf.trialdur / (conf.flpi * length(data.dotx))) * length(
         
         if mode.regenerate_on
             data.initPosition = Randi(round(data.loopPeriod/4),[2 1]);
-            data.paceRate = Randi(3,[2 1]);
-% data.paceRate = [1; 1];
+            data.paceRate = Randi(2,[2 1]);
+            % data.paceRate = [1; 1];
             %   data.Track = 1:round(length(data.dotx));% 2 for accuracy, and data.loopPeriod for period
             [data.lefttouch data.righttouch] = touchground(data.dotx, data.initPosition(1), data.paceRate(1), data.Track);     %for the index when PLW touches ground
         else
             % do not generate, use the previously saved data(not enabled by default)
             load RL_PLW_data;
             %where we have two PLWs, and quicker pace than 3 maybe too quick
-            data.paceRate = Randi(3,[2 1]);
+            data.paceRate = Randi(2,[2 1]);
             data.initPosition = Randi(round(data.loopPeriod/4),[2 1]);
         end
         data.moveDirection = round(rand([length(flow.Trialsequence), 2])); %walkers walking direction is random
         
-        % Generate the mu ltisensory data.Track to synch on time
+        % Generate the multisensory data.Track to synch on time
         [data.vTrack data.tTrack] = genTrack(flow.Trialsequence(flow.Trial), data.Track, data.lefttouch, data.righttouch, conf.flpi, conf.ntdurflp, conf.nvterrflp);
         
         % display:  +
@@ -204,6 +219,12 @@ data.Track = 1: round(conf.trialdur / (conf.flpi * length(data.dotx))) * length(
         flow.isquit = 0;     % to capture ESCAPE for quitting
         flow.isresponse = 0;
         render.iniTimer=GetSecs;
+        
+        [data.inittype ~] = find(data.tTrack, 1);%initial type of tactile stimuli
+        if isempty(data.inittype);
+            data.inittype = 0;  %baseline is 0
+        end
+        data.iniTactile = data.inittype;
         for i=data.Track  %loop leghth
             flow.Flip = i;
             % here comes the noise background
@@ -223,12 +244,13 @@ data.Track = 1: round(conf.trialdur / (conf.flpi * length(data.dotx))) * length(
             if ~mode.tacktile_on; render.dioIn = false; end
             
             % get the response
-            if mode.RT
-                [Trials, flow.prestate, flow.response, render.iniTimer, flow.isquit, flow.isresponse] = getResponseRT(mode.tacktile_on, render.iniTimer, render.dioIn, flow.prestate, flow.response, flow.Trialsequence, flow.Trial, data.moveDirection, render.kb, flow.isresponse, flow.isquit, Trials);
-            else
-                [Trials, flow.prestate, flow.response, render.iniTimer, flow.isquit, flow.isresponse, flow.nresp ] = getResponse(mode.tacktile_on, render.iniTimer, render.dioIn, flow.prestate, flow.response, flow.Trialsequence, flow.Trial, data.moveDirection, render.kb, flow.isresponse, flow.isquit, Trials, flow.nresp);
-            end
-            if mode.RT; if flow.isresponse; break; end; end
+            [Trials, flow.prestate, flow.response, render.iniTimer, flow.isquit,...
+                flow.isresponse, flow.nresp ] = getResponseU(mode.tacktile_on, ...
+                render.iniTimer, render.dioIn, flow.prestate, ...
+                flow.response, flow.Trialsequence,...
+                flow.Trial, data.moveDirection, render.kb, flow.isresponse,...
+                flow.isquit, Trials, flow.nresp, data.paceRate' , data.iniTactile, mode.RT_on);
+            if mode.RT_on; if flow.isresponse; break; end; end
             
             % Flip the visual stimuli on the screen, along with timing
             render.vlb = Screen('Flip', w, render.vlb + conf.flpi);
@@ -242,21 +264,23 @@ data.Track = 1: round(conf.trialdur / (conf.flpi * length(data.dotx))) * length(
         Screen('Flip', w);
         
         % Get the remaining last response
-        if mode.RT
-            [Trials, flow.prestate, flow.response, render.iniTimer, flow.isquit, flow.isresponse]  = getlastResponseRT(mode.tacktile_on, render.iniTimer, render.dioIn, flow.prestate, flow.response, flow.Trialsequence, flow.Trial, data.moveDirection, render.kb, flow.isresponse, flow.isquit, Trials);
-        else
-            [Trials, flow.prestate, flow.response, render.iniTimer, flow.isquit, flow.isresponse, flow.nresp ]  = getlastResponse(mode.tacktile_on, render.iniTimer, render.dioIn, flow.prestate, flow.response, flow.Trialsequence, flow.Trial, data.moveDirection, render.kb, flow.isresponse, flow.isquit, Trials, flow.nresp);
-        end
+        [Trials, flow.prestate, flow.response, render.iniTimer, flow.isquit, flow.isresponse, flow.nresp ]  = getlastResponseU(mode.tacktile_on, render.iniTimer, render.dioIn, flow.prestate, flow.response, flow.Trialsequence, flow.Trial, data.moveDirection, render.kb, flow.isresponse, flow.isquit, Trials, flow.nresp, data.paceRate', data.iniTactile );
+        %        if mode.RT_on
+        %            [Trials, flow.prestate, flow.response, render.iniTimer, flow.isquit, flow.isresponse]  = getlastResponseRT(mode.tacktile_on, render.iniTimer, render.dioIn, flow.prestate, flow.response, flow.Trialsequence, flow.Trial, data.moveDirection, render.kb, flow.isresponse, flow.isquit, Trials, data.paceRate', data.iniTactile );
+        %        else
+        %            [Trials, flow.prestate, flow.response, render.iniTimer, flow.isquit, flow.isresponse, flow.nresp ]  = getlastResponse(mode.tacktile_on, render.iniTimer, render.dioIn, flow.prestate, flow.response, flow.Trialsequence, flow.Trial, data.moveDirection, render.kb, flow.isresponse, flow.isquit, Trials, flow.nresp, data.paceRate', data.iniTactile );
+        %        end
     end;
     
     % End of experiment
-    save(['data/' Subinfo{1} '.mat'],'Trials','conf', 'Subinfo');
+    save(['data/',Subinfo{1},'/', Subinfo{1}, date, '.mat'],'Trials','conf', 'Subinfo','flow','mode','data');
     % Display 'Thanks' Screen
     RL_Regards(w, mode.english_on);
     
 catch
     % save the buggy data for debugging
     save data/buggy;
+    save(['data/', Subinfo{1}, '/', 'buggy.mat']);
     %     disp(['';'';'data/buggy saved successfully, use for debugging!']);
     disp(char('','','data/buggy saved successfully, use for debugging!',''));
     Screen('CloseAll');
@@ -277,4 +301,4 @@ ListenChar(0);
 % save data for testing for the last experiment
 save data/test
 disp('Experiment was successful!');
-end
+% end

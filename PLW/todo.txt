@@ -7,3 +7,17 @@ visual-tactle err: 150ms
 after each 5 trial, rest at most 30s, until press button
 
 input control
+done!
+==============
+Two types of tasks, so two .txt!
+done!
+
+unify genResponse and genResponseRT
+done
+
+unify genResponse and genResponseRT for last
+done!
+
+=============
+use structures for function IO (to make it consice, but not clear)
+ignore it for now
