@@ -42,7 +42,7 @@ if flag  %subtract them back if added for the checking above
     rightfoot = rightfoot - 1;
 end
 % rightfoot(X(rightfoot) > prctile(X(rightfoot,2),.75)) = [];  % kick out the extremes
-rightfoot(X(rightfoot,2) - median(X(rightfoot,2)) > std(X(rightfoot,2))) = [];  % kick out the ones beyond std
+rightfoot(X(rightfoot,2) - median(X(rightfoot,2)) > 2 * std(X(rightfoot,2))) = [];  % kick out the ones beyond std
 
 if any(X(leftfoot,1) > (min(min(X)) + max(max(X)))/2) || any(X(rightfoot,2) > (min(min(X)) + max(max(X)))/2)
     beep;   %the data created is unwanted here!

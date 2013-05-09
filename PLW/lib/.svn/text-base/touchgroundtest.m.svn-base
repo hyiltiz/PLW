@@ -48,7 +48,7 @@ if flag  %subtract them back if added for the checking above
         rightfoot = rightfoot - 1;
 end
 % rightfoot(X(rightfoot,2) > prctile(X(rightfoot,2),90)) = [];  % kick out the ones beyond std
-rightfoot(X(rightfoot,2) - median(X(rightfoot,2)) > std(X(rightfoot,2))) = [];  % kick out the ones beyond std
+rightfoot(X(rightfoot,2) - median(X(rightfoot,2)) > 2 * std(X(rightfoot,2))) = [];  % kick out the ones beyond std
 
 if any(X(leftfoot,1) > (min(min(X)) + max(max(X)))/2) || any(X(rightfoot,2) > (min(min(X)) + max(max(X)))/2)
         beep;   %the data created is unwanted here!
@@ -65,6 +65,7 @@ plot(X,'k');
 plot(leftfoot, X(leftfoot,1), 'ro');
 plot(rightfoot, X(rightfoot,2), 'bo');
 refline(0, (min(min(X)) + max(max(X)))/2);
+[diff(leftfoot(1:8)), diff(rightfoot(1:8))]
 
 %{
 THIS WAS RATHER COMPLICATED!

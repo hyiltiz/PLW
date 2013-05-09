@@ -1,4 +1,4 @@
-%% Copyright (C) 2012 Multisensory Lab of Peking University
+% Copyright (C) 2012 Multisensory Lab of Peking University
 %
 % This program is free software; you can redistribute it and/or modify
 % it under the terms of the GNU General Public License as published by
@@ -30,47 +30,50 @@
 %   Help on tactile support by Lihan Chen, June 2012
 %   Added tactile support by Hormetjan, June 2012
 %   Documented by Hormetjan, July 2012
-%   Added accurate timing suppost by Hormetjan, Oct 2012
+%   Added accurate timing support by Hormetjan, Oct 2012
 %   Adjusted for experimental needs, Oct 2012
 %   For the latest source code, please contact hyiltiz@gmail.com
 %   For Documentation of the program, please read README.txt file that
 %   comdes with the program, to have a better understanding of the way the
 %   program was written.
-
+tic;
 addpath('./data', './lib', './resources');
 data.visualfilename = '07_01.data3d.txt'; % visaul data resource file
 data.instruct_filename = 'RL_Instruction_en.txt'; % instructions text file
 
 % time setting vatiables
-conf.flpi               =  0.01;        % each frame is set to 20ms (the monitor's flip interval is 16.7ms)
-conf.trialdur           =   70;         % duration time for every trial
+conf.flpi               =  0.02;        % each frame is set to 20ms (the monitor's flip interval is 16.7ms)
+conf.trialdur           =  70;          % duration time for every trial
 conf.repetitions        =  5;           % repetition time of a condition
+conf.resttime           =  30;          % rest for 30s
+conf.restpertrial       =  1;           % every 5 trial a rest
 conf.ntdurflp           =  1;           % tactile duration time: n * conf.flpi
 conf.nvterrflp          =  15;          % visual-tactile error time: n * conf.flpi
 conf.waitBetweenTrials  =  .8+rand*0.2; % wait black screen between Trials, random
 conf.waitFixationScreen =  .8+rand*0.2; % '+' time randomized
 conf.scale1             =  20;          % PLW's visual scale, more the bigger
 conf.noisescale         =  .14;         % the width of the noise dots, and the default PLW dot width is 7
-conf.resttime           =  30;          % rest for 30s
-conf.restpertrial       =  1;           % every 5 trial a rest
 % conf.exptime          =  45;          % experiment is 45min long
 
 % state control variables
-mode.debug_on      = 0;  % default is 0; 1 is not to use full screen, and skip the synch test
-mode.english_on    = 1;  % use English for Instructions etc., 0 for Chinese(not supported for now!)
 mode.many_on       = 1;  % the task is the majority of dots the participant saw
+mode.english_on    = 1;  % use English for Instructions etc., 0 for Chinese(not supported for now!)
 mode.regenerate_on = 1;  % mode.regenerate_on data for experiment, rather than using the saved one
 mode.audio_on      = 0;  % set audio stimuli on
-mode.RT_on         = 0  ;  % Reaction time mode, this is not to be changed!
+mode.RT_on         = 0;  % Reaction time mode, this is not to be changed!
+mode.debug_on      = 1;  % default is 0; 1 is not to use full screen, and skip the synch test
+
+if mode.debug_on
+    conf.repetitions = 1;
+    conf.resttime = 1;
+    conf.trialdur = 3;
+end
 
 % randomized sample exp. conditions and trial sequences variables
 % condition type:4; recording results in 5 culumns
-if mode.debug_on
-    conf.repetitions = 2;
-    conf.resttime = 3;
-    conf.trialdur = 10;
-end
 [flow.Trialsequence Trials] = genTrial(conf.repetitions, 9);
+data.moveDirection = [round(rand([length(flow.Trialsequence), 1])), flow.Trialsequence(:,1) - 1]; %walkers walking direction is random
+flow.Trialsequence(:,1) = [];
 
 % unified key definitions
 render.kb = keyDefinition();
@@ -144,7 +147,7 @@ try
     % Variables used across trials
     if mode.debug_on; conf.exptime = 5; end
     %     data.Track = 1:round(conf.exptime*60/(conf.flpi * data.loopPeriod * 8 * conf.repetitions) * length(data.dotx));        % 2 for less longer stimuli
-    data.Track = 1: round(conf.trialdur / (conf.flpi * length(data.dotx))) * length(data.dotx);
+    data.Track = 1: round(conf.trialdur / (conf.flpi * length(data.dotx)) * length(data.dotx));
     
     
     flow.prestate = 0;  % the last reponse until now
@@ -199,7 +202,7 @@ try
             data.paceRate = Randi(2,[2 1]);
             data.initPosition = Randi(round(data.loopPeriod/4),[2 1]);
         end
-        data.moveDirection = round(rand([length(flow.Trialsequence), 2])); %walkers walking direction is random
+        
         
         % Generate the multisensory data.Track to synch on time
         [data.vTrack data.tTrack] = genTrack(flow.Trialsequence(flow.Trial), data.Track, data.lefttouch, data.righttouch, conf.flpi, conf.ntdurflp, conf.nvterrflp);
@@ -220,11 +223,11 @@ try
         flow.isresponse = 0;
         render.iniTimer=GetSecs;
         
-        [data.inittype ~] = find(data.tTrack, 1);%initial type of tactile stimuli
-        if isempty(data.inittype);
-            data.inittype = 0;  %baseline is 0
+        data.iniTactile = data.tTrack(find(data.tTrack>0,1));%initial type of tactile stimuli
+        if isempty(data.iniTactile);
+            data.iniTactile = 0;  %baseline is 0
         end
-        data.iniTactile = data.inittype;
+        
         for i=data.Track  %loop leghth
             flow.Flip = i;
             % here comes the noise background
@@ -265,24 +268,25 @@ try
         
         % Get the remaining last response
         [Trials, flow.prestate, flow.response, render.iniTimer, flow.isquit, flow.isresponse, flow.nresp ]  = getlastResponseU(mode.tacktile_on, render.iniTimer, render.dioIn, flow.prestate, flow.response, flow.Trialsequence, flow.Trial, data.moveDirection, render.kb, flow.isresponse, flow.isquit, Trials, flow.nresp, data.paceRate', data.iniTactile );
-        %        if mode.RT_on
-        %            [Trials, flow.prestate, flow.response, render.iniTimer, flow.isquit, flow.isresponse]  = getlastResponseRT(mode.tacktile_on, render.iniTimer, render.dioIn, flow.prestate, flow.response, flow.Trialsequence, flow.Trial, data.moveDirection, render.kb, flow.isresponse, flow.isquit, Trials, data.paceRate', data.iniTactile );
-        %        else
-        %            [Trials, flow.prestate, flow.response, render.iniTimer, flow.isquit, flow.isresponse, flow.nresp ]  = getlastResponse(mode.tacktile_on, render.iniTimer, render.dioIn, flow.prestate, flow.response, flow.Trialsequence, flow.Trial, data.moveDirection, render.kb, flow.isresponse, flow.isquit, Trials, flow.nresp, data.paceRate', data.iniTactile );
-        %        end
     end;
     
     % End of experiment
-    save(['data/',Subinfo{1},'/', Subinfo{1}, date, '.mat'],'Trials','conf', 'Subinfo','flow','mode','data');
+    if mode.many_on % M is for many_dots task, while D is for direction task
+        tmp = 'M';
+    else
+        tmp = 'D';
+    end
+    %save(['data/',Subinfo{1},'/', Subinfo{1}, tmp, date, '.mat'],'Trials','conf', 'Subinfo','flow','mode','data');
+    save(['data/', Subinfo{1}, date, '.mat'],'Trials','conf', 'Subinfo','flow','mode','data');
     % Display 'Thanks' Screen
     RL_Regards(w, mode.english_on);
     
 catch
     % save the buggy data for debugging
     save data/buggy;
-    save(['data/', Subinfo{1}, '/', 'buggy.mat']);
-    %     disp(['';'';'data/buggy saved successfully, use for debugging!']);
     disp(char('','','data/buggy saved successfully, use for debugging!',''));
+    save(['data/', Subinfo{1}, date, 'buggy.mat']);
+    %     disp(['';'';'data/buggy saved successfully, use for debugging!']);
     Screen('CloseAll');
     if mode.audio_on; PsychPortAudio('Close'); end
     Priority(0);
@@ -301,4 +305,5 @@ ListenChar(0);
 % save data for testing for the last experiment
 save data/test
 disp('Experiment was successful!');
+toc;
 % end

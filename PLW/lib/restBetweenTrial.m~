@@ -16,9 +16,8 @@ if ~isSkip
 end
 
 if restcount == pertrial
-      WaitSecs(3);
-      if english_on
-        Instruction('restBetweenTrial_text_en.txt', w, wsize, debug_mode, english_on, kb, resttime);
+    if english_on
+    Instruction('restBetweenTrial_text_en.txt', w, wsize, debug_mode, english_on, kb, resttime);
     else
         Instruction('restBetweenTrial_text_zh.txt', w, wsize, debug_mode, english_on, kb, resttime);
     end
