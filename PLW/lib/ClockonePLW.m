@@ -12,7 +12,7 @@ function ClockonePLW(w, f, cx, cy, dotx, doty, xy0, isinv)
 % 0 for head, 1 for left parts and 2 for right parts of PLW.
 mapping = [1 1 1 1 1 1 1 1 1 1 1 1 1];
 gcolor = {[0 255 0]};
-dot_w = 5;
+dot_w = 8;
 big = .7;
 
 % use xy0 within (0,1)

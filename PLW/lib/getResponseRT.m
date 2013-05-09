@@ -1,5 +1,5 @@
 function [Trials, prestate, response, iniTimer, isquit, isresponse ] = ...
-    getResponse(tactile_on, iniTimer, dioIn, prestate, response,...
+    getResponseRT(tactile_on, iniTimer, dioIn, prestate, response,...
     Trialsequence, k, moveDirection, kb, isresponse, isquit, Trials)
 % Capture all teh reaction input from pedal, if tactile decises can be
 % found, or from the keyboard otherwise.
@@ -25,9 +25,19 @@ if tactile_on
         Trials(k,1)=Trialsequence(k);
         Trials(k,2) = prestate;
         Trials(k,[4 5]) = moveDirection(k, :);  % direction of walkers
+        Trials(k,6) = k;
         iniTimer = GetSecs;
         prestate=response;
         isresponse = 1;
+    end
+    
+    % Presss ESC for quitting!
+    [ keyIsDown, ~, keyCode ] = KbCheck;
+    if keyIsDown
+        if any(keyCode(kb.escapeKey)) %quit program
+            isquit = 1;
+            error('Manually pressed ESC button: quit!');
+        end
     end
     
 else  % use keyboard then
@@ -39,6 +49,7 @@ else  % use keyboard then
             Trials(k,1) = Trialsequence(k);
             Trials(k,2) = keyCode(kb.leftArrow) + keyCode(kb.rightArrow)*2 + keyCode(kb.upArrow)*3 + keyCode(kb.downArrow)*4;
             Trials(k,[4 5]) = moveDirection(k, :);  % direction of walkers
+            Trials(k,6) = k;
             %                 PsychPortAudio('Stop', pahandle, 2);    %stop sound with discarding process
             isresponse = 1;
             %         break;
@@ -51,12 +62,7 @@ else  % use keyboard then
             % due to the closeness of the arrow keys
         else
             % ignore other stuff!
-            error([''...
-            '###################################'...
-                'Do not play around!, PLEASE. '...
-                'You have to do ALL OVER AGAIN, '...
-                'as you HAVE BEEN WARNED earlier!'...
-            '###################################'...]);
+            error(['###################################', 'Do not play around!, PLEASE. ', 'You have to do ALL OVER AGAIN, ', 'as you HAVE BEEN WARNED earlier!', '###################################']);
         end
     end
     

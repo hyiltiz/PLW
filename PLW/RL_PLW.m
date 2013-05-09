@@ -31,6 +31,7 @@ function RL_PLW()
 %   Added tactile support by Hormetjan, June 2012
 %   Documented by Hormetjan, July 2012
 %   Added accurate timing suppost by Hormetjan, Oct 2012
+%   Adjusted for experimental needs, Oct 2012
 %   For the latest source code, please contact hyiltiz@gmail.com
 %   For Documentation of the program, please read README.txt file that
 %   comdes with the program, to have a better understanding of the way the
@@ -38,30 +39,36 @@ function RL_PLW()
 
 addpath('./data', './lib', './resources');
 data.visualfilename = '07_01.data3d.txt'; % visaul data resource file
-data.instruct_filename = 'RL_instruction_en.txt'; % instructions text file
+data.instruct_filename = 'RL_Instruction_en.txt'; % instructions text file
 
 % time setting vatiables
 conf.flpi               =  0.02;        % each frame is set to 20ms (the monitor's flip interval is 16.7ms)
-conf.ntdurflp           =  2;           % tactile duration time: n * conf.flpi
+conf.trialdur           =   70;         % duration time for every trial
+conf.ntdurflp           =  1;           % tactile duration time: n * conf.flpi
 conf.nvterrflp          =  15;          % visual-tactile error time: n * conf.flpi
 conf.waitBetweenTrials  =  .8+rand*0.2; % wait black screen between Trials, random
 conf.waitFixationScreen =  .8+rand*0.2; % '+' time randomized
-conf.repetitions        =  10;          % repetition time of a condition
+conf.repetitions        =  5;           % repetition time of a condition
 conf.scale1             =  20;          % PLW's visual scale, more the bigger
-conf.noisescale         =  7;          % the width of the noise dots, and the default PLW dot width is 7
+conf.noisescale         =  .14;         % the width of the noise dots, and the default PLW dot width is 7
+conf.resttime           =  30;          % rest for 30s
+conf.restpertrial       =  5;           % every 5 trial a rest
+% conf.exptime          =  45;          % experiment is 45min long
 
 % state control variables
 mode.regenerate_on = 1;  % mode.regenerate_on data for experiment, rather than using the saved one
-mode.debug_on      = 0;  % do ont use full screen, and skip the synch test
+mode.debug_on      = 1;  % do ont use full screen, and skip the synch test
 mode.audio_on      = 0;  % set audio stimuli on
-mode.english_on    = 1;  % use English for Instructions etc., 0 for Chinese
+mode.english_on    = 1;  % use English for Instructions etc., 0 for Chinese(not supported for now!)
+mode.RT            = 1;  % Reaction time mode, this is not to be changed!
 
 % randomized sample exp. conditions and trial sequences variables
 % condition type:4; recording results in 5 culumns
 if mode.debug_on
     conf.repetitions = 2;
+    conf.resttime = 3;
 end
-[flow.Trialsequence Trials] = genTrial(conf.repetitions, 5);
+[flow.Trialsequence Trials] = genTrial(conf.repetitions, 6);
 
 % unified key definitions
 render.kb = keyDefinition();
@@ -123,7 +130,7 @@ try
     end
     
     render.ifi=Screen('GetFlipInterval', w);
-    if render.ifi > conf.flpi
+    if render.ifi > conf.flpi + 0.0005 % allow 0.5ms error
         error('Monitor Flip Interval is too large. Please use another computer.')
     end
     
@@ -131,29 +138,43 @@ try
     render.cy = render.wsize(4)/2; %center y
     
     % Variables used across trials
-    data.Track = 1:round(2 * length(data.dotx));        % 2 for less longer stimuli
+    if mode.debug_on; conf.exptime = 5; end
+%     data.Track = 1:round(conf.exptime*60/(conf.flpi * data.loopPeriod * 8 * conf.repetitions) * length(data.dotx));        % 2 for less longer stimuli
+data.Track = 1: round(conf.trialdur / (conf.flpi * length(data.dotx))) * length(data.dotx);
+
+
     flow.prestate = 0;
     flow.response = 0;
+    flow.nresp    = 1;
+    flow.restcount= 0;
     Priority(MaxPriority(w));
     
-    %% create the noise, using buffer, thus better than addNoise
-    [tex, render.dstRect] = addNoise(w, render.wsize, data.Track, conf.noisescale);
+    %% create the noise, using buffer, thus better than addNoise_old
+    render.noiseloopT = 50;
+    render.noiseloop = modloop(1:length(data.Track), render.noiseloopT);
+    [tex, render.dstRect] = addNoise(w, render.wsize, data.Track,conf.noisescale, render.noiseloopT);
+    %     [tex, render.dstRect] = addNoise_no_fixed_sqr(w, render.wsize, data.Track,conf.noisescale);
     
     %% Instructions
     %     RL_Instruction(w, mode.debug_on, mode.english_on, render.kb);
     if ~mode.english_on
-        data.instruct_filename = 'RL_instruction_zh.txt';
+        data.instruct_filename = 'RL_Instruction_zh.txt';
     end
-    Instruction(data.instruct_filename, w, render.wsize, mode.debug_on, mode.english_on, render.kb)
+    Instruction(data.instruct_filename, w, render.wsize, mode.debug_on, mode.english_on, render.kb, inf);
+    
     
     %% Here begins our trial
     for k = 1:length(flow.Trialsequence)
         flow.Trial = k;
+        
+        % rest every couple trial once
+        flow.restcount = restBetweenTrial(flow.restcount, conf.resttime, conf.restpertrial, w, render.wsize, mode.debug_on, mode.english_on, render.kb);
         WaitSecs(conf.waitBetweenTrials);  % wait black screen between Trials, random
         
         if mode.regenerate_on
             data.initPosition = Randi(round(data.loopPeriod/4),[2 1]);
             data.paceRate = Randi(3,[2 1]);
+% data.paceRate = [1; 1];
             %   data.Track = 1:round(length(data.dotx));% 2 for accuracy, and data.loopPeriod for period
             [data.lefttouch data.righttouch] = touchground(data.dotx, data.initPosition(1), data.paceRate(1), data.Track);     %for the index when PLW touches ground
         else
@@ -186,11 +207,11 @@ try
         for i=data.Track  %loop leghth
             flow.Flip = i;
             % here comes the noise background
-            % addNoise(w, 256, render.wsize);%Do not use this, since buffer tex is used
-            %Screen('DrawTexture', w, tex(flow.Flip), [], render.dstRect, [], 0);
+            %             addNoise(w, 256, render.wsize);%Do not use this, since buffer tex is used
+            Screen('DrawTexture', w, tex(render.noiseloop(flow.Flip)), [], render.dstRect, [], 0);
             % and here comes the walkers
             RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx, render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 0 0]);
-            RLonePLW(w,data.initPosition(2) + data.paceRate(2)*data.vTrack(flow.Flip), render.cx, render.cy, data.dotx1, data.doty1, data.moveDirection(flow.Trial, :), [0 255 0]);
+            RLonePLW(w,data.initPosition(2) + data.paceRate(2)*data.vTrack(flow.Flip), render.cx, render.cy, data.dotx1, data.doty1, data.moveDirection(flow.Trial, :), [0 255 255]);
             
             % here comes their footsteps
             if mode.tacktile_on
@@ -199,28 +220,33 @@ try
                 tactileStimuli(data.tTrack(flow.Flip), render.dioOut);
             end
             %% catch the response
-            if ~mode.tacktile_on
-                render.dioIn = false;
-            end
+            if ~mode.tacktile_on; render.dioIn = false; end
             
             % get the response
-            [Trials, flow.prestate, flow.response, render.iniTimer, flow.isquit, flow.isresponse ] = getResponse(mode.tacktile_on, render.iniTimer, render.dioIn, flow.prestate, flow.response, flow.Trialsequence, flow.Trial, data.moveDirection, render.kb, flow.isresponse, flow.isquit, Trials);
-            if flow.isresponse; break; end
+            if mode.RT
+                [Trials, flow.prestate, flow.response, render.iniTimer, flow.isquit, flow.isresponse] = getResponseRT(mode.tacktile_on, render.iniTimer, render.dioIn, flow.prestate, flow.response, flow.Trialsequence, flow.Trial, data.moveDirection, render.kb, flow.isresponse, flow.isquit, Trials);
+            else
+                [Trials, flow.prestate, flow.response, render.iniTimer, flow.isquit, flow.isresponse, flow.nresp ] = getResponse(mode.tacktile_on, render.iniTimer, render.dioIn, flow.prestate, flow.response, flow.Trialsequence, flow.Trial, data.moveDirection, render.kb, flow.isresponse, flow.isquit, Trials, flow.nresp);
+            end
+            if mode.RT; if flow.isresponse; break; end; end
             
             % Flip the visual stimuli on the screen, along with timing
             render.vlb = Screen('Flip', w, render.vlb + conf.flpi);
             
         end
         % quit if the participant pressed ESC
-        if flow.isquit, break, end
+        %         if flow.isquit, break, end
         
         % end of per trial
         Screen('FillRect',w ,0);
         Screen('Flip', w);
         
         % Get the remaining last response
-        [Trials, flow.prestate, flow.response, render.iniTimer, flow.isquit, flow.isresponse ]  = getlastResponse(mode.tacktile_on, render.iniTimer, render.dioIn, flow.prestate, flow.response, flow.Trialsequence, flow.Trial, data.moveDirection, render.kb, flow.isresponse, flow.isquit, Trials);
-        
+        if mode.RT
+            [Trials, flow.prestate, flow.response, render.iniTimer, flow.isquit, flow.isresponse]  = getlastResponseRT(mode.tacktile_on, render.iniTimer, render.dioIn, flow.prestate, flow.response, flow.Trialsequence, flow.Trial, data.moveDirection, render.kb, flow.isresponse, flow.isquit, Trials);
+        else
+            [Trials, flow.prestate, flow.response, render.iniTimer, flow.isquit, flow.isresponse, flow.nresp ]  = getlastResponse(mode.tacktile_on, render.iniTimer, render.dioIn, flow.prestate, flow.response, flow.Trialsequence, flow.Trial, data.moveDirection, render.kb, flow.isresponse, flow.isquit, Trials, flow.nresp);
+        end
     end;
     
     % End of experiment
@@ -231,6 +257,8 @@ try
 catch
     % save the buggy data for debugging
     save data/buggy;
+    %     disp(['';'';'data/buggy saved successfully, use for debugging!']);
+    disp(char('','','data/buggy saved successfully, use for debugging!',''));
     Screen('CloseAll');
     if mode.audio_on; PsychPortAudio('Close'); end
     Priority(0);

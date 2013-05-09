@@ -1,6 +1,6 @@
-function [Trials, prestate, response, iniTimer, isquit, isresponse ] = ...
+function [Trials, prestate, response, iniTimer, isquit, isresponse, nresp ] = ...
     getResponse(tactile_on, iniTimer, dioIn, prestate, response,...
-    Trialsequence, k, moveDirection, kb, isresponse, isquit, Trials)
+    Trialsequence, k, moveDirection, kb, isresponse, isquit, Trials, nresp)
 % Capture all teh reaction input from pedal, if tactile decises can be
 % found, or from the keyboard otherwise.
 
@@ -21,42 +21,62 @@ if tactile_on
     end
     
     if  response~=prestate
-        Trials(k,3) = GetSecs - iniTimer;
-        Trials(k,1)=Trialsequence(k);
-        Trials(k,2) = prestate;
-        Trials(k,[4 5]) = moveDirection(k, :);  % direction of walkers
+        Trials(nresp,3) = GetSecs - iniTimer;
+        Trials(nresp,1)=Trialsequence(k);
+        Trials(nresp,2) = prestate;
+        Trials(nresp,[4 5]) = moveDirection(k, :);  % direction of walkers
+        Trials(nresp,6) = k;
         iniTimer = GetSecs;
         prestate=response;
         isresponse = 1;
+        nresp = nresp + 1;
+    end
+    
+    % Presss ESC for quitting!
+    [ keyIsDown, ~, keyCode ] = KbCheck;
+    if keyIsDown
+        if any(keyCode(kb.escapeKey)) %quit program
+            isquit = 1;
+            error('Manually pressed ESC button: quit!');
+        end
     end
     
 else  % use keyboard then
     % acquire responce
     [ keyIsDown, ~, keyCode ] = KbCheck;
-    if keyIsDown
-        if (keyCode(kb.leftArrow) || keyCode(kb.rightArrow))
-            Trials(k,3) = GetSecs-iniTimer;
-            Trials(k,1) = Trialsequence(k);
-            Trials(k,2) = keyCode(kb.leftArrow) + keyCode(kb.rightArrow)*2 + keyCode(kb.upArrow)*3 + keyCode(kb.downArrow)*4;
-            Trials(k,[4 5]) = moveDirection(k, :);  % direction of walkers
-            %                 PsychPortAudio('Stop', pahandle, 2);    %stop sound with discarding process
+    if keyIsDown & (keyCode(kb.leftArrow) || keyCode(kb.rightArrow))
+        response = keyCode(kb.leftArrow) + keyCode(kb.rightArrow)*2 + keyCode(kb.upArrow)*3 + keyCode(kb.downArrow)*4;
+        
+        
+        if  response~=prestate
+            Trials(nresp,3) = GetSecs-iniTimer;
+            Trials(nresp,1) = Trialsequence(k);
+            Trials(nresp,2) = keyCode(kb.leftArrow) + keyCode(kb.rightArrow)*2 + keyCode(kb.upArrow)*3 + keyCode(kb.downArrow)*4;
+            Trials(nresp,[4 5]) = moveDirection(k, :);  % direction of walkers
+            Trials(nresp,6) = k;
+            % PsychPortAudio('Stop', pahandle, 2);    %stop sound with discarding process
+            iniTimer = GetSecs;
+            prestate=response;
             isresponse = 1;
+            nresp = nresp + 1;
+            
             %         break;
             return;
-        elseif any(keyCode(kb.escapeKey)) %quit program
-            isquit = 1;
-            error('Manually pressed ESC button: quit!');
-        elseif (keyCode(kb.upArrow) || keyCode(kb.downArrow))
-            % allow pressing this BY MISTAKE, as will most probably happen
-            % due to the closeness of the arrow keys
-        else
-            % ignore other stuff!
-            error(['###################################', 'Do not play around!, PLEASE. ', 'You have to do ALL OVER AGAIN, ', 'as you HAVE BEEN WARNED earlier!', '###################################']);
         end
+    elseif any(keyCode(kb.escapeKey)) %quit program
+        isquit = 1;
+        error('Manually pressed ESC button: quit!');
+    elseif (keyCode(kb.upArrow) || keyCode(kb.downArrow))
+        % allow pressing this BY MISTAKE, as will most probably happen
+        % due to the closeness of the arrow keys
+    else
+        % ignore other stuff!
+%         error(['###################################', 'Do not play around!, PLEASE. ', 'You have to do ALL OVER AGAIN, ', 'as you HAVE BEEN WARNED earlier!', '###################################']);
     end
-    
-    % Do not clear buffer, or if the user holds any key pressed on, then
-    % all the display will wait until the key was released.
-    %     if keyIsDown; while KbCheck; end; end; %clear buffer
 end
+
+% Do not clear buffer, or if the user holds any key pressed on, then
+% all the display will wait until the key was released.
+%     if keyIsDown; while KbCheck; end; end; %clear buffer
 end
+

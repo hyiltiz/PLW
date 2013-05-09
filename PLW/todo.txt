@@ -1,0 +1,9 @@
+repetition: 5 times/condition 
+durance  70s
+exp: 40min
+tactile_durance: 10-20ms
+tactile random init after + 3s
+visual-tactle err: 150ms
+after each 5 trial, rest at most 30s, until press button
+
+input control

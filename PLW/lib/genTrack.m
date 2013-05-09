@@ -1,8 +1,11 @@
 function [vTrack tTrack] = genTrack(Trialsequence, Track, lefttouch, righttouch, flpi, ntdurflp, nvterrflp )
 % Generate visual stimuli track 'vTrack' and tactile stimuli track 'tTrack'
 
-% ntdurflp = 2;
-% nvterrflp = 15;
+isSkip = 1;
+if ~isSkip
+ntdurflp = 2;
+nvterrflp = 15;
+end
 vterr = flpi * nvterrflp; % visual-tactile incongruence error (s)
 tdur = flpi * ntdurflp; % tactile stimuli duration time
 
@@ -25,6 +28,13 @@ switch Trialsequence
         case 4  % baseline: no tactile
                 % no stimuli
 end
+
+% random beginning of tactile stimuli
+flpi = 0.02;
+ini_mean = 3; % mean ini_time is 3s
+ini_std = 0.5; % ini_time std is .5s
+after_n_ini = ini_mean / flpi + Randi(2 * ini_std / flpi) - ini_std / flpi;
+tTrack(1:after_n_ini) = 0;
 
 
         function xTrack = adjustTrack(xtouch, theTrack, type, thenvterrflp, thentdurflp)

@@ -16,6 +16,6 @@ else
         resultFlag = 0;
         error('Matlab version is too old. Your version is not supported. You will comment out checkVersion() to try it out.');
     end
-    
+
 end
 end

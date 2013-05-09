@@ -238,17 +238,18 @@ try
                 'Press any key to ESCAPE ']), 'center', 'center', [255, 255, 255]);
         Screen('Flip', w);
         KbStrokeWait;
-catch ME
+% catch ME
+catch
         Screen('CloseAll');
         Priority(0);
         ShowCursor;
         ListenChar(0);
-        disp(ME);
+%         disp(ME);
         disp('');
-        for k=1:length(ME.stack)
-                ME.stack(k)
-        end
-        disp(getReport(ME));
+%         for k=1:length(ME.stack)
+%                 ME.stack(k)
+%         end
+%         disp(getReport(ME));
         %         whatswrong = lasterror;
         %         disp('');
         %         whatswrong.message

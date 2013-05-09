@@ -1,27 +1,30 @@
-function Instruction(filename, w, wsize, debug_mode, english_on, kb)
+function Instruction(filename, w, wsize, debug_mode, english_on, kb, time)
 % Print instructions in instruction file.
 
-% english_on = 1;
-% debug_mode = 1;
-
-% use instructions for RL_PLW() if the filename is not given.
-try
-    if ~isemyty(filename); end
-catch
-    switch english_on
-        case 1
-            filename = 'RL_Instruction_en.txt';
-        case 0
-            filename = 'RL_Instruction_zh.txt';
-        otherwise
-            filename = 'RL_Instruction_en.txt';
-    end
+isSkip = 1;
+if ~isSkip
+english_on = 1;
+debug_mode = 1;
 end
 
+% use instructions for RL_PLW() if the filename is not given.
+% try
+%     if ~isemyty(filename); end
+% catch
+%     switch english_on
+%         case 1
+%             filename = 'RL_Instruction_en.txt';
+%         case 0
+%             filename = 'RL_Instruction_zh.txt';
+%         otherwise
+%             filename = 'RL_Instruction_en.txt';
+%     end
+% end
+
 % Read some text file:
-fd = fopen(['resources/' filename], 'rt');
+fd = fopen(['./resources/' filename], 'rt');
 if fd==-1
-    error('Could not open Instruction.txt file in ./resource directory!');
+    error(sprintf('Could not open the %s file in ./resources directory!', filename));
 end
 
 mytext = '';
@@ -37,10 +40,16 @@ mytext = [mytext char(10)];
 
 % disp(mytext);
 
-% screens=Screen('Screens');
-% screenNumber=max(screens);
-% [w,wsize]=Screen('OpenWindow',screenNumber,0,[ 1,1,801,601],[]);
-% [w,wsize]=Screen('OpenWindow',screenNumber,0);
+if ~isSkip
+    debug_mode = 1;
+    screens=Screen('Screens');
+    screenNumber=max(screens);
+    if debug_mode
+        [w,wsize]=Screen('OpenWindow',screenNumber,0,[ 1,1,801,601],[]);
+    else
+        [w,wsize]=Screen('OpenWindow',screenNumber,0);
+    end
+end
 
 % Select specific text font, style and size:
 % Screen('TextFont',w, 'Times');
@@ -53,7 +62,7 @@ Screen('Preference', 'TextRenderer', 1);
 Screen('Preference', 'TextAntiAliasing', 1);
 
 % golden_ratio = (sqrt(5)-1)/2;
-lenghth = 64;
+lenghth = 52;
 [~, ~, bbox] = DrawFormattedText(w, mytext, 0, 0, 0, lenghth);
 textbox = (wsize - bbox)/2;
 DrawFormattedText(w, mytext, textbox(3), textbox(4), [255 255 255], lenghth);
@@ -63,7 +72,8 @@ Screen('FrameRect', w, 0, bbox);
 Screen('Flip',w);
 
 % wait for any key press to go on, unless breaking out by calling ESC
-[~, keyCode] = KbStrokeWait;
+[~, keyCode] = KbStrokeWait([], time);
+
 if keyCode(kb.escapeKey) %quit program
     sca;
     error('Experiment aborted manually!');

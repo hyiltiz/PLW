@@ -44,7 +44,7 @@ clear F;
 count=0;
 xrange = [min(min(dotx))-50, max(max(dotx))+50];
 yrange = [min(min(doty))-80, max(max(doty))+80];
-gcolor = {'black', 'blue', 'red'};
+gcolor = {'blue', 'blue', 'blue'};
 
 % uncomment this for loop to check if the original data is loopable.
 % for times = 1:3
