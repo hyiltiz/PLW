@@ -1,8 +1,8 @@
-function [tex, dstRect] = addNoise(w, wsize, Track, noisescale)
+function [tex, dstRect] = addNoise(w, wsize, Track)
 % create the noise, using buffer
 
 rectSize = 256;
-% noisescale = 9;
+noisescale = 2;
 objRect = SetRect(0,0, rectSize, rectSize);
 dstRect = ArrangeRects(1, objRect, wsize);
 

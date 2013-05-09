@@ -1,0 +1,5 @@
+In this exprtiment, two sets of dots, each in green or red, in the shape of a walking man will be displayed. Please use an ARROW key (-> or <-) to point out the RED walker's walking direction as QUICK as as possible, while your reaction should also be CORRECT.
+
+Press any key if you understood the instructions above and begin the experiment. Otherwise press ESCAPE to quit!
+
+WARNING: you are warmly asked to pay full ATTENTION to the experiment and make responses, so please NEVER try pressing any buttons other than the ONLY ALLOWED two ARROW keys, or you HAVE TO do all over AGAIN.

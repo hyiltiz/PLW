@@ -36,5 +36,5 @@ while f > length(dotx), f = f - length(dotx); end
 
 grouping = 1;
 %         Screen('DrawDots', w, [(cx-dotx(f,mapping == grouping));(cy-doty(f,mapping == grouping))], dot_w, gcolor{grouping + 1}, [cx-xy0(1) cy-xy0(2)], 1);
-Screen('DrawDots', w, [dotx(f,mapping == grouping);doty(f,mapping == grouping)], dot_w, gcolor{grouping }, xy0, 2);
+Screen('DrawDots', w, [dotx(f,mapping == grouping);doty(f,mapping == grouping)], dot_w, gcolor{grouping }, xy0, 1);
 end

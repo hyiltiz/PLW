@@ -51,7 +51,9 @@ else  % use keyboard then
             % due to the closeness of the arrow keys
         else
             % ignore other stuff!
-            error(['###################################', 'Do not play around!, PLEASE. ', 'You have to do ALL OVER AGAIN, ', 'as you HAVE BEEN WARNED earlier!', '###################################']);
+            error(['Do not play around!, PLEASE. '...
+                'You have to do ALL OVER AGAIN, '...
+                'as you HAVE BEEN WARNED earlier!']);
         end
     end
     

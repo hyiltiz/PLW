@@ -1,23 +1,23 @@
 %% Copyright (C) 2012 Multisensory Lab of Peking University
-%
-% This program is free software; you can redistribute it and/or modify
-% it under the terms of the GNU General Public License as published by
-% the Free Software Foundation; either version 3 of the License, or
-% (at your option) any later version.
-%
-% This program is distributed in the hope that it will be useful,
-% but WITHOUT ANY WARRANTY; without even the implied warranty of
-% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% GNU General Public License for more details.
-%
-% You should have received a copy of the GNU General Public License
-% along with this program; see the file COPYING.  If not, see
-% <http://www.gnu.org/licenses/>.
+%%
+%% This program is free software; you can redistribute it and/or modify
+%% it under the terms of the GNU General Public License as published by
+%% the Free Software Foundation; either version 3 of the License, or
+%% (at your option) any later version.
+%%
+%% This program is distributed in the hope that it will be useful,
+%% but WITHOUT ANY WARRANTY; without even the implied warranty of
+%% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%% GNU General Public License for more details.
+%%
+%% You should have received a copy of the GNU General Public License
+%% along with this program; see the file COPYING.  If not, see
+%% <http://www.gnu.org/licenses/>.
 
-% RL_PLW(scale1, english_on)
+%% RL_PLW(scale1, english_on)
 
-% Author: Hormetjan Yiltiz  hyiltiz@gmail.com
-% Created: 2012-10-17
+%% Author: Hormetjan Yiltiz  hyiltiz@gmail.com
+%% Created: 2012-10-17
 
 function RL_PLW()
 %% this code to generate pointlight display using 3D coordinates file
@@ -41,18 +41,17 @@ data.visualfilename = '07_01.data3d.txt'; % visaul data resource file
 data.instruct_filename = 'RL_instruction_en.txt'; % instructions text file
 
 % time setting vatiables
-conf.flpi               =  0.02;        % each frame is set to 20ms (the monitor's flip interval is 16.7ms)
-conf.ntdurflp           =  2;           % tactile duration time: n * conf.flpi
-conf.nvterrflp          =  15;          % visual-tactile error time: n * conf.flpi
-conf.waitBetweenTrials  =  .8+rand*0.2; % wait black screen between Trials, random
-conf.waitFixationScreen =  .8+rand*0.2; % '+' time randomized
-conf.repetitions        =  10;          % repetition time of a condition
-conf.scale1             =  20;          % PLW's visual scale, more the bigger
-conf.noisescale         =  7;          % the width of the noise dots, and the default PLW dot width is 7
+conf.flpi               =  0.02;      % each frame is set to 20ms (the monitor's flip interval is 16.7ms)
+conf.ntdurflp           =  2;         % tactile duration time: n * conf.flpi
+conf.nvterrflp          =  15;        % visual-tactile error time: n * conf.flpi
+conf.waitBetweenTrials  =  .8+rand*0.2;% wait black screen between Trials, random
+conf.waitFixationScreen =  .8+rand*0.2;% '+' time randomized
+conf.repetitions        =  20;          % repetition time of a condition
+conf.scale1             =  20;         % PLW's visual scale, more the bigger
 
 % state control variables
 mode.regenerate_on = 1;  % mode.regenerate_on data for experiment, rather than using the saved one
-mode.debug_on      = 0;  % do ont use full screen, and skip the synch test
+mode.debug_on      = 1;  % do ont use full screen, and skip the synch test
 mode.audio_on      = 0;  % set audio stimuli on
 mode.english_on    = 1;  % use English for Instructions etc., 0 for Chinese
 
@@ -81,9 +80,6 @@ try
         mode.tacktile_on = 0;  % 0 is no tactile device
     end
     
-    % make sure the software version is new enouch for running the program
-    checkVersion();
-    
     %% Get Subject information
     Subinfo = getSubInfo();
     %% initialization
@@ -103,14 +99,24 @@ try
         data.loopPeriod = 130;
         conf.imagex=250;  % image size
         
-        % Generate the data for plotting Point Light Walkers
-        data.readData.thet = 0;  %to rotate along the first axis
-        data.readData.xyzseq = [1 3 2];  %axis rotation, [1 3 2] by default
-        [data.dotx  data.doty ] = PLWtransform(data.readData, conf.scale1, conf.imagex);
+        % create the PLW data
+        n = 8;
+        theta(k, :) = 360 * rand(n, 1);       %walkers face direction
+        readData.xyzseq = [1 3 2];  %axis rotation, [1 3 2] by default
+        positionPLW = [cos(0: pi/4: 2*pi); sin(0: pi/4: 2*pi)];
+        positionPLW = positionPLW(:, 1:n);
         
-        data.readData.xyzseq = [1 3 2];  %to rotate across xyz
-        data.readData.thet = 180;  %to rotate along the first axis
-        [data.dotx1 data.doty1] = PLWtransform(data.readData, conf.scale1, conf.imagex);
+        readData.thet = 0;  %to rotate along the first axis
+        [dotx  doty ] = PLWtransform(readData, scale1, imagex);
+        
+        dot = cell(n,1);
+        for i = 1 : n
+            readData.thet = theta(k, i);  %to rotate along the first axis
+            [dot{i}.x dot{i}.y] = PLWtransform(readData, scale1, imagex);
+            dot{i}.pace = Randi(3);
+            dot{i}.pos = positionPLW(:, i)'/3;
+        end
+        
     end
     
     render.screens=Screen('screens');
@@ -132,12 +138,12 @@ try
     
     % Variables used across trials
     data.Track = 1:round(2 * length(data.dotx));        % 2 for less longer stimuli
-    flow.prestate = 0;
+    flow.flow.prestate = 0;
     flow.response = 0;
     Priority(MaxPriority(w));
     
     %% create the noise, using buffer, thus better than addNoise
-    [tex, render.dstRect] = addNoise(w, render.wsize, data.Track, conf.noisescale);
+    [tex, render.dstRect] = addNoise(w, render.wsize, data.Track);
     
     %% Instructions
     %     RL_Instruction(w, mode.debug_on, mode.english_on, render.kb);
@@ -180,18 +186,18 @@ try
         end
         
         %% PLW that you can see on the screen
-        flow.isquit = 0;     % to capture ESCAPE for quitting
+        flow.flow.isquit = 0;     % to capture ESCAPE for quitting
         flow.isresponse = 0;
         render.iniTimer=GetSecs;
         for i=data.Track  %loop leghth
             flow.Flip = i;
             % here comes the noise background
             % addNoise(w, 256, render.wsize);%Do not use this, since buffer tex is used
-            %Screen('DrawTexture', w, tex(flow.Flip), [], render.dstRect, [], 0);
+            Screen('DrawTexture', w, tex(flow.Flip), [], render.dstRect, [], 0);
             % and here comes the walkers
-            RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx, render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 0 0]);
-            RLonePLW(w,data.initPosition(2) + data.paceRate(2)*data.vTrack(flow.Flip), render.cx, render.cy, data.dotx1, data.doty1, data.moveDirection(flow.Trial, :), [0 255 0]);
-            
+            for i = 1 : n
+                ClockonePLW(w,dot{i}.pace*f, cx, cy, dot{i}.x , dot{i}.y ,dot{i}.pos, [0 1]);
+            end
             % here comes their footsteps
             if mode.tacktile_on
                 % save data/postbuggy;
@@ -204,7 +210,7 @@ try
             end
             
             % get the response
-            [Trials, flow.prestate, flow.response, render.iniTimer, flow.isquit, flow.isresponse ] = getResponse(mode.tacktile_on, render.iniTimer, render.dioIn, flow.prestate, flow.response, flow.Trialsequence, flow.Trial, data.moveDirection, render.kb, flow.isresponse, flow.isquit, Trials);
+            [Trials, flow.flow.prestate, flow.response, render.iniTimer, flow.flow.isquit, flow.isresponse ] = getResponse(mode.tacktile_on, render.iniTimer, render.dioIn, flow.flow.prestate, flow.response, flow.Trialsequence, flow.Trial, data.moveDirection, render.kb, flow.isresponse, flow.flow.isquit, Trials);
             if flow.isresponse; break; end
             
             % Flip the visual stimuli on the screen, along with timing
@@ -212,19 +218,19 @@ try
             
         end
         % quit if the participant pressed ESC
-        if flow.isquit, break, end
+        if flow.flow.isquit, break, end
         
         % end of per trial
         Screen('FillRect',w ,0);
         Screen('Flip', w);
         
         % Get the remaining last response
-        [Trials, flow.prestate, flow.response, render.iniTimer, flow.isquit, flow.isresponse ]  = getlastResponse(mode.tacktile_on, render.iniTimer, render.dioIn, flow.prestate, flow.response, flow.Trialsequence, flow.Trial, data.moveDirection, render.kb, flow.isresponse, flow.isquit, Trials);
+        [Trials, flow.flow.prestate, flow.response, render.iniTimer, flow.flow.isquit, flow.isresponse ]  = getlastResponse(mode.tacktile_on, render.iniTimer, render.dioIn, flow.flow.prestate, flow.response, flow.Trialsequence, flow.Trial, data.moveDirection, render.kb, flow.isresponse, flow.flow.isquit, Trials);
         
     end;
     
     % End of experiment
-    save(['data/' Subinfo{1} '.mat'],'Trials','conf', 'Subinfo');
+    save(['data/' Subinfo{1} '.mat'],'Trials');
     % Display 'Thanks' Screen
     RL_Regards(w, mode.english_on);
     

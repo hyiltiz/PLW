@@ -58,7 +58,7 @@ try
         Screen('Preference', 'TextAntiAliasing', 1);
         % Select specific text font, style and size:
         Screen('TextFont',w, 'Sans');
-        Screen('TextSize',w, 13);
+        Screen('TextSize',w, 18);
         Screen('TextStyle', w, 1+2);
         DrawFormattedText(w, sprintf(['This is a Point Light Walker demo.\n' ...
                 'use arrow key for most Walker''s walking direction\n' ...
@@ -107,7 +107,7 @@ try
                 isresponse = 0;
                 iniTimer=GetSecs;
                 for f=1:length(dotx)  % 2 for accuracy
-                        addNoise(w, 100, wsize);
+                        addNoise_old(w, 100, wsize);
                         for i = 1 : n
                                 ClockonePLW(w,dot{i}.pace*f, cx, cy, dot{i}.x , dot{i}.y ,dot{i}.pos, [0 1]);
                         end
