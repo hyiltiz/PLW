@@ -32,7 +32,7 @@ postlat = PsychPortAudio('LatencyBias', pahandle);
 promptParameters = {'Subject Name', 'Age', 'Gender (F or M?)','Handedness (L or R)'};
 defaultParameters = {'ClockPLW_default', '25','F', 'R'};
 Subinfo = inputdlg(promptParameters, 'Subject Info  ', 1, defaultParameters);
-
+if isempty(Subinfo) error('Subject information not entered!');end;
 %% initialization
 try
         HideCursor;
@@ -107,26 +107,26 @@ try
                 isresponse = 0;
                 iniTimer=GetSecs;
                 for f=1:length(dotx)  % 2 for accuracy
+                        addNoise(w, 100, wsize);
                         for i = 1 : n
                                 ClockonePLW(w,dot{i}.pace*f, cx, cy, dot{i}.x , dot{i}.y ,dot{i}.pos, [0 1]);
                         end
                         
                         % acquire responce
                         [ keyIsDown, seconds, keyCode ] = KbCheck;
-                        if keyIsDown && (keyCode(escapeKey) || keyCode(leftArrow) || keyCode(rightArrow)|| keyCode(upArrow) || keyCode(downArrow))
+                        if keyIsDown && keyCode(leftArrow) || (keyCode(rightArrow)|| keyCode(upArrow) || keyCode(downArrow))
                                 Trials(k,3) = GetSecs-iniTimer;
                                 Trials(k,1) = Trialsequence(k);
                                 Trials(k,2) = keyCode(leftArrow) + keyCode(rightArrow)*2 + keyCode(upArrow)*3 + keyCode(downArrow)*4;
-                                
                                 PsychPortAudio('Stop', pahandle, 2);    %stop sound with discarding process
                                 isresponse = 1;
                                 break;
                         end
-                        if keyIsDown; while KbCheck; end; end; %clear buffer
-                        if keyCode(escapeKey) %quit program
+                        if keyIsDown && keyCode(escapeKey) %quit program
                                 isquit = 1;
                                 error('quit!');
                         end
+                        if keyIsDown; while KbCheck; end; end; %clear buffer
                         
                         Screen('Flip', w);
                         WaitSecs(0.02);

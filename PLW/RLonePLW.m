@@ -12,7 +12,7 @@ function RLonePLW(w, f, cx, cy, dotx, doty, isinv, Color)
 % 0 for head, 1 for left parts and 2 for right parts of PLW.
 mapping = [1 1 1 1 1 1 1 1 1 1 1 1 1];
 gcolor = {Color};
-dot_w = 5;
+dot_w = 7;
 xy0 = [0 0];
 
 % use xy0 within (0,1)

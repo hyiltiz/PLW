@@ -34,7 +34,7 @@ for i=1:size(dotnum,2)
     doty(:,i)=coefwy(:,dotnum(i));
 end;
 
-init = round(rand * 130/4) + 1;
-dotx = dotx(init : init + 130 * 2, :);
-doty = doty(init : init + 130 * 2, :);
+% init = round(rand * 130/4) + 1;
+% dotx = dotx(init : init + 130 * 2, :);
+% doty = doty(init : init + 130 * 2, :);
 

@@ -32,7 +32,7 @@ postlat = PsychPortAudio('LatencyBias', pahandle);
 promptParameters = {'Subject Name', 'Age', 'Gender (F or M?)','Handedness (L or R)'};
 defaultParameters = {'PL_PLW_default', '25','F', 'R'};
 Subinfo = inputdlg(promptParameters, 'Subject Info  ', 1, defaultParameters);
-
+if isempty(Subinfo) error('Subject information not entered!');end;
 %% initialization
 try
         HideCursor;
@@ -102,6 +102,7 @@ try
                 isresponse = 0;
                 iniTimer=GetSecs;
                 for f=1:round(length(dotx)/4)  % 2 for accuracy, and T for period
+                        addNoise(w, 256, wsize);
                         RLonePLW(w,initPosition(1) + paceRate(1)*f, cx, cy, dotx , doty , moveDirection(k, :), [255 0 0]);
                         RLonePLW(w,initPosition(2) + paceRate(2)*f, cx, cy, dotx1, doty1, moveDirection(k, :), [0 255 0]);
                         
