@@ -45,8 +45,8 @@ data.instruct_filename = 'RL_Instruction_en.txt'; % instructions text file
 
 % input variables, use them via updateStruct() to update the defined variables below
 if nargin > 0
-render.conf=conf;
-render.mode=mode;
+    render.conf=conf;
+    render.mode=mode;
 end
 
 % time setting vatiables
@@ -71,21 +71,21 @@ mode.many_on            = 0;  % the task is the majority of dots the participant
 mode.greyNoise_on       = 0;  % do not use the original grey noise
 mode.english_on         = 1;  % use English for Instructions etc., 0 for Chinese(not supported for now!)
 mode.regenerate_on      = 1;  % mode.regenerate_on data for experiment, rather than using the saved one
-mode.once_on            = 0;  % only one trial, used for demostration before experiment
+mode.once_on            = 1;  % only one trial, used for demostration before experiment
 mode.audio_on           = 0;  % set audio stimuli on
 mode.RT_on              = 0;  % Reaction time mode, this is not to be changed!
 mode.debug_on           = 1;  % default is 0; 1 is not to use full screen, and skip the synch test
 
 % evaluate the input arguments of this function
 if nargin > 0
-conf = updateStruct(render.conf, conf)
-mode = updateStruct(render.mode, mode)
+    conf = updateStruct(render.conf, conf);
+    mode = updateStruct(render.mode, mode);
 end
 
 if mode.mirror_on
-  %good
+    %good
 else
-  conf.xshift = 0;
+    conf.xshift = 0;
 end
 
 if mode.debug_on
@@ -145,11 +145,11 @@ try
         % Generate the data for plotting Point Light Walkers
         data.readData.thet = 0;  %to rotate along the first axis
         data.readData.xyzseq = [1 3 2];  %axis rotation, [1 3 2] by default
-        [data.dotx  data.doty data.init] = PLWtransform(data.readData, conf.scale1, conf.imagex, -1);
+        [data.dotx  data.doty data.init data.maxdot] = PLWtransform(data.readData, conf.scale1, conf.imagex, -1);
         
         data.readData.xyzseq = [1 3 2];  %to rotate across xyz
         data.readData.thet = 180;  %to rotate along the first axis
-        [data.dotx1 data.doty1 data.init1] = PLWtransform(data.readData, conf.scale1, conf.imagex, -1);
+        [data.dotx1 data.doty1 data.init1 data.maxdot1] = PLWtransform(data.readData, conf.scale1, conf.imagex, -1);
     end
     
     render.screens=Screen('screens');
@@ -181,16 +181,14 @@ try
     flow.restcount= 0;  % the number of trials from last rest
     Priority(MaxPriority(w));
     
-if mode.mirror_on
-  % do not create noise, we do not need them if using mirrors
-
-else
-    %% create the noise, using buffer, thus better than addNoise_old
-    render.noiseloopT = 50;
-    render.noiseloop = modloop(1:length(data.Track), render.noiseloopT);
-    [tex, render.dstRect] = addNoise(w, render.wsize, data.Track,conf.noisescale, render.noiseloopT, mode.greyNoise_on, conf.lagFlip);
-    %     [tex, render.dstRect] = addNoise_no_fixed_sqr(w, render.wsize, data.Track,conf.noisescale);
-end
+    if mode.mirror_on
+        % do not create noise, we do not need them if using mirrors
+    else
+        %% create the noise, using buffer
+        render.noiseloopT = 50;
+        render.noiseloop = modloop(1:length(data.Track), render.noiseloopT);
+        [tex, render.dstRect] = addNoise(w, render.wsize, data.Track,conf.noisescale, render.noiseloopT, mode.greyNoise_on, conf.lagFlip);
+    end
     
     %% Instructions
     %     RL_Instruction(w, mode.debug_on, mode.english_on, render.kb);
@@ -217,6 +215,7 @@ end
         flow.Trial = k;
         % rest every couple trial once
         if flow.Trial > 1
+            WaitSecs(3);
             showLeftTrial(flow.Trialsequence, flow.Trial, w, render.wsize, mode.debug_on, mode.english_on, render.kb, 1, mode.tactile_on);
         end
         flow.restcount = restBetweenTrial(flow.restcount, conf.resttime, conf.restpertrial, w, render.wsize, mode.debug_on, mode.english_on, render.kb, 0, mode.tactile_on);
@@ -224,27 +223,37 @@ end
         
         if mode.regenerate_on
             data.initPosition = Randi(round(data.loopPeriod/4),[2 1]);
-%             data.paceRate = Randi(2,[2 1]);
-            data.paceRate = repmat(Randi(2), [2 1]);
-            % data.paceRate = [1; 1];
+            %             data.paceRate = Randi(2,[2 1]);
+            %             data.paceRate = repmat(Randi(2), [2 1]);
+            data.paceRate = [1; 1];
             %   data.Track = 1:round(length(data.dotx));% 2 for accuracy, and data.loopPeriod for period
             [data.lefttouch data.righttouch] = touchground(data.dotx, data.initPosition(1), data.paceRate(1), data.Track);     %for the index when PLW touches ground
         else
             % do not generate, use the previously saved data(not enabled by default)
             load RL_PLW_data;
             %where we have two PLWs, and quicker pace than 3 maybe too quick
-%             data.paceRate = Randi(2,[2 1]);
+            %             data.paceRate = Randi(2,[2 1]);
             data.paceRate = repmat(Randi(2), [2 1]);
             data.initPosition = Randi(round(data.loopPeriod/4),[2 1]);
         end
         
+        conf.xshift = (round(rand)*2-1) * conf.xshift;
+        data.xshift(flow.Trial) = conf.xshift;
         
         % Generate the multisensory data.Track to synch on time
         [data.vTrack data.tTrack] = genTrack(flow.Trialsequence(flow.Trial), data.Track, data.lefttouch, data.righttouch, conf.flpi, conf.ntdurflp, conf.nvterrflp);
         
         % display:  +
-        fixation(w, render.cx, render.cy);
+        %fixation(w, render.cx, render.cy);
+        testMirror(w, render.cx , render.cy, 255, [-conf.xshift 0], data.maxdot);
+        testMirror(w, render.cx , render.cy, 255, [conf.xshift 0], data.maxdot1);
+        Screen('Flip',w);
+        
+        % wait until the participant's mirror is ready
+        pedalWait(mode.tactile_on, 10000, render.kb);
         WaitSecs(conf.waitFixationScreen);  % '+' time randomized
+        
+        
         Screen('FillRect',w,0);
         render.vlb = Screen('Flip', w);  % record render.vlb, used for TIMING control
         
@@ -266,16 +275,17 @@ end
         for i=data.Track  %loop leghth
             flow.Flip = i;
             if mode.mirror_on
-            % we do not need noise for mask here!
+                % we do not need noise for mask here!
             else
-            % here comes the noise background
-            %             addNoise(w, 256, render.wsize);%Do not use this, since buffer tex is used
-            Screen('DrawTexture', w, tex(render.noiseloop(flow.Flip)), [], render.dstRect, [], 0);
+                % here comes the noise background
+                %addNoise(w, 256, render.wsize);%Do not use this, since buffer tex is used
+                Screen('DrawTexture', w, tex(render.noiseloop(flow.Flip)), [], render.dstRect, [], 0);
             end
             
+            
             % and here comes the walkers
-            RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 0 0], [-conf.xshift 0]);
-            RLonePLW(w,data.initPosition(2) + data.paceRate(2)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx1, data.doty1, data.moveDirection(flow.Trial, :), [0 255 255], [conf.xshift 0]);
+            RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 0 0], [-conf.xshift 0], data.maxdot);
+            RLonePLW(w,data.initPosition(2) + data.paceRate(2)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx1, data.doty1, data.moveDirection(flow.Trial, :), [0 255 0], [conf.xshift 0], data.maxdot1);
             
             % here comes their footsteps
             if mode.tactile_on
@@ -287,12 +297,13 @@ end
             if ~mode.tactile_on; render.dioIn = false; end
             
             % get the response
+            render.islastResponse = 0;
             [Trials, flow.prestate, flow.response, render.iniTimer, flow.isquit,...
                 flow.isresponse, flow.nresp ] = getResponseU(mode.tactile_on, ...
                 render.iniTimer, render.dioIn, flow.prestate, ...
                 flow.response, flow.Trialsequence,...
                 flow.Trial, data.moveDirection, render.kb, flow.isresponse,...
-                flow.isquit, Trials, flow.nresp, data.paceRate' , data.iniTactile, mode.RT_on);
+                flow.isquit, Trials, flow.nresp, data.paceRate' , data.iniTactile, mode.RT_on, conf.xshift, render.islastResponse);
             if mode.RT_on; if flow.isresponse; break; end; end
             
             % Flip the visual stimuli on the screen, along with timing
@@ -304,14 +315,20 @@ end
             tic;
         end
         % quit if the participant pressed ESC
-                 if flow.isquit, break, end
+        if flow.isquit, break, end
         
-        %         % end of per trial
+        % end of per trial
         Screen('FillRect',w ,0);
         Screen('Flip', w);
         
         % Get the remaining last response
-        [Trials, flow.prestate, flow.response, render.iniTimer, flow.isquit, flow.isresponse, flow.nresp ]  = getlastResponseU(mode.tactile_on, render.iniTimer, render.dioIn, flow.prestate, flow.response, flow.Trialsequence, flow.Trial, data.moveDirection, render.kb, flow.isresponse, flow.isquit, Trials, flow.nresp, data.paceRate', data.iniTactile );
+        render.islastResponse = 1;
+        [Trials, flow.prestate, flow.response, render.iniTimer, flow.isquit,...
+                flow.isresponse, flow.nresp ] = getResponseU(mode.tactile_on, ...
+                render.iniTimer, render.dioIn, flow.prestate, ...
+                flow.response, flow.Trialsequence,...
+                flow.Trial, data.moveDirection, render.kb, flow.isresponse,...
+                flow.isquit, Trials, flow.nresp, data.paceRate' , data.iniTactile, mode.RT_on, conf.xshift, render.islastResponse);
         
         if mode.once_on; error('Preparation Finished! (No worries. This is no bug, buddy.)'); end
     end;
@@ -323,8 +340,9 @@ end
         tmp = 'D';
     end
     %save(['data/',Subinfo{1},'/', Subinfo{1}, tmp, date, '.mat'],'Trials','conf', 'Subinfo','flow','mode','data');
-    save(['data/', Subinfo{1}, tmp, date, '.mat'],'Trials','conf', 'Subinfo','flow','mode','data');
-    Display(['data/', Subinfo{1}, tmp, date, '.mat']);
+    render.matFileName = ['data/', Subinfo{1}, 'Mirror', tmp, date, '.mat'];
+    save(render.matFileName,'Trials','conf', 'Subinfo','flow','mode','data');
+    Display(render.matFileName);
     % Display 'Thanks' Screen
     RL_Regards(w, mode.english_on);
     

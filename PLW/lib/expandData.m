@@ -3,10 +3,10 @@ function [ ret ] = expandData (matfile)
 addpath('./data/');
 
 try
-  if strmatch('Small', matfile);load(matfile);end
+    if strmatch('Small', matfile);load(matfile);end
 catch
-  ret = -1;
-  return; %do not do anything if the .mat-file doesn't exist.
+    ret = -1;
+    return; %do not do anything if the .mat-file doesn't exist.
 end
 
 % See below for meanings of each colomns in Condition;
@@ -15,8 +15,9 @@ end
 %Condition(:,[3 4]) = moveDirection(k, :);  % direction of walkers
 %Condition(:,5) = iniTactile;
 %Condition(:,[6 7]) = paceRate;
+%Condition(:,8)=xshift;
 
-%Response = Trials(:,dynam); 
+%Response = Trials(:,dynam);
 % See below for meanings of each colomns in Response;
 %Response{i} = k; the k.th trial
 %Response{i}(:,1) = prestate;
@@ -33,22 +34,22 @@ end
 Trials = [];
 for i=1:length(Response);
     iCon = repmat(Condition(i,:), length(Response{i}), 1);
-    Trials = [Trials; [iCon(:,2), Response{i}, iCon(:,[3 4 1 5 6 7])]];
+    Trials = [Trials; [iCon(:,2), Response{i}, iCon(:,[3 4 1 5 6 7 8])]];
 end
 
 % reading in bvh text files for raw data
 data.readData = PLWread(data.visualfilename);
 if isfield(data, 'init')  % dotx and such can be regenerated
-        % Generate the data for plotting Point Light Walkers
-        data.readData.thet = 0;  %to rotate along the first axis
-        data.readData.xyzseq = [1 3 2];  %axis rotation, [1 3 2] by default
-        [data.dotx  data.doty data.init] = PLWtransform(data.readData, conf.scale1, conf.imagex, data.init);
+    % Generate the data for plotting Point Light Walkers
+    data.readData.thet = 0;  %to rotate along the first axis
+    data.readData.xyzseq = [1 3 2];  %axis rotation, [1 3 2] by default
+    [data.dotx  data.doty data.init] = PLWtransform(data.readData, conf.scale1, conf.imagex, data.init);
+    
+    data.readData.xyzseq = [1 3 2];  %to rotate across xyz
+    data.readData.thet = 180;  %to rotate along the first axis
+    [data.dotx1 data.doty1 data.init] = PLWtransform(data.readData, conf.scale1, conf.imagex, data.init1);
+end
 
-        data.readData.xyzseq = [1 3 2];  %to rotate across xyz
-        data.readData.thet = 180;  %to rotate along the first axis
-        [data.dotx1 data.doty1 data.init] = PLWtransform(data.readData, conf.scale1, conf.imagex, data.init1);
-    end
-
-    matfile = matfile(7:end);  % strip the prefix Small
-    save(['data/', 'Expanded_', matfile],'Trials','conf', 'Subinfo','flow','mode','data', 'Response', 'Condition');
+matfile = matfile(7:end);  % strip the prefix Small
+save(['data/', 'Expanded_', matfile],'Trials','conf', 'Subinfo','flow','mode','data', 'Response', 'Condition');
 end

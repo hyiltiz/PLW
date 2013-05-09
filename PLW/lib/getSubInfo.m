@@ -1,6 +1,6 @@
 function Subinfo= getSubInfo()
-        promptParameters = {'Subject Name', 'Age', 'Gender (F or M?)','Handedness (L or R)'};
-        defaultParameters = {'RL_PLW_default', '23','F', 'R'};
+        promptParameters = {'Subject Name', 'Age', 'Gender (F or M?)','Handedness (L or R)', 'Left eyesight', 'Right eyesight', 'dominant eye (L or R)'};
+        defaultParameters = {'RL_PLW_default', '23','F', 'R', '1.0', '1,0', 'L'};
     if ~ IsOctave
         Subinfo = inputdlg(promptParameters, 'Subject Info  ', 1, defaultParameters);
         if isempty(Subinfo)

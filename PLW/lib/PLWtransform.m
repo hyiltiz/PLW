@@ -1,4 +1,4 @@
-function [dotx doty init] = PLWtransform(readData, scale1, imagex, init)
+function [dotx doty init maxdot] = PLWtransform(readData, scale1, imagex, init)
 %PLWtransform for PLW display. Makes transformation for displayed dots.
 %[dotx doty] = PLWtransfor(readData, scale1, imagex)
 jointspos = readData.jointspos;
@@ -47,3 +47,8 @@ end
 dotx = dotx(init : init + 130 * 2, :);
 doty = doty(init : init + 130 * 2, :);
 
+dotx = 3 * dotx;
+doty = 3 * doty;
+dotx = dotx - min(min(dotx))/2 - max(max(dotx))/2;
+doty = doty - min(min(doty))/2 - max(max(doty))/2;
+maxdot = [max(max(dotx)) max(max(doty))];

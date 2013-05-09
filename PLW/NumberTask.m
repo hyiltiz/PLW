@@ -10,11 +10,14 @@ conf.restpertrial       =  1;           % every x trial a rest
 conf.lagFlip            =  2;           % every x Flip change a noise
 
 % state control variables
+mode.mirror_on     = 1;  % use mirror rather that spectacles for binacular rivalry
 mode.many_on       = 1;  % the task is the majority of dots the participant saw
 mode.debug_on      = 0;  % default is 0; 1 is not to use full screen, and skip the synch test
 if nargin > 0
 mode.once_on       = 1;  % only one trial, used for demostration before experiment
-end
+else
+    mode.once_on       = 0;  % only one trial, used for demostration before experiment
+
 
 % Call the main function RL_PLW()
 RL_PLW(conf, mode);
