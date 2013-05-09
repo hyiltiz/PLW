@@ -1,7 +1,7 @@
-function RLonePLW(w, f, cx, cy, dotx, doty, isinv, Color)
+function RLonePLW(w, f, cx, cy, dotx, doty, isinv, Color, xy0)
 % onePLW(w, f, cx, cy, dotx, doty, xy0) displays one PLW on w at frequency
 % f at center xy0 within -1<xy0()<1 relative to given center cx, cy, according to the given
-% data input dotx, doty. The PLW is vertically inversse if set to [0 1]
+% data input dotx, doty. The PLW is vertically inversse if isinv set to [0 1]
 
 % Written by Hormetjan Yiltiz, Department of Psychology, Peking University
 % 2012-05-19
@@ -13,7 +13,7 @@ function RLonePLW(w, f, cx, cy, dotx, doty, isinv, Color)
 mapping = [1 1 1 1 1 1 1 1 1 1 1 1 1];
 gcolor = {Color};
 dot_w = 7;
-xy0 = [0 0];
+%xy0 = [-.4 0];
 
 % use xy0 within (0,1)
 if (-1 < xy0(1) && xy0(1) < 1) && (-1 < xy0(2) && xy0(2) < 1)

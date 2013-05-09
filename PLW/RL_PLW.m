@@ -56,6 +56,7 @@ conf.repetitions        =  5;           % repetition time of a condition
 conf.resttime           =  30;          % rest for 30s
 conf.restpertrial       =  1;           % every x trial a rest
 conf.lagFlip            =  2;           % every x Flip change a noise
+conf.xshift             = .40;          % shift PLW for using mirror, see mode.mirror_on
 conf.ntdurflp           =  1;           % tactile duration time: n * conf.flpi
 conf.nvterrflp          =  15;          % visual-tactile error time: n * conf.flpi
 conf.waitBetweenTrials  =  .8+rand*0.2; % wait black screen between Trials, random
@@ -65,19 +66,26 @@ conf.noisescale         =  .14;         % the width of the noise dots, and the d
 % conf.exptime          =  45;          % experiment is 45min long
 
 % state control variables
-mode.many_on       = 0;  % the task is the majority of dots the participant saw
-mode.greyNoise_on  = 0;  % do not use the original grey noise
-mode.english_on    = 1;  % use English for Instructions etc., 0 for Chinese(not supported for now!)
-mode.regenerate_on = 1;  % mode.regenerate_on data for experiment, rather than using the saved one
-mode.once_on       = 0;  % only one trial, used for demostration before experiment
-mode.audio_on      = 0;  % set audio stimuli on
-mode.RT_on         = 0;  % Reaction time mode, this is not to be changed!
-mode.debug_on      = 1;  % default is 0; 1 is not to use full screen, and skip the synch test
+mode.mirror_on          = 1;  % use mirror rather that spectacles for binacular rivalry
+mode.many_on            = 0;  % the task is the majority of dots the participant saw
+mode.greyNoise_on       = 0;  % do not use the original grey noise
+mode.english_on         = 1;  % use English for Instructions etc., 0 for Chinese(not supported for now!)
+mode.regenerate_on      = 1;  % mode.regenerate_on data for experiment, rather than using the saved one
+mode.once_on            = 0;  % only one trial, used for demostration before experiment
+mode.audio_on           = 0;  % set audio stimuli on
+mode.RT_on              = 0;  % Reaction time mode, this is not to be changed!
+mode.debug_on           = 1;  % default is 0; 1 is not to use full screen, and skip the synch test
 
 % evaluate the input arguments of this function
 if nargin > 0
 conf = updateStruct(render.conf, conf)
 mode = updateStruct(render.mode, mode)
+end
+
+if mode.mirror_on
+  %good
+else
+  conf.xshift = 0;
 end
 
 if mode.debug_on
@@ -173,11 +181,16 @@ try
     flow.restcount= 0;  % the number of trials from last rest
     Priority(MaxPriority(w));
     
+if mode.mirror_on
+  % do not create noise, we do not need them if using mirrors
+
+else
     %% create the noise, using buffer, thus better than addNoise_old
     render.noiseloopT = 50;
     render.noiseloop = modloop(1:length(data.Track), render.noiseloopT);
-    [tex, render.dstRect] = addNoise(w, render.wsize, data.Track,conf.noisescale, render.noiseloopT, mode.greyNoise_on);
+    [tex, render.dstRect] = addNoise(w, render.wsize, data.Track,conf.noisescale, render.noiseloopT, mode.greyNoise_on, conf.lagFlip);
     %     [tex, render.dstRect] = addNoise_no_fixed_sqr(w, render.wsize, data.Track,conf.noisescale);
+end
     
     %% Instructions
     %     RL_Instruction(w, mode.debug_on, mode.english_on, render.kb);
@@ -252,13 +265,17 @@ try
         
         for i=data.Track  %loop leghth
             flow.Flip = i;
+            if mode.mirror_on
+            % we do not need noise for mask here!
+            else
             % here comes the noise background
             %             addNoise(w, 256, render.wsize);%Do not use this, since buffer tex is used
             Screen('DrawTexture', w, tex(render.noiseloop(flow.Flip)), [], render.dstRect, [], 0);
+            end
             
             % and here comes the walkers
-            RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx, render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 0 0]);
-            RLonePLW(w,data.initPosition(2) + data.paceRate(2)*data.vTrack(flow.Flip), render.cx, render.cy, data.dotx1, data.doty1, data.moveDirection(flow.Trial, :), [0 255 255]);
+            RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 0 0], [-conf.xshift 0]);
+            RLonePLW(w,data.initPosition(2) + data.paceRate(2)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx1, data.doty1, data.moveDirection(flow.Trial, :), [0 255 255], [conf.xshift 0]);
             
             % here comes their footsteps
             if mode.tactile_on
@@ -279,10 +296,10 @@ try
             if mode.RT_on; if flow.isresponse; break; end; end
             
             % Flip the visual stimuli on the screen, along with timing
-            old = render.vlb;
-            render.vlb = Screen('Flip', w, render.vlb + conf.flpi);
-            Display(old, render.vlb, render.vlb - old, length(data.Track),length(data.tTrack));
-            %Screen('Flip', w);
+            % old = render.vlb;
+            % render.vlb = Screen('Flip', w, render.vlb + conf.flpi);
+            % Display(old, render.vlb, render.vlb - old, length(data.Track),length(data.tTrack));
+            Screen('Flip', w);
             toc;
             tic;
         end

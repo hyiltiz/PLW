@@ -1,11 +1,22 @@
-function test(is_once_on)
+function testConf(is_once_on)
 %This function is especially for configuring conf variables
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%These conf variables in the scope needs consideraton%%%
+%%%Uncomment the needed variables and change their values%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-conf.lagFlip            =  2;           % every x Flip change a noise
+
+%%Another noise with corresponding coloring
+%mode.mirror_on          = 0;           % use mirror rather that spectacles for binacular rivalry
+%conf.lagFlip            = 2;           % every x Flip change a noise, use only integer
+%%Or no noise for binacular rivalry stimulated with mirror
+mode.mirror_on          = 1;           % use mirror rather that spectacles for binacular rivalry
+conf.xshift             = .4;          % shift of PLW along x within (-1,1)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
