@@ -121,3 +121,9 @@ Trials
       Trials(:,6) is the number of the trial, begins from 1
       Trials(:,7) is the initial tactile stimuli type. Definition is the same with response in Trials(:,2), 1 indicating right, while 2 left, and 0 is baseline, without tactile
       Trials(:,8) is the frame pitch, representing the walking speed. 1 is 130 frames per loop (which is full loop) while 2 is 130/2 frames per loop.
+
+###################################################################
+The wangchongM*.mat and chenqifanM*.mat was under different task due to the experimenter's mistake.
+Before many_on experiment, they were told to RESPOND "LEFT" TO MANY OF THE 
+"RED" DOTS, which is:  MANY RED--> LEFT
+         unlike this:  MANY RED--> RIGHT (this is what it should have been.)

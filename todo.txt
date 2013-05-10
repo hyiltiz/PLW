@@ -21,7 +21,7 @@ done!
 =============
 use structures for function IO (to make it consice, but not clear)
 ignore it for now
-SKIPPED!!!
+done!
 
 ============
 1. find out the genTrack() bug for tTrack
@@ -30,6 +30,7 @@ done!
 done!
 3. the 5 and 1 bug is in the touchground(), kill it!
 found at last, about kicking the outliers depending on std...
+done!
 ============
 
 
@@ -71,9 +72,11 @@ Deadly bug! the experiment is two times longer than it meant to. Fixed immediate
 Fixed (as described above!)
 Does not seems fixed, at least it seems fucking bad.
 Lihan Chen suggested to clear the time tracking in Screen('Flip'): we'd better NOT DO THAT!!!
+done!
 ============
 1. Found out that the bug reported above has not been fixed YET!
 Fix this!
+done!
 
 2. The wangchongM*.mat and chenqifanM*.mat was under different task due to the experimenter's mistake.
 Before many_on experiment, they were told to RESPOND "LEFT" TO MANY OF THE 
@@ -85,6 +88,7 @@ Before many_on experiment, they were told to RESPOND "LEFT" TO MANY OF THE
 ===========
 two bugs above not fixed.
 all the data files in *M.mat task uses an inverse case as the ones reported above (for integrity)
+documented!
 
 Gaoxiang/*.mat and majie01-Dec-2012buggy(partial).mat did not finish the last remaining trial, due to a program crash caused by 'indexing problems in genTrack()->adjustTrack()->xTrack
 They need to add this little piece!
@@ -99,9 +103,12 @@ and Windows MATLAB is just all right
 
 Deadly bug! the experiment is two times longer than it meant to. Fixed immediately, it is in the round() function. Always wrap all the things inside a round(), not parts of the components!
 Fixed AT LAST! Use the center of the flip interval for Flip refresh in PTB.
+done!
 
 Use a more optimized method for solveInit() in stripData();
 No need for this, actually. Mark Solved here.
+done!
 
 "Remaining" Screen is taking much longer than expected!
 Done! (issue about the next Flip!)
+done!
