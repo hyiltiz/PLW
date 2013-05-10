@@ -12,15 +12,15 @@ function [vTrack tTrack] = genTrack(Trialsequence, Track, lefttouch, righttouch,
   vTrack = Track;  %visual track
   tTrack = zeros(1, length(Track));  % no stimuli
 
-  static.side = 1;
-  static.sidename = {'lefttouch'};
-  static.side(2)=2;
-  static.sidename(2) = {'righttouch'};
+  sideinfo.side = 1;
+  sideinfo.sidename = {'lefttouch'};
+  sideinfo.side(2)=2;
+  sideinfo.sidename(2) = {'righttouch'};
 
-  WhichStaticSide=1;%this is left
+  WhichsideinfoSide=1;%this is left
   WhichShiftSide=2;
-  % the first stimuli is shifted, and the latter is static
-  if righttouch(1) > lefttouch(1) WhichShiftSide=1;WhichStaticSide=2; end; %and this is right
+  % the first stimuli is shifted, and the latter is sideinfo
+  if righttouch(1) > lefttouch(1) WhichShiftSide=1;WhichsideinfoSide=2; end; %and this is right
 
   switch Trialsequence
     case 1  % tactile before visual
@@ -41,25 +41,25 @@ function [vTrack tTrack] = genTrack(Trialsequence, Track, lefttouch, righttouch,
       % no stinuli
     else
       % 3 types of stunuli corresponding to 3 different flagged nvterrflpcoeff
-      %static side has no tactile stimuli shift
-      tTrack = adjustTrack(eval(static.sidename{WhichStaticSide}), tTrack, static.side(WhichStaticSide), 0*nvterrflp, ntdurflp);
+      %sideinfo side has no tactile stimuli shift
+      tTrack = adjustTrack(eval(sideinfo.sidename{WhichsideinfoSide}), tTrack, sideinfo.side(WhichsideinfoSide), 0*nvterrflp, ntdurflp);
       %the other side with corresponding shifts
-      tTrack = adjustTrack(eval(static.sidename{WhichShiftSide}), tTrack, static.side(WhichShiftSide), nvterrflpcoeff*nvterrflp, ntdurflp);
+      tTrack = adjustTrack(eval(sideinfo.sidename{WhichShiftSide}), tTrack, sideinfo.side(WhichShiftSide), nvterrflpcoeff*nvterrflp, ntdurflp);
     end
 
     % switch Trialsequence
     %     case 1  % tactile before visual
     %         tTrack = adjustTrack(lefttouch, tTrack, 1, -nvterrflp, ntdurflp);  % left touch stimuli, 1
     %         tTrack = adjustTrack(righttouch, tTrack, 2, -nvterrflp, ntdurflp); % right touch stimuli, 2
-    %         
+    %
     %     case 2  % tactile and visual, congruent
     %         tTrack = adjustTrack(lefttouch, tTrack, 1, 0, ntdurflp);  % left touch stimuli, 1
     %         tTrack = adjustTrack(righttouch, tTrack, 2, 0, ntdurflp); % right touch stimuli, 2
-    %         
+    %
     %     case 3  % tactile after visual
     %         tTrack = adjustTrack(lefttouch, tTrack, 1, nvterrflp, ntdurflp);  % left touch stimuli, 1
     %         tTrack = adjustTrack(righttouch, tTrack, 2, nvterrflp, ntdurflp); % right touch stimuli, 2
-    %         
+    %
     %     case 4  % baseline: no tactile
     %         % no stimuli
     % end
@@ -82,7 +82,7 @@ function [vTrack tTrack] = genTrack(Trialsequence, Track, lefttouch, righttouch,
     tmp = xtouch + thenvterrflp;  %the stimuli instances, move the touchground baseline
     xTrack = theTrack;
     %         for i = 1:thentdurflp  % tmp is changing in every loop
-    
+
     if isempty(find(tmp <= 0))
       %good
     else
