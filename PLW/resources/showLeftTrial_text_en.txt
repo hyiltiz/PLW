@@ -1,1 +1,0 @@
-showLeftTrial_text_en.txt
