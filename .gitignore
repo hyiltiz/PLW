@@ -1,2 +1,4 @@
 tmp
-./*.mat
+/*.mat
+/data/buggy.mat
+/data/*default*.mat
