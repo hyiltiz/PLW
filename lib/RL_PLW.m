@@ -64,7 +64,7 @@ function RL_PLW(conf, mode)
   conf.scale1             =  20;          % PLW's visual scale, more the bigger
   conf.noisescale         =  .14;         % the width of the noise dots, and the default PLW dot width is 7
   conf.kill_dotr          =  .1;          % ratio at which to kill dotr percent of dots
-  conf.doubleTactileDiff  = 10 ;          % flips between taps on one tactile stimuli (double tactile)
+  conf.doubleTactileDiff  =  0 ;          % flips between taps on one tactile stimuli (double tactile);0 to disable
   % conf.exptime          =  45;          % experiment is 45min long
 
   % state control variables
