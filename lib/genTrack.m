@@ -1,6 +1,7 @@
 function [vTrack tTrack] = genTrack(Trialsequence, Track, lefttouch, righttouch, flpi, ntdurflp, nvterrflp )
   % Generate visual stimuli track 'vTrack' and tactile stimuli track 'tTrack'
 
+  doubleTactileDiff = 10;
   isSkip = 1;
   if ~isSkip
     ntdurflp = 2;
@@ -40,35 +41,23 @@ function [vTrack tTrack] = genTrack(Trialsequence, Track, lefttouch, righttouch,
     if nvterrflpcoeff==2
       % no stinuli
     else
-      % 3 types of stunuli corresponding to 3 different flagged nvterrflpcoeff
+      % 3 types of stimuli corresponding to 3 different flagged nvterrflpcoeff
       %sideinfo side has no tactile stimuli shift
       tTrack = adjustTrack(eval(sideinfo.sidename{WhichsideinfoSide}), tTrack, sideinfo.side(WhichsideinfoSide), 0*nvterrflp, ntdurflp);
       %the other side with corresponding shifts
       tTrack = adjustTrack(eval(sideinfo.sidename{WhichShiftSide}), tTrack, sideinfo.side(WhichShiftSide), nvterrflpcoeff*nvterrflp, ntdurflp);
     end
 
-    % switch Trialsequence
-    %     case 1  % tactile before visual
-    %         tTrack = adjustTrack(lefttouch, tTrack, 1, -nvterrflp, ntdurflp);  % left touch stimuli, 1
-    %         tTrack = adjustTrack(righttouch, tTrack, 2, -nvterrflp, ntdurflp); % right touch stimuli, 2
-    %
-    %     case 2  % tactile and visual, congruent
-    %         tTrack = adjustTrack(lefttouch, tTrack, 1, 0, ntdurflp);  % left touch stimuli, 1
-    %         tTrack = adjustTrack(righttouch, tTrack, 2, 0, ntdurflp); % right touch stimuli, 2
-    %
-    %     case 3  % tactile after visual
-    %         tTrack = adjustTrack(lefttouch, tTrack, 1, nvterrflp, ntdurflp);  % left touch stimuli, 1
-    %         tTrack = adjustTrack(righttouch, tTrack, 2, nvterrflp, ntdurflp); % right touch stimuli, 2
-    %
-    %     case 4  % baseline: no tactile
-    %         % no stimuli
-    % end
-    % disp('+++++++++++++++++++++++++length of tTrack:++++++++++++++++');
-    % disp(length(vTrack));
-    % disp(length(tTrack));
-    % disp(length(Track));
-    %
-    % disp('+++++++++++++++++++++++++length of tTrack:++++++++++++++++');
+    % tactile stimuli should be double rather than single
+    % resembling back then front of foot touching ground
+    if doubleTactileDiff == 0
+      % do nothing, no double tactile
+    else
+      tTrack(find(tTrack==1) + doubleTactileDiff) = 1;
+      tTrack(find(tTrack==2) + doubleTactileDiff) = 2;
+      tTrack(length(Track)+1:end) = [];
+    end
+
 
     % random beginning of tactile stimuli
     flpi = 0.02;
