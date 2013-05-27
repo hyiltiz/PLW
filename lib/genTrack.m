@@ -1,9 +1,9 @@
-function [vTrack tTrack] = genTrack(Trialsequence, Track, lefttouch, righttouch, flpi, ntdurflp, nvterrflp )
+function [vTrack tTrack] = genTrack(Trialsequence, Track, lefttouch, righttouch, flpi, ntdurflp, nvterrflp, doubleTactileDiff )
   % Generate visual stimuli track 'vTrack' and tactile stimuli track 'tTrack'
 
-  doubleTactileDiff = 10;
-  isSkip = 1;
+  isSkip = 0;
   if ~isSkip
+    doubleTactileDiff = 10;
     ntdurflp = 2;
     nvterrflp = 15;
   end
