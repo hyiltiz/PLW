@@ -53,8 +53,8 @@ function [vTrack tTrack] = genTrack(Trialsequence, Track, lefttouch, righttouch,
     if doubleTactileDiff == 0
       % do nothing, no double tactile
     else
-      tTrack(find(tTrack==1) + doubleTactileDiff) = 1;
-      tTrack(find(tTrack==2) + doubleTactileDiff) = 2;
+      tTrack(find(tTrack==1) + doubleTactileDiff) = 3; % left front
+      tTrack(find(tTrack==2) + doubleTactileDiff) = 4; % right front
       tTrack(length(Track)+1:end) = [];
     end
 
