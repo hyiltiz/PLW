@@ -98,6 +98,16 @@ function RL_PLW(conf, mode)
     conf.trialdur = 13;
   end
 
+  if mode.many_on % M is for many_dots task, while D is for direction task
+    dataSuffix = 'M';
+  else
+    dataSuffix = 'D';
+  end
+
+  if mode.inout_on % M is for many_dots task, while D is for direction task
+    dataSuffix = [dataSuffix + '_InOut_'] ;
+  end
+
   % randomized sample exp. conditions and trial sequences variables
   % condition type:4; recording results in 5 culumns
   [flow.Trialsequence, Trials] = genTrial(conf.repetitions, 9);
@@ -362,28 +372,19 @@ function RL_PLW(conf, mode)
     end;
 
     % End of experiment
-    if mode.many_on % M is for many_dots task, while D is for direction task
-      tmp = 'M';
-    else
-      tmp = 'D';
-    end
-    %save(['data/',Subinfo{1},'/', Subinfo{1}, tmp, date, '.mat'],'Trials','conf', 'Subinfo','flow','mode','data');
-    render.matFileName = ['data/', Subinfo{1}, 'Mirror', tmp, date, '.mat'];
+
+    %save(['data/',Subinfo{1},'/', Subinfo{1}, dataSuffix, date, '.mat'],'Trials','conf', 'Subinfo','flow','mode','data');
+    render.matFileName = ['data/', Subinfo{1}, 'Mirror', dataSuffix, date, '.mat'];
     save(render.matFileName,'Trials','conf', 'Subinfo','flow','mode','data');
     Display(render.matFileName);
     % Display 'Thanks' Screen
     RL_Regards(w, mode.english_on);
 
   catch
-    if mode.many_on % M is for many_dots task, while D is for direction task
-      tmp = 'M';
-    else
-      tmp = 'D';
-    end
     % save the buggy data for debugging
     save data/buggy.mat;
     Display(char('','','data/buggy.dat saved successfully, use for debugging!',''));
-    save(['data/', Subinfo{1}, tmp, date, 'buggy.mat']);
+    save(['data/', Subinfo{1}, dataSuffix, date, 'buggy.mat']);
     %     disp(['';'';'data/buggy saved successfully, use for debugging!']);
     Screen('CloseAll');
     if mode.audio_on; PsychPortAudio('Close'); end
