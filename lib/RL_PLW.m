@@ -118,11 +118,11 @@ function RL_PLW(conf, mode)
   %% randomized sample exp. conditions and trial sequences variables
   % condition type:4; recording results in 5 culumns
   if mode.inout_on
-    % we only want upright PLWs here
+    % we only want upright PLWs here; congurent or not:4
     [flow.Trialsequence, Trials] = genTrial(conf.repetitions, 9, [1, 4]);
     data.moveDirection = [round(rand([length(flow.Trialsequence), 1])), flow.Trialsequence(:,1)]; %walking direction is random
   else
-    % rhythmtype= [1:2*4];  % condition type, upright vs. upside-down; congurent or not:4
+    % [2, 4] condition type, upright vs. upside-down:2; congurent or not:4
     [flow.Trialsequence, Trials] = genTrial(conf.repetitions, 9, [2, 4]);
     data.moveDirection = [round(rand([length(flow.Trialsequence), 1])), flow.Trialsequence(:,1) - 1]; %walkers walking direction is random
   end
