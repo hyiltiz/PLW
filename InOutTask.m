@@ -12,6 +12,7 @@ function InOutTask()
   conf.tiltangle          =  5;           % tilt angle for simulating 3D stereo display
   conf.xshift             =  .25;          % shift PLW for using mirror, see mode.mirror_on
   conf.shadowshift        = .5;           % distance between PLWs and their twin shadows
+  conf.doubleTactileDiff  = 10 ;          % flips between taps on one tactile stimuli (double tactile);0 to disable
 
   % state control variables
   mode.inout_on      = 1;  % use incoming and outgoing PLWs for demo

@@ -49,13 +49,17 @@ function RL_PLW(conf, mode)
     render.mode=mode;
   end
 
+  % conf and mode variables listed here for using calling from a WRAP FUNCTION
+  % so do not directly change any value here!
+
   % time setting vatiables
   conf.flpi               =  .02;         % each frame is set to 20ms (the monitor's flip interval is 16.7ms)
   conf.trialdur           =  70;          % duration time for every trial
   conf.repetitions        =  5;           % repetition time of a condition
   conf.resttime           =  30;          % rest for 30s
   conf.restpertrial       =  1;           % every x trial a rest
-  conf.lagFlip            =  2;           % every x Flip change a noise
+  conf.doubleTactileDiff  =  0 ;          % flips between taps on one tactile stimuli (double tactile);0 to disable
+  conf.tiltangle          =  0;           % tilt angle for simulating 3D stereo display
   conf.xshift             =  .4;          % shift PLW for using mirror, see mode.mirror_on
   conf.shadowshift        =  0;           % distance between PLWs and their twin shadows
   conf.ntdurflp           =  1;           % tactile duration time: n * conf.flpi
@@ -63,21 +67,21 @@ function RL_PLW(conf, mode)
   conf.waitBetweenTrials  =  .8+rand*0.2; % wait black screen between Trials, random
   conf.waitFixationScreen =  .8+rand*0.2; % '+' time randomized
   conf.scale1             =  20;          % PLW's visual scale, more the bigger
+  conf.lagFlip            =  2;           % every x Flip change a noise
   conf.noisescale         =  .14;         % the width of the noise dots, and the default PLW dot width is 7
   conf.kill_dotr          =  .1;          % ratio at which to kill dotr percent of dots
-  conf.doubleTactileDiff  =  0 ;          % flips between taps on one tactile stimuli (double tactile);0 to disable
-  conf.tiltangle          =  0;           % tilt angle for simulating 3D stereo display
   % conf.exptime          =  45;          % experiment is 45min long
 
   % state control variables
-  mode.mirror_on          = 1;  % use mirror rather that spectacles for binacular rivalry
   mode.baseline_on        = 0;  % baseline trial, without visual stimuli
   mode.inout_on           = 0;  % use incoming and outgoing PLWs for demo
+  mode.once_on            = 1;  % only one trial, used for demostration before experiment
+  % DO NOT CHANGE UNLESS YOU KNOW EXCACTLY WHAT YOU ARE DOING
+  mode.mirror_on          = 1;  % use mirror rather that spectacles for binacular rivalry
   mode.many_on            = 0;  % the task is the majority of dots the participant saw
   mode.greyNoise_on       = 1;  % do not use the original grey noise
   mode.english_on         = 1;  % use English for Instructions etc., 0 for Chinese(not supported for now!)
   mode.regenerate_on      = 1;  % mode.regenerate_on data for experiment, rather than using the saved one
-  mode.once_on            = 1;  % only one trial, used for demostration before experiment
   mode.audio_on           = 0;  % set audio stimuli on
   mode.RT_on              = 0;  % Reaction time mode, this is not to be changed!
   mode.debug_on           = 1;  % default is 0; 1 is not to use full screen, and skip the synch test
