@@ -9,6 +9,9 @@ function InOutTask()
   conf.resttime           =  30;          % rest for 30s
   conf.restpertrial       =  1;           % every x trial a rest
   conf.lagFlip            =  2;           % every x Flip change a noise
+  conf.tiltangle          =  5;           % tilt angle for simulating 3D stereo display
+  conf.xshift             =  .25;          % shift PLW for using mirror, see mode.mirror_on
+  conf.shadowshift        = .5;           % distance between PLWs and their twin shadows
 
   % state control variables
   mode.inout_on      = 1;  % use incoming and outgoing PLWs for demo

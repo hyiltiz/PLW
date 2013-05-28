@@ -50,13 +50,14 @@ function RL_PLW(conf, mode)
   end
 
   % time setting vatiables
-  conf.flpi               =  0.02;        % each frame is set to 20ms (the monitor's flip interval is 16.7ms)
+  conf.flpi               =  .02;         % each frame is set to 20ms (the monitor's flip interval is 16.7ms)
   conf.trialdur           =  70;          % duration time for every trial
   conf.repetitions        =  5;           % repetition time of a condition
   conf.resttime           =  30;          % rest for 30s
   conf.restpertrial       =  1;           % every x trial a rest
   conf.lagFlip            =  2;           % every x Flip change a noise
-  conf.xshift             = .40;          % shift PLW for using mirror, see mode.mirror_on
+  conf.xshift             =  .4;          % shift PLW for using mirror, see mode.mirror_on
+  conf.shadowshift        =  0;           % distance between PLWs and their twin shadows
   conf.ntdurflp           =  1;           % tactile duration time: n * conf.flpi
   conf.nvterrflp          =  15;          % visual-tactile error time: n * conf.flpi
   conf.waitBetweenTrials  =  .8+rand*0.2; % wait black screen between Trials, random
@@ -65,6 +66,7 @@ function RL_PLW(conf, mode)
   conf.noisescale         =  .14;         % the width of the noise dots, and the default PLW dot width is 7
   conf.kill_dotr          =  .1;          % ratio at which to kill dotr percent of dots
   conf.doubleTactileDiff  =  0 ;          % flips between taps on one tactile stimuli (double tactile);0 to disable
+  conf.tiltangle          =  0;           % tilt angle for simulating 3D stereo display
   % conf.exptime          =  45;          % experiment is 45min long
 
   % state control variables
@@ -95,6 +97,7 @@ function RL_PLW(conf, mode)
   if mode.debug_on
     conf.repetitions = 1;
     conf.resttime = 5;
+    conf.exptime = 5;
     conf.trialdur = 13;
   end
 
@@ -105,10 +108,10 @@ function RL_PLW(conf, mode)
   end
 
   if mode.inout_on % M is for many_dots task, while D is for direction task
-    dataSuffix = [dataSuffix + '_InOut_'] ;
+    dataSuffix = [dataSuffix '_InOut_'] ;
   end
 
-  % randomized sample exp. conditions and trial sequences variables
+  %% randomized sample exp. conditions and trial sequences variables
   % condition type:4; recording results in 5 culumns
   [flow.Trialsequence, Trials] = genTrial(conf.repetitions, 9);
   data.moveDirection = [round(rand([length(flow.Trialsequence), 1])), flow.Trialsequence(:,1) - 1]; %walkers walking direction is random
@@ -138,10 +141,9 @@ function RL_PLW(conf, mode)
     % make sure the software version is new enouch for running the program
     checkVersion();
 
-    %% Get Subject information
+    % Get Subject information
     Subinfo = getSubInfo();
-    % create directory for saving date
-    % mkdir(Subinfo{1});
+
     %% initialization
     HideCursor;
     ListenChar(2);
@@ -159,23 +161,46 @@ function RL_PLW(conf, mode)
       data.loopPeriod = 130;
       conf.imagex=250;  % image size
 
-      % Generate the data for plotting Point Light Walkers
-      data.readData.thet = 0;  %to rotate along the first axis
-      if mode.inout_on;data.readData.thet = 90;end
-      data.readData.xyzseq = [1 3 2];  %axis rotation, [1 3 2] by default
-      [data.dotx,  data.doty, data.init, data.maxdot] = PLWtransform(data.readData, conf.scale1, conf.imagex, -1);
-
-      % Use for solving the touchground data
+      % virtual PLW:PLW0 Use for solving the touchground data
       % We need unrotated one (right-left direction) for solving
       % touchground
       data.readData.thet = 0;
+      data.readData.xyzseq = [1 3 2];  %axis rotation, [1 3 2] by default
       % use exactly the same initial position as the first PLW via data.init
-      [data.dotx0,  data.doty0, data.init0, data.maxdot] = PLWtransform(data.readData, conf.scale1, conf.imagex, data.init);
+      [data.dotx0,  data.doty0, data.init0, data.maxdot] = PLWtransform(data.readData, conf.scale1, conf.imagex, -1);
 
-      data.readData.xyzseq = [1 3 2];  %to rotate across xyz
+      % Generate the data for plotting Point Light Walkers
+      % PLW-target
+      data.readData.thet = 0;  %to rotate along the first axis
+      if mode.inout_on;data.readData.thet = 90 + conf.tiltangle;end
+      data.readData.xyzseq = [1 3 2];  %axis rotation, [1 3 2] by default
+      data.init = data.init0; % the same with virtual PLW, though rotated
+      [data.dotx,  data.doty, data.init, data.maxdot] = PLWtransform(data.readData, conf.scale1, conf.imagex, data.init);
+
+      % PLW-nontarget
       data.readData.thet = 180;  %to rotate along the first axis
-      if mode.inout_on;data.readData.thet = -90;end
+      if mode.inout_on;data.readData.thet = -90 + conf.tiltangle;end
+      data.readData.xyzseq = [1 3 2];  %to rotate across xyz
       [data.dotx1, data.doty1, data.init1, data.maxdot1] = PLWtransform(data.readData, conf.scale1, conf.imagex, -1);
+
+
+      if mode.inout_on
+        % another two PLWs for stereo 3D display
+        % PLW-target-shadow
+        data.readData.thet = 0;  %to rotate along the first axis
+        if mode.inout_on;data.readData.thet = 90 - conf.tiltangle;end
+        data.readData.xyzseq = [1 3 2];  %axis rotation, [1 3 2] by default
+        data.init = data.init0; % the same with virtual PLW, though rotated
+        [data.dotxs,  data.dotys, data.inits, data.maxdots] = PLWtransform(data.readData, conf.scale1, conf.imagex, data.init);
+
+        % PLW-nontarget-shadow
+        data.readData.thet = 180;  %to rotate along the first axis
+        if mode.inout_on;data.readData.thet = -90 - conf.tiltangle;end
+        data.readData.xyzseq = [1 3 2];  %to rotate across xyz
+        [data.dotx1s, data.doty1s, data.init1s, data.maxdot1s] = PLWtransform(data.readData, conf.scale1, conf.imagex, -1);
+      end
+
+
     end
 
     render.screens=Screen('screens');
@@ -196,7 +221,6 @@ function RL_PLW(conf, mode)
     render.cy = render.wsize(4)/2; %center y
 
     % Variables used across trials
-    if mode.debug_on; conf.exptime = 5; end
     %     data.Track = 1:round(conf.exptime*60/(conf.flpi * data.loopPeriod * 8 * conf.repetitions) * length(data.dotx));        % 2 for less longer stimuli
     data.Track = 1: round(conf.trialdur / (conf.flpi * length(data.dotx)) * length(data.dotx));
     %     data.Track = 1:5/.01;
@@ -314,11 +338,16 @@ function RL_PLW(conf, mode)
 
 
         if mode.baseline_on
-            % do not show the PLWs
+          % do not show the PLWs
         else
           % and here comes the walkers
-          RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 0 0], [-conf.xshift 0], data.maxdot);
-          RLonePLW(w,data.initPosition(2) + data.paceRate(2)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx1, data.doty1, data.moveDirection(flow.Trial, :), [0 255 0], [conf.xshift 0], data.maxdot);
+          RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 0 0], [-conf.xshift-conf.shadowshift 0], data.maxdot);
+          RLonePLW(w,data.initPosition(2) + data.paceRate(2)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx1, data.doty1, data.moveDirection(flow.Trial, :), [0 255 0], [conf.xshift-conf.shadowshift 0], data.maxdot);
+          if mode.inout_on
+          RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotxs, data.dotys, data.moveDirection(flow.Trial, :), [255 0 0], [-conf.xshift+conf.shadowshift 0], data.maxdot);
+          RLonePLW(w,data.initPosition(2) + data.paceRate(2)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx1s, data.doty1s, data.moveDirection(flow.Trial, :), [0 255 0], [conf.xshift+conf.shadowshift 0], data.maxdot);
+          end
+
         end
         Screen('DrawingFinished', w); % no further drawing commands will follow before Screen('Flip')
 
