@@ -286,9 +286,9 @@ function RL_PLW(conf, mode)
 
       if mode.regenerate_on
         data.initPosition = Randi(round(data.loopPeriod/4),[2 1]);
-          %         data.paceRate = repmat(Randi(2), [2 1]);
-          % Remember not to use those quick ones
-          data.paceRate = [1; 1];
+        %         data.paceRate = repmat(Randi(2), [2 1]);
+        % Remember not to use those quick ones
+        data.paceRate = [1; 1];
         %   data.Track = 1:round(length(data.dotx));% 2 for accuracy, and data.loopPeriod for period
         [data.lefttouch, data.righttouch] = touchground(data.dotx0, data.initPosition(1), data.paceRate(1), data.Track);     %for the index when PLW touches ground
       else
@@ -355,8 +355,8 @@ function RL_PLW(conf, mode)
           RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 0 0], [-conf.xshift-conf.shadowshift 0], data.maxdot);
           RLonePLW(w,data.initPosition(2) + data.paceRate(2)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx1, data.doty1, data.moveDirection(flow.Trial, :), [0 255 0], [conf.xshift-conf.shadowshift 0], data.maxdot);
           if mode.inout_on
-          RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotxs, data.dotys, data.moveDirection(flow.Trial, :), [255 0 0], [-conf.xshift+conf.shadowshift 0], data.maxdot);
-          RLonePLW(w,data.initPosition(2) + data.paceRate(2)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx1s, data.doty1s, data.moveDirection(flow.Trial, :), [0 255 0], [conf.xshift+conf.shadowshift 0], data.maxdot);
+            RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotxs, data.dotys, data.moveDirection(flow.Trial, :), [255 0 0], [-conf.xshift+conf.shadowshift 0], data.maxdot);
+            RLonePLW(w,data.initPosition(2) + data.paceRate(2)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx1s, data.doty1s, data.moveDirection(flow.Trial, :), [0 255 0], [conf.xshift+conf.shadowshift 0], data.maxdot);
           end
 
         end
