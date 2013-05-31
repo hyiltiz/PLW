@@ -9,7 +9,6 @@ switch tTrack
     case 0
         putvalue(dioOut,0); % clear zero
     case 1
-<<<<<<< HEAD
       putvalue(dioOut, 2);% the left back foot touches the ground.
     case 2
       putvalue(dioOut, 8);% the right back foot touches the ground
@@ -19,14 +18,3 @@ switch tTrack
       putvalue(dioOut, 32);% the left front foot touches the ground.
     end
   end
-=======
-        putvalue(dioOut, 2);% the left foot touches the ground.
-    case 2
-        putvalue(dioOut, 8);% the right foot touches the ground
-    case 3
-        putvalue(dioOut, 16);% the left front foot touches the ground
-    case 4
-        putvalue(dioOut, 32);% the right front foot touches the ground
-end
-end
->>>>>>> 2d1bab952e012c089a27a7cf6e1305659ab5f3ef
