@@ -1,4 +1,8 @@
-tmp
+*.asv
 /*.mat
-/data/buggy.mat
+/bad
 /data/*default*.mat
+/data/buggy.mat
+/data/test.mat
+/octave-core
+tmp

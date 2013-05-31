@@ -8,7 +8,10 @@ function InOutTask()
   conf.repetitions        =  5;           % repetition time of a condition
   conf.resttime           =  30;          % rest for 30s
   conf.restpertrial       =  1;           % every x trial a rest
-  conf.lagFlip            =  2;           % every x Flip change a noise
+  conf.tiltangle          =  10;          % tilt angle for simulating 3D stereo display
+  conf.xshift             =  .25;         % shift PLW for using mirror, see mode.mirror_on
+  conf.shadowshift        = .5;           % distance between PLWs and their twin shadows
+  conf.doubleTactileDiff  = 10 ;          % flips between taps on one tactile stimuli (double tactile);0 to disable
 
   % state control variables
   mode.inout_on      = 1;  % use incoming and outgoing PLWs for demo
@@ -25,3 +28,4 @@ function InOutTask()
 
   % Call the main function RL_PLW()
   RL_PLW(conf, mode);
+end

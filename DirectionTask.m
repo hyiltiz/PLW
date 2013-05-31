@@ -8,6 +8,7 @@ function DirectionTask(is_once_on)
   conf.resttime           =  30;          % rest for 30s
   conf.restpertrial       =  1;           % every x trial a rest
   conf.lagFlip            =  2;           % every x Flip change a noise
+  conf.doubleTactileDiff  =  10 ;          % flips between taps on one tactile stimuli (double tactile);0 to disable
 
   % state control variables
   mode.mirror_on     = 1;  % use mirror rather that spectacles for binacular rivalry
