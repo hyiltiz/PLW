@@ -312,7 +312,7 @@ function RL_PLW(conf, mode)
         testMirror(w, render.cx , render.cy, 255, [-conf.shadowshift 0], data.maxdot);
         %testMirror(w, render.cx , render.cy, 255, [conf.xshift 0], data.maxdot1);
         % use the same maxdot for both PLW; the frame has to be the same
-        testMirror(w, render.cx , render.cy, 255, [conf.xshift.shadowshift 0], data.maxdot);
+        testMirror(w, render.cx , render.cy, 255, [conf.shadowshift 0], data.maxdot);
       else
         %fixation(w, render.cx, render.cy);
         testMirror(w, render.cx , render.cy, 255, [-conf.xshift 0], data.maxdot);
