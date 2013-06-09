@@ -307,11 +307,20 @@ function RL_PLW(conf, mode)
       [data.vTrack, data.tTrack] = genTrack(flow.Trialsequence(flow.Trial), data.Track, data.lefttouch, data.righttouch, conf.flpi, conf.ntdurflp, conf.nvterrflp, conf.doubleTactileDiff);
 
       % display:  +
-      %fixation(w, render.cx, render.cy);
-      testMirror(w, render.cx , render.cy, 255, [-conf.xshift 0], data.maxdot);
-      %testMirror(w, render.cx , render.cy, 255, [conf.xshift 0], data.maxdot1);
-      % use the same maxdot for both PLW; the frame has to be the same
-      testMirror(w, render.cx , render.cy, 255, [conf.xshift 0], data.maxdot);
+      if mode.inout_on % M is for many_dots task, while D is for direction task
+        %fixation(w, render.cx, render.cy);
+        testMirror(w, render.cx , render.cy, 255, [-conf.shadowshift 0], data.maxdot);
+        %testMirror(w, render.cx , render.cy, 255, [conf.xshift 0], data.maxdot1);
+        % use the same maxdot for both PLW; the frame has to be the same
+        testMirror(w, render.cx , render.cy, 255, [conf.xshift.shadowshift 0], data.maxdot);
+      else
+        %fixation(w, render.cx, render.cy);
+        testMirror(w, render.cx , render.cy, 255, [-conf.xshift 0], data.maxdot);
+        %testMirror(w, render.cx , render.cy, 255, [conf.xshift 0], data.maxdot1);
+        % use the same maxdot for both PLW; the frame has to be the same
+        testMirror(w, render.cx , render.cy, 255, [conf.xshift 0], data.maxdot);
+
+      end
       Screen('Flip',w);
 
       % wait until the participant's mirror is ready
