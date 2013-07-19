@@ -75,6 +75,7 @@ function RL_PLW(conf, mode)
   % state control variables
   mode.baseline_on        = 0;  % baseline trial, without visual stimuli
   mode.inout_on           = 0;  % use incoming and outgoing PLWs for demo
+  mode.posture_on         = 0;  % for posture exp. only upright PLWs used
   mode.once_on            = 1;  % only one trial, used for demostration before experiment
   % DO NOT CHANGE UNLESS YOU KNOW EXCACTLY WHAT YOU ARE DOING
   mode.mirror_on          = 1;  % use mirror rather that spectacles for binacular rivalry
@@ -113,11 +114,13 @@ function RL_PLW(conf, mode)
 
   if mode.inout_on % M is for many_dots task, while D is for direction task
     dataSuffix = [dataSuffix '_InOut_'] ;
+  elseif mode.posture_on
+    dataSuffix = [dataSuffix '_Posture_'] ;
   end
 
   %% randomized sample exp. conditions and trial sequences variables
   % condition type:4; recording results in 5 culumns
-  if mode.inout_on
+  if mode.inout_on | mode.posture_on
     % we only want upright PLWs here; congurent or not:4
     [flow.Trialsequence, Trials] = genTrial(conf.repetitions, 9, [1, 4]);
     data.moveDirection = [round(rand([length(flow.Trialsequence), 1])), flow.Trialsequence(:,1)]; %walking direction is random
