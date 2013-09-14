@@ -9,13 +9,13 @@ function Subinfo= getSubInfo()
   else
     % This is for octave
     %Subinfo = inputdlg(promptParameters, 'Subject Info  ', 1, defaultParameters);
-    Subinfo = cell(length(defaultParameters));
+    Subinfo = cell(length(defaultParameters),1);
     for i = 1 : length(promptParameters)
       getinput = input(['Please enter ', promptParameters{i}, ':'],'s');
       if isempty(getinput)
         getinput = defaultParameters{i};
       end
-      Subinfo{i} = getinput;
+      Subinfo{i,1} = getinput;
     end
 
     if isempty(Subinfo)
