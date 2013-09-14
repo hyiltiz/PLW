@@ -11,7 +11,7 @@ prestate = 2; %[1 0];PLW
 trials = [];
 iCounter = 1;
 Tinterval=0;
-seq = genTrials(2,[2 3]); % first-1 from initial rightwards; 2-initial leftwards;
+seq = genTrials(2,[2 3]); % first-1 from initial inwards; 2-initial leftwards;
 % second, 1-tactile short-long-short, 2-tactile equal; 3-tactile
 % long-short-long.
 %% initialize dio
@@ -53,11 +53,11 @@ try
     %%0.1 Display Instructions,the first page;
     Screen('FillRect',mainWnd);
     drawTextAt(mainWnd,'This is an experiment about apparent motion.', cx,cy-200,[200 200 200]);
-    drawTextAt(mainWnd,'There will be two tactile taps successively presented on your left and right finger', cx,cy-100,[200 200 200]);
+    drawTextAt(mainWnd,'There will be two tactile taps successively presented on your left and right foot', cx,cy-100,[200 200 200]);
     drawTextAt(mainWnd,'your task is to report the dominant direction of the motion after the first several tactile pair is presented ', cx,cy-50,[200 200 200]);
-    drawTextAt(mainWnd,'If you perceive right-ward motion [->], please press right foot-switch and hold it', cx,cy,[200 200 200]);
-    drawTextAt(mainWnd,'If you perceive left-ward motion [<-], please press left foot-switch and hold it', cx,cy+50,[200 200 200]);
-    drawTextAt(mainWnd,'Press any foot switch to second page...', cx,cy+250,[200 200 200]);
+    drawTextAt(mainWnd,'If you perceive in-ward motion [^], please press red button and HOLD it', cx,cy,[200 200 200]);
+    drawTextAt(mainWnd,'If you perceive out-ward motion [v], please press green button and HOLD it', cx,cy+50,[200 200 200]);
+    drawTextAt(mainWnd,'Press red button to second page...', cx,cy+250,[200 200 200]);
     Screen('Flip', mainWnd);
     DioWait;
     WaitSecs(1);
@@ -65,7 +65,7 @@ try
     %%0.2 Display Instructions,the second page;
     Screen('FillRect',mainWnd);
     drawTextAt(mainWnd,'Please make your responses after the signal ''begins'' appears', cx,cy,[200 200 200]);
-    drawTextAt(mainWnd,'Press the footpaddle to start', cx,cy+250,[200 200 200]);
+    drawTextAt(mainWnd,'Press red button to start', cx,cy+250,[200 200 200]);
     Screen('Flip', mainWnd);
     DioWait;
     WaitSecs(1);
@@ -80,7 +80,7 @@ try
             strTrl = sprintf('Trial No %d',iTrl);
             drawTextAt(mainWnd,strTrl, cx,cy-20,255);
             drawTextAt(mainWnd,'Please take a rest', cx,cy+ 20,255);
-            drawTextAt(mainWnd,'Press  foot switch to continue...',cx,cy+60,255);%% and then lift the padel
+            drawTextAt(mainWnd,'Press red button to continue...',cx,cy+60,255);%% and then lift the padel
             Screen('Flip', mainWnd);
             DioWait;
             Screen('FillRect',mainWnd);
@@ -91,7 +91,7 @@ try
             strTrl = sprintf('Trial No %d',iTrl);
             Screen('Flip', mainWnd);
             drawTextAt(mainWnd,strTrl,cx,cy-20,255);
-            drawTextAt(mainWnd,' foot switch to start...',cx,cy+20,255);
+            drawTextAt(mainWnd,' red button to start...',cx,cy+20,255);
             Screen('Flip', mainWnd);
             DioWait;
             Screen('FillRect',mainWnd);
@@ -113,7 +113,7 @@ try
         % SFrames = 0.15/sampleRate; %step frames 150ms
         % initHFrame = 0.1/sampleRate;
         % tAdjust = 0.00035;
-        % seq = genTrials(2,[2 3]); % first-1 from initial rightwards; 2-initial leftwards;
+        % seq = genTrials(2,[2 3]); % first-1 from initial inwards; 2-initial leftwards;
         % second, 1-tactile short-long-short, 2-tactile equal; 3-tactile
         % long-short-long.
         

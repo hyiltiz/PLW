@@ -10,11 +10,11 @@ function [Trials, prestate, response, iniTimer, isquit, isresponse, nresp ] = ..
     getvalue(dioIn);
     switch  sum(getvalue(dioIn))
       case 1
-        response=1; % right response
+        response=1; % right response (red:forward)
       case 2
         response=0;
       case 3
-        response=2; % left response
+        response=2; % left response  (green:backward)
       end
 
     else  % use keyboard then
