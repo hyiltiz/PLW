@@ -17,8 +17,10 @@
 %     'yeshaoqiangMirrorD26-Jan-2013','maqianliMirrorD27-Jan-2013','songyuchenMirrorD03-Mar-2013','sundanMirrorD03-Mar-2013','zhaolijianMirrorD02-Mar-2013',...,
 %     'guoxinMirrorD02-Mar-2013','zhouyanlingMirrorD03-Mar-2013'};
 
-%subs={'anshuaiMirrorD_InOut_17-Sep-2013.mat','cuizhenpengMirrorD_InOut_15-Sep-2013.mat','lilingyuMirrorD_InOut_15-Sep-2013.mat','liuweifangMirrorD_InOut_17-Sep-2013.mat','liuyeMirrorD_InOut_15-Sep-2013.mat','liuziMirrorD_InOut_15-Sep-2013.mat','lushilinMirrorD_InOut_15-Sep-2013.mat','mawenjingMirrorD_InOut_17-Sep-2013.mat','shaojiayuanMirrorD_InOut_15-Sep-2013.mat','shaorenjieMirrorD_InOut_17-Sep-2013.mat','sihongweiMirrorD_InOut_17-Sep-2013.mat','songqingjunMirrorD_InOut_15-Sep-2013.mat','tantianMirrorD_InOut_15-Sep-2013.mat','wanghaoMirrorD_InOut_17-Sep-2013.mat','wenghanxingMirrorD_InOut_15-Sep-2013.mat','zhaoyuanMirrorD_InOut_17-Sep-2013.mat','zhengguomaoMirrorD_InOut_17-Sep-2013.mat'};
-subs = {'zhaoyuanMirrorD_InOut_17-Sep-2013.mat'};
+clear all;
+close all;
+subs={'anshuaiMirrorD_InOut_17-Sep-2013.mat','cuizhenpengMirrorD_InOut_15-Sep-2013.mat','lilingyuMirrorD_InOut_15-Sep-2013.mat','liuweifangMirrorD_InOut_17-Sep-2013.mat','liuyeMirrorD_InOut_15-Sep-2013.mat','liuziMirrorD_InOut_15-Sep-2013.mat','lushilinMirrorD_InOut_15-Sep-2013.mat','mawenjingMirrorD_InOut_17-Sep-2013.mat','shaojiayuanMirrorD_InOut_15-Sep-2013.mat','shaorenjieMirrorD_InOut_17-Sep-2013.mat','sihongweiMirrorD_InOut_17-Sep-2013.mat','songqingjunMirrorD_InOut_15-Sep-2013.mat','tantianMirrorD_InOut_15-Sep-2013.mat','wanghaoMirrorD_InOut_17-Sep-2013.mat','wenghanxingMirrorD_InOut_15-Sep-2013.mat','zhaoyuanMirrorD_InOut_17-Sep-2013.mat','zhengguomaoMirrorD_InOut_17-Sep-2013.mat'};
+% subs = {'zhaoyuanMirrorD_InOut_17-Sep-2013.mat'};
 time_on = 0;  % 0: do NOT plot for response time
 
 Dur=[];
@@ -30,13 +32,13 @@ for isub=1:length(subs)
   load(subs{isub},'Trials');
   idx=find(Trials(:,2)==0);
   Trials(idx,:)=[];  % delete the none-response data.
-  keyboard
+
   %% here set the "congruent" and "incongruent" conditions
   Trials(2:end,12)=diff(Trials(:,2));
   idx=find(Trials(:,12)~=0);
   switchrate=length(idx)/length(Trials);
   Trials(:,2)=((Trials(:,2)-1)==Trials(:,4))+1; % 1--> incong  2-->cong
-  keyboard
+
 
   % step 2: normalized phase duration for each subject
   Trials(:,3)=Trials(:,3)/(mean(Trials(:,3)));
@@ -54,22 +56,36 @@ for isub=1:length(subs)
   %    idx2 =find(Trials(:,4)==1);
   %    Trials2=Trials(idx2,:); %  red PLW is rightwards motion;
 
-  keyboard
+
+  tbl1 = zeros(4,1);
+  tbl2 = zeros(4,1);
   if IsOctave
+
     dur = accumarray([Trials(:,1) Trials(:,2)],Trials(:,3),[],@mean);
-    %1.72  1.08
-    %0.51  0.46
-    %0.03  2.39
-    %0.71  1.10
+    dur = reshape(dur',[numel(dur),1]);
+    g = [repmat(1:size(dur,1),[1 numel(dur)/size(dur,1)])' repmat(1:size(dur,2),[1 numel(dur)/size(dur,2)])'];
+    dur = [dur g];
+
+    [tbl1v tblidx1]= table(Trials(Trials(:,2)==1,1));%number of incongruent response
+    [tbl2v tblidx2]= table(Trials(Trials(:,2)==2,1));%number of congruent response
   else
     [dur g] = grpstats(Trials(:,3),{Trials(:,1),Trials(:,2)},{'mean','gname'}); %  cond: 4; resp: 1-inward; 2-outward
+
+    for j=1:length(g)
+      dur(j,2)=str2num(g{j,1});
+      dur(j,3)=str2num(g{j,2});
+    end
+    tbl1x = tabulate(Trials(Trials(:,2)==1,1));
+    tbl2x = tabulate(Trials(Trials(:,2)==2,1));
+    tbl1v = tbl1x(:,2);
+    tbl2v = tbl2x(:,2);
+
+    tblidx1 = tbl1x(:,1);
+    tblidx2 = tbl2x(:,1);
   end
-  tbl1 = sum(table(Trials(Trials(:,2)==1,1),Trials(Trials(:,2)==1,6)),2);%number of incongruent response
-  tbl2 = sum(table(Trials(Trials(:,2)==2,1),Trials(Trials(:,2)==2,6)),2);%number of congruent response
-  for j=1:length(g)
-    dur(j,2)=str2num(g{j,1});
-    dur(j,3)=str2num(g{j,2});
-  end
+  tbl1(tblidx1) = tbl1v;
+  tbl2(tblidx2) = tbl2v;
+
 
   for j=1:4 % cond
     idxtemp=find(dur(:,2)==j);
@@ -109,39 +125,30 @@ for isub=1:length(subs)
   set(gca,'XtickLabel',{'TbeforV','Synchronous','TafterV','baseline'});
 end
 
-%% Averaged plot
 Dur1=Dur(:,1);
 Dur2=Dur(:,2);
-Dur1=reshape(Dur1,[4,17]);
-Dur2=reshape(Dur2,[4,17]);
+Dur1=reshape(Dur1,[4,size(subs,2)]);
+Dur2=reshape(Dur2,[4,size(subs,2)]);
 Dur1=Dur1';
 Dur2=Dur2';
 Dur1avr=mean(Dur1);
 Dur2avr=mean(Dur2);
-keyboard
 
+
+%% Averaged plot
+figure;
+hold on;
 if time_on
-  figure;
-  hold on;
-  plot(1:4, Dur1avr','s-');
+  plot(1:4, Dur1avr','rs-');
   plot(1:4, Dur2avr','s-.');
-  hold off;
-  legend('Incong','Cong');
-  xlabel('tactile conditions');
   ylabel('duration (s)');
-  set(gca,'Xtick',1:4);
-  set(gca,'XtickLabel',{'TbeforV','Synchronous','TafterV','baseline'});
-
 else
-  %% Averaged plot
-  figure;
-  hold on;
-  plot(1:4, mean(Table),'s-');
-  plot(1:4, Dur2avr','s-.');
-  hold off;
-  legend('Incong','Cong');
-  xlabel('tactile conditions');
-  ylabel('duration (s)');
-  set(gca,'Xtick',1:4);
-  set(gca,'XtickLabel',{'TbeforV','Synchronous','TafterV','baseline'});
+  plot(1:4, mean(Table(:,[1:4])),'rs-');
+  plot(1:4, mean(Table(:,[5:8])),'s-');
+  ylabel('number of responses');
 end
+hold off;
+legend('Incong','Cong');
+xlabel('tactile conditions');
+set(gca,'Xtick',1:4);
+set(gca,'XtickLabel',{'TbeforV','Synchronous','TafterV','baseline'});
