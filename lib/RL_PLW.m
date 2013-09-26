@@ -70,12 +70,15 @@ conf.scale1             =  20;          % PLW's visual scale, more the bigger
 conf.lagFlip            =  2;           % every x Flip change a noise
 conf.noisescale         =  .14;         % the width of the noise dots, and the default PLW dot width is 7
 conf.kill_dotr          =  .1;          % ratio at which to kill dotr percent of dots
+conf.colors             = [255 0 0;0 255 255];
 % conf.exptime          =  45;          % experiment is 45min long
 
 % state control variables
 mode.baseline_on        = 0;  % baseline trial, without visual stimuli
 mode.inout_on           = 0;  % use incoming and outgoing PLWs for demo
 mode.posture_on         = 0;  % for posture exp. only upright PLWs used
+mode.simpleInOut_on     = 0;  % simple InOut exp, with the same tactile stimuli for both foot
+mode.colorbalance_on    = 0;  % balance the color of the target PLW, which is by default red
 mode.once_on            = 1;  % only one trial, used for demostration before experiment
 % DO NOT CHANGE UNLESS YOU KNOW EXCACTLY WHAT YOU ARE DOING
 mode.mirror_on          = 1;  % use mirror rather that spectacles for binacular rivalry
@@ -114,9 +117,27 @@ end
 
 if mode.inout_on % M is for many_dots task, while D is for direction task
     dataSuffix = [dataSuffix '_InOut_'] ;
-elseif mode.posture_on
+  elseif mode.posture_on
     dataSuffix = [dataSuffix '_Posture_'] ;
+  elseif mode.simpleInOut_on
+    dataSuffix = [dataSuffix '_simple_'];
 end
+
+if mode.simpleInOut_on
+  %use the same visual stimuli
+  mode.InOut_on = 1;
+  mode.mono_tactile = 1;
+  conf.doubleTactileDiff  =  0;
+  mode.colorbalance_on    = 0;  % set target PLW green, rather than red
+end
+
+  if mode.colorbalance_on
+    if round(rand)
+    flipud(conf.colors);
+    dataSuffix = [dataSuffix '_greenTarget_'];
+  end
+    dataSuffix = [dataSuffix '_ColorBalance_'];
+  end
 
 %% randomized sample exp. conditions and trial sequences variables
 % condition type:4; recording results in 5 culumns
@@ -367,18 +388,18 @@ try
                 % and here comes the walkers
                 % randomize the sequence to print
                 if isRedFirst(data.Track)
-                    RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 0 0], [-conf.xshift-conf.shadowshift 0], data.maxdot);
-                    RLonePLW(w,data.initPosition(2) + data.paceRate(2)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx1, data.doty1, data.moveDirection(flow.Trial, :), [0 255 0], [conf.xshift-conf.shadowshift 0], data.maxdot);
+                    RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), conf.colors(1,:), [-conf.xshift-conf.shadowshift 0], data.maxdot);
+                    RLonePLW(w,data.initPosition(2) + data.paceRate(2)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx1, data.doty1, data.moveDirection(flow.Trial, :), conf.colors(2,:), [conf.xshift-conf.shadowshift 0], data.maxdot);
                     if mode.inout_on
-                        RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotxs, data.dotys, data.moveDirection(flow.Trial, :), [255 0 0], [-conf.xshift+conf.shadowshift 0], data.maxdot);
-                        RLonePLW(w,data.initPosition(2) + data.paceRate(2)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx1s, data.doty1s, data.moveDirection(flow.Trial, :), [0 255 0], [conf.xshift+conf.shadowshift 0], data.maxdot);
+                        RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotxs, data.dotys, data.moveDirection(flow.Trial, :), conf.colors(1,:), [-conf.xshift+conf.shadowshift 0], data.maxdot);
+                        RLonePLW(w,data.initPosition(2) + data.paceRate(2)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx1s, data.doty1s, data.moveDirection(flow.Trial, :), conf.colors(2,:), [conf.xshift+conf.shadowshift 0], data.maxdot);
                     end
                 else
-                    RLonePLW(w,data.initPosition(2) + data.paceRate(2)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx1, data.doty1, data.moveDirection(flow.Trial, :), [0 255 0], [conf.xshift-conf.shadowshift 0], data.maxdot);
-                    RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 0 0], [-conf.xshift-conf.shadowshift 0], data.maxdot);
+                    RLonePLW(w,data.initPosition(2) + data.paceRate(2)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx1, data.doty1, data.moveDirection(flow.Trial, :), conf.colors(2,:), [conf.xshift-conf.shadowshift 0], data.maxdot);
+                    RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), conf.colors(1,:), [-conf.xshift-conf.shadowshift 0], data.maxdot);
                     if mode.inout_on
-                        RLonePLW(w,data.initPosition(2) + data.paceRate(2)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx1s, data.doty1s, data.moveDirection(flow.Trial, :), [0 255 0], [conf.xshift+conf.shadowshift 0], data.maxdot);
-                        RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotxs, data.dotys, data.moveDirection(flow.Trial, :), [255 0 0], [-conf.xshift+conf.shadowshift 0], data.maxdot);
+                        RLonePLW(w,data.initPosition(2) + data.paceRate(2)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx1s, data.doty1s, data.moveDirection(flow.Trial, :), conf.colors(2,:), [conf.xshift+conf.shadowshift 0], data.maxdot);
+                        RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotxs, data.dotys, data.moveDirection(flow.Trial, :), conf.colors(1,:), [-conf.xshift+conf.shadowshift 0], data.maxdot);
                     end
                 end
 
@@ -389,7 +410,7 @@ try
             if mode.tactile_on
                 % save data/postbuggy;
                 % disp('postbuggy');
-                tactileStimuli(data.tTrack(flow.Flip), render.dioOut);
+                tactileStimuli(data.tTrack(flow.Flip), render.dioOut,mode.mono_tactile);
             end
             %% catch the response
             if ~mode.tactile_on; render.dioIn = false; end
