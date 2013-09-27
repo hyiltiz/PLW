@@ -1,8 +1,11 @@
 *.asv
+*.zip
+*.7z
+*.tar.gz
 /*.mat
 /bad
 /data/*default*.mat
 /data/buggy.mat
 /data/test.mat
-/octave-core
+octave-core
 tmp

@@ -1,0 +1,183 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language chinese-simplified
+\language_package default
+\inputencoding UTF8
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\font_cjk gkai
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+实验指示
+\end_layout
+
+\begin_layout Abstract
+您好！谢谢您对本实验的支持！本实验是关于立体视觉认知的实验。整个实验由两部分组成，一共大约需要45分钟。实验期间不能离开。因此实验开始前可以先去卫生间，并请确保
+手机调到静音模式，以防受到干扰。
+\end_layout
+
+\begin_layout Section
+实验一
+\end_layout
+
+\begin_layout Subsection
+实验程序
+\end_layout
+
+\begin_layout Standard
+本实验一共由20个模块组成，每个模块大约延续一分钟。每5个模块之间，屏幕将提示您可以休息30秒（如果不打算休息，可以通过按任何键来跳过；如果打算休息，一定
+\bar under
+确保不要按任何键
+\bar default
+）。
+\end_layout
+
+\begin_layout Standard
+实验开始之前，在实验员的帮助下一起
+\series bold
+调整立体镜
+\series default
+。立体镜比较不稳定，而调整起来也耗费时间。因此请注意在实验过程中
+\bar under
+不要碰到立体镜
+\bar default
+。每个模块开始前都将出现调整立体镜的界面，以确认立体镜的摆放无误。此时，如果您从屏幕中看到的与实验开始前调整后所看到的一样，请按任何键继续实验。否则，请告诉实验
+员立体镜摆放有误需要调整。
+\end_layout
+
+\begin_layout Standard
+每个模块中，
+\bar under
+您将在屏幕上看到
+\bar default
+由一些点组成的一个行走中的人。您需要
+\series bold
+只关注
+\series default
+屏幕中央的注视点+，而不关注任何如局部特征或者某种运动模式。
+\end_layout
+
+\begin_layout Standard
+实验前，您需要带上耳塞，并在小腿处安装触觉装置。带耳塞前，请
+\series bold
+使劲捏紧耳塞
+\series default
+将其变得很细，再塞紧，尽可能避免能听到声音。触觉装置在小腿靠近脚踝处分别在小腿前侧和后侧安装，一共四处。
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+触觉刺激有方向性
+\series default
+。其方向行的定义如下：针对
+\series bold
+连续
+\series default
+出现的两个前后的触觉刺激，触觉刺激的方向是从前一个刺激指向后一个刺激。譬如，当后侧一对刺激出现后紧接着出现前侧一对刺激，则可以认为触觉刺激的方向是指向前方；反之
+指向后方。
+\end_layout
+
+\begin_layout Subsection
+实验任务
+\end_layout
+
+\begin_layout Standard
+您将在屏幕中看到一对行走中的人，分别为红色和绿色。人的行走方向可能是向外（从屏幕内走向屏幕外，面朝您），或者向里（从屏幕外走想屏幕里，背朝您）。其行走方向会随机
+切换（即原来走向外的人走向里），每次切换的时间都不是稳定的（即可能在0-1秒内，或1-3秒或更长，也可能超过10秒）。
+\end_layout
+
+\begin_layout Standard
+您的任务是：根据小腿上触觉刺激的方向，判断红色和绿色的人中哪一个人行走方向与触觉刺激的方向一致。如果发现
+\series bold
+红色
+\series default
+的人行走方向一直，请按住”1“键不放，直到方向一直的人不再是红色的人。如果发现
+\series bold
+绿色
+\series default
+的人行走方向一直，请按住”2“键不放，直到方向一直的人不再是红色的人。如果实在无法判断，可以不按任何键。但这种情况基本上很少见，在实验中
+\bar under
+90%以上的情况下，您都是在按”1“键或者”2“键。
+\end_layout
+
+\begin_layout Section
+实验二
+\end_layout
+
+\begin_layout Standard
+本实验大约将延续15分钟，一共有长约一分钟的12个模块组成。实验程序和任务与实验一基本类似，有以下两处需要注意
+\end_layout
+
+\begin_layout Enumerate
+屏幕中不再出现人。您需要根据您的自己的
+\series bold
+主观感觉
+\series default
+和小腿上的触觉刺激，判断是哪个颜色的“人”行走方向与触觉刺激的方向保持一致。
+\end_layout
+
+\begin_layout Enumerate
+实验开始后，当且仅当屏幕中有"begins"提示词时，作出按键反应。其前后均
+\series bold
+不能
+\series default
+做反应。
+\end_layout
+
+\end_body
+\end_document
