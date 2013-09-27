@@ -1,4 +1,4 @@
-function PLWTactileBase()
+function PLWTactileBaseInOutSimple
 % As a baseline test for PLW tactile asynchrony manipulation
 %% 14, Mar, 2013, lihan chen
 addpath('./data', './lib', './resources');
@@ -11,7 +11,7 @@ prestate = 2; %[1 0];PLW
 trials = [];
 iCounter = 1;
 Tinterval=0;
-seq = genTrials(2,[2 3]); % first-1 from initial rightwards; 2-initial leftwards;
+seq = genTrials(2,[2 3]); % first-1 from initial inwards; 2-initial leftwards;
 % second, 1-tactile short-long-short, 2-tactile equal; 3-tactile
 % long-short-long.
 %% initialize dio
@@ -53,23 +53,23 @@ try
     %%0.1 Display Instructions,the first page;
     Screen('FillRect',mainWnd);
     drawTextAt(mainWnd,'This is an experiment about apparent motion.', cx,cy-200,[200 200 200]);
-    drawTextAt(mainWnd,'There will be two tactile taps successively presented on your left and right finger', cx,cy-100,[200 200 200]);
+    drawTextAt(mainWnd,'There will be two tactile taps successively presented on your left and right foot', cx,cy-100,[200 200 200]);
     drawTextAt(mainWnd,'your task is to report the dominant direction of the motion after the first several tactile pair is presented ', cx,cy-50,[200 200 200]);
-    drawTextAt(mainWnd,'If you perceive right-ward motion [->], please press right foot-switch and hold it', cx,cy,[200 200 200]);
-    drawTextAt(mainWnd,'If you perceive left-ward motion [<-], please press left foot-switch and hold it', cx,cy+50,[200 200 200]);
-    drawTextAt(mainWnd,'Press any foot switch to second page...', cx,cy+250,[200 200 200]);
+    drawTextAt(mainWnd,'If you perceive in-ward motion [^], please press red button and HOLD it', cx,cy,[200 200 200]);
+    drawTextAt(mainWnd,'If you perceive out-ward motion [v], please press green button and HOLD it', cx,cy+50,[200 200 200]);
+    drawTextAt(mainWnd,'Press red button to second page...', cx,cy+250,[200 200 200]);
     Screen('Flip', mainWnd);
     DioWait;
     WaitSecs(1);
-
+    
     %%0.2 Display Instructions,the second page;
     Screen('FillRect',mainWnd);
     drawTextAt(mainWnd,'Please make your responses after the signal ''begins'' appears', cx,cy,[200 200 200]);
-    drawTextAt(mainWnd,'Press the footpaddle to start', cx,cy+250,[200 200 200]);
+    drawTextAt(mainWnd,'Press red button to start', cx,cy+250,[200 200 200]);
     Screen('Flip', mainWnd);
     DioWait;
     WaitSecs(1);
-
+    
     Screen('FillRect',mainWnd);
     Screen('Flip', mainWnd);
     %% present stimli
@@ -80,7 +80,7 @@ try
             strTrl = sprintf('Trial No %d',iTrl);
             drawTextAt(mainWnd,strTrl, cx,cy-20,255);
             drawTextAt(mainWnd,'Please take a rest', cx,cy+ 20,255);
-            drawTextAt(mainWnd,'Press  foot switch to continue...',cx,cy+60,255);%% and then lift the padel
+            drawTextAt(mainWnd,'Press red button to continue...',cx,cy+60,255);%% and then lift the padel
             Screen('Flip', mainWnd);
             DioWait;
             Screen('FillRect',mainWnd);
@@ -91,14 +91,14 @@ try
             strTrl = sprintf('Trial No %d',iTrl);
             Screen('Flip', mainWnd);
             drawTextAt(mainWnd,strTrl,cx,cy-20,255);
-            drawTextAt(mainWnd,' foot switch to start...',cx,cy+20,255);
+            drawTextAt(mainWnd,' red button to start...',cx,cy+20,255);
             Screen('Flip', mainWnd);
             DioWait;
             Screen('FillRect',mainWnd);
             Screen('Flip', mainWnd);
         end
-
-
+        
+        
         %exit if press excape key
         [ keyIsDown, seconds, keyCode ] = KbCheck;
         if keyIsDown
@@ -113,14 +113,14 @@ try
         % SFrames = 0.15/sampleRate; %step frames 150ms
         % initHFrame = 0.1/sampleRate;
         % tAdjust = 0.00035;
-        % seq = genTrials(2,[2 3]); % first-1 from initial rightwards; 2-initial leftwards;
+        % seq = genTrials(2,[2 3]); % first-1 from initial inwards; 2-initial leftwards;
         % second, 1-tactile short-long-short, 2-tactile equal; 3-tactile
         % long-short-long.
-
+        
         %% seq(iTrl,2)=1,tactile short-long-short temporal structure
         %% seq(iTrl,2)=2,bistable motion
         %% seq(iTrl,2)=3,tactile long-short-long temporal structure
-
+        
         T=70;   %duration 70 seconds
         Tinterval=GetSecs;
         % initTime = GetSecs;
@@ -142,11 +142,12 @@ try
             end
         end
 
+        
         prestate=2;
         response=0;
         iCounter = 1;
         trials = [];
-
+        
         %presenting stimuli
         for iRep = 1:round(T/1.3);
             if iRep==5
@@ -158,13 +159,13 @@ try
                 end
                 switch tStim(iframe)
                     case 1
-                        putvalue(dioOut,2);%% left tactile
+                        putvalue(dioOut,2+8);%% left tactile
                     case 2
-                        putvalue(dioOut,8); %% right tactile
+                        putvalue(dioOut,16+32); %% right tactile
                     case -1
                         putvalue(dioOut,0);
                 end
-
+                
                 %acquiring data
                 if iRep>=5 %% eliminate initial bias,start response
                     getvalue(dioIn);
@@ -186,7 +187,7 @@ try
                         prestate=response;
                     end
                 end
-               Screen('Flip', mainWnd);
+                Screen('Flip', mainWnd);
             end
             %end one cycle
         end  %% end a trial
@@ -194,14 +195,14 @@ try
         getvalue(dioIn);  %% the following to capture the last data
         Screen('FillRect',mainWnd);
         Screen('Flip', mainWnd);
-                    if sum(getvalue(dioIn))==2
-                        response=0;
-                    elseif sum(getvalue(dioIn))==3
-                        response=1;
-                    elseif sum(getvalue(dioIn))==1
-                        response=2;
-                    end
-
+        if sum(getvalue(dioIn))==2
+            response=0;
+        elseif sum(getvalue(dioIn))==3
+            response=1;
+        elseif sum(getvalue(dioIn))==1
+            response=2;
+        end
+        
         if  response>0
             trials(iCounter,1) = response;
             trials(iCounter,2) = GetSecs - initTime;
@@ -211,9 +212,9 @@ try
             initTime = GetSecs;
             iCounter = iCounter + 1;
         end
-
+        
         totaltrials=[totaltrials;trials];
-
+        
         putvalue(dioOut,0);
     end %% end all trials
     putvalue(dioOut,0);
