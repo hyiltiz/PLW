@@ -125,7 +125,7 @@ end
 
 if mode.simpleInOut_on
   %use the same visual stimuli
-  mode.InOut_on = 1;
+  mode.inout_on = 1;
   mode.mono_tactile = 1;
   conf.doubleTactileDiff  =  0;
   mode.colorbalance_on    = 0;  % set target PLW green, rather than red

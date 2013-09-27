@@ -18,7 +18,8 @@ disp(' ');
 disp(' ');
 disp(response);
 
-for i=1:3
+for i=1:30
+    if 0
 pause(1);
 
 putvalue(dioOut, 2);% the left back foot touches the ground.putvalue(dioOut,0); % clear zero
@@ -36,7 +37,19 @@ putvalue(dioOut,0); % clear zero
 putvalue(dioOut, 32);% the left front foot touches the ground.
 pause(0.3);
 putvalue(dioOut,0); % clear zero
+    else
+        pause(1);
 
+putvalue(dioOut, 10);% the left back foot touches the ground.putvalue(dioOut,0); % clear zero
+% putvalue(dioOut, 8);% the right back foot touches the ground
+pause(0.3);
+putvalue(dioOut,0); % clear zero
+
+putvalue(dioOut, 48);% the left front foot touches the ground.
+% putvalue(dioOut, 32);% the left front foot touches the ground.
+pause(0.3);
+putvalue(dioOut,0); % clear zero
+    end
 end
 
 while true; pause(.1); sum(getvalue(dioIn)),end

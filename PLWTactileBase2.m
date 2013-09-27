@@ -61,7 +61,7 @@ try
     Screen('Flip', mainWnd);
     DioWait;
     WaitSecs(1);
-    
+
     %%0.2 Display Instructions,the second page;
     Screen('FillRect',mainWnd);
     drawTextAt(mainWnd,'Please make your responses after the signal ''begins'' appears', cx,cy,[200 200 200]);
@@ -69,7 +69,7 @@ try
     Screen('Flip', mainWnd);
     DioWait;
     WaitSecs(1);
-    
+
     Screen('FillRect',mainWnd);
     Screen('Flip', mainWnd);
     %% present stimli
@@ -97,8 +97,8 @@ try
             Screen('FillRect',mainWnd);
             Screen('Flip', mainWnd);
         end
-        
-        
+
+
         %exit if press excape key
         [ keyIsDown, seconds, keyCode ] = KbCheck;
         if keyIsDown
@@ -116,37 +116,37 @@ try
         % seq = genTrials(2,[2 3]); % first-1 from initial rightwards; 2-initial leftwards;
         % second, 1-tactile short-long-short, 2-tactile equal; 3-tactile
         % long-short-long.
-        
+
         %% seq(iTrl,2)=1,tactile short-long-short temporal structure
         %% seq(iTrl,2)=2,bistable motion
         %% seq(iTrl,2)=3,tactile long-short-long temporal structure
-        
+
         T=70;   %duration 70 seconds
         Tinterval=GetSecs;
         % initTime = GetSecs;
         if seq(iTrl,1)==1 %% initial tactile: left
             if seq(iTrl,2)==1 % first tactile leading, short-long-short
-                tStim = [zeros(1,initHFrame), 1, -1, zeros(1,10), 3,-1,zeros(1, round(TFrames/2)-SFrames-2-12),2,-1, zeros(1,10), 4,-1, zeros(1,round(TFrames/2)-initHFrame-2-12+SFrames)];
+                tStim = [zeros(1,initHFrame), 1, -1, zeros(1, round(TFrames/2)-SFrames-2),2,-1, zeros(1,round(TFrames/2)-initHFrame-2+SFrames)];
             elseif seq(iTrl,2)==2
-                tStim = [zeros(1,initHFrame), 1, -1, zeros(1,10), 3,-1,zeros(1, (round(TFrames/2)-2-12)),2,-1, zeros(1,10), 4,-1, zeros(1,TFrames-initHFrame-2-12-round(TFrames/2))];
+                tStim = [zeros(1,initHFrame), 1, -1, zeros(1, (round(TFrames/2)-2)),2,-1, zeros(1,TFrames-initHFrame-2-round(TFrames/2))];
             elseif seq(iTrl,2)==3 %% long-short-long
-                tStim = [zeros(1,initHFrame), 1, -1, zeros(1,10), 3,-1,zeros(1,  round(TFrames/2)+SFrames-2-12),2 -1, zeros(1,10), 4,-1, zeros(1,round(TFrames/2)-initHFrame-2-12-SFrames)];
+                tStim = [zeros(1,initHFrame), 1, -1, zeros(1,  round(TFrames/2)+SFrames-2),2 -1, zeros(1,round(TFrames/2)-initHFrame-2-SFrames)];
             end
         else  % initial tactile tap: right tap
             if seq(iTrl,2)==1 % first tactile leading, short-long-short
-                tStim = [zeros(1,initHFrame), 2, -1, zeros(1,10), 4,-1,zeros(1, round(TFrames/2)-SFrames-2-12),1,-1, zeros(1,10), 3,-1, zeros(1,round(TFrames/2)-initHFrame-2-12+SFrames)];
+                tStim = [zeros(1,initHFrame), 2, -1, zeros(1, round(TFrames/2)-SFrames-2),1,-1, zeros(1,round(TFrames/2)-initHFrame-2+SFrames)];
             elseif seq(iTrl,2)==2
-                tStim = [zeros(1,initHFrame), 2, -1, zeros(1,10), 4,-1,zeros(1, (round(TFrames/2)-2-12)),1,-1, zeros(1,10), 3,-1, zeros(1,TFrames-initHFrame-2-12-round(TFrames/2))];
+                tStim = [zeros(1,initHFrame), 2, -1, zeros(1, (round(TFrames/2)-2)),1,-1, zeros(1,TFrames-initHFrame-2-round(TFrames/2))];
             elseif seq(iTrl,2)==3 %% long-short-long
-                tStim = [zeros(1,initHFrame), 2, -1, zeros(1,10), 4,-1,zeros(1,  round(TFrames/2)+SFrames-2-12),1 -1, zeros(1,10), 3,-1, zeros(1,round(TFrames/2)-initHFrame-2-12-SFrames)];
+                tStim = [zeros(1,initHFrame), 2, -1, zeros(1,  round(TFrames/2)+SFrames-2),1 -1, zeros(1,round(TFrames/2)-initHFrame-2-SFrames)];
             end
         end
-        
+
         prestate=2;
         response=0;
         iCounter = 1;
         trials = [];
-        
+
         %presenting stimuli
         for iRep = 1:round(T/1.3);
             if iRep==5
@@ -161,14 +161,10 @@ try
                         putvalue(dioOut,2);%% left tactile
                     case 2
                         putvalue(dioOut,8); %% right tactile
-                    case 3
-                        putvalue(dioOut, 16);% the left front foot touches the ground.
-                    case 4
-                        putvalue(dioOut, 32);% the left front foot touches the ground.
                     case -1
                         putvalue(dioOut,0);
                 end
-                
+
                 %acquiring data
                 if iRep>=5 %% eliminate initial bias,start response
                     getvalue(dioIn);
@@ -190,7 +186,7 @@ try
                         prestate=response;
                     end
                 end
-                Screen('Flip', mainWnd);
+               Screen('Flip', mainWnd);
             end
             %end one cycle
         end  %% end a trial
@@ -198,14 +194,14 @@ try
         getvalue(dioIn);  %% the following to capture the last data
         Screen('FillRect',mainWnd);
         Screen('Flip', mainWnd);
-        if sum(getvalue(dioIn))==2
-            response=0;
-        elseif sum(getvalue(dioIn))==3
-            response=1;
-        elseif sum(getvalue(dioIn))==1
-            response=2;
-        end
-        
+                    if sum(getvalue(dioIn))==2
+                        response=0;
+                    elseif sum(getvalue(dioIn))==3
+                        response=1;
+                    elseif sum(getvalue(dioIn))==1
+                        response=2;
+                    end
+
         if  response>0
             trials(iCounter,1) = response;
             trials(iCounter,2) = GetSecs - initTime;
@@ -215,9 +211,9 @@ try
             initTime = GetSecs;
             iCounter = iCounter + 1;
         end
-        
+
         totaltrials=[totaltrials;trials];
-        
+
         putvalue(dioOut,0);
     end %% end all trials
     putvalue(dioOut,0);
