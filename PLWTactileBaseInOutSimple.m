@@ -231,7 +231,7 @@ try
     if isempty(Subinfo{1})
         save('data/Test','seq','totaltrials','M');
     else
-        save(['data/', Subinfo{1}],'seq','Subinfo','totaltrials','M' );
+        save(['data/', Subinfo{1} '_Simple_'],'seq','Subinfo','totaltrials','M' );
     end
     clear all;
 catch

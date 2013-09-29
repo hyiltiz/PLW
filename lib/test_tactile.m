@@ -18,7 +18,7 @@ disp(' ');
 disp(' ');
 disp(response);
 
-for i=1:30
+for i=1:3
     if 0
 pause(1);
 
