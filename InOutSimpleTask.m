@@ -15,6 +15,7 @@ function InOutSimpleTask(is_once_on)
 
   % state control variables
   mode.simpleInOut_on= 1;  % simple InOut exp, with the same tactile stimuli for both foot
+mode.colorbalance_on    = 1;  % balance the color of the target PLW, which is by default red
   mode.mirror_on     = 1;  % use mirror rather that spectacles for binacular rivalry
   mode.many_on       = 0;  % the task is the majority of dots the participant saw
   mode.debug_on      = 0;  % default is 0; 1 is not to use full screen, and skip the synch test
