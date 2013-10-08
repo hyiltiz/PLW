@@ -8,7 +8,7 @@ function InOutSimpleTask(is_once_on)
   conf.repetitions        =  5;           % repetition time of a condition
   conf.resttime           =  30;          % rest for 30s
   conf.restpertrial       =  5;           % every x trial a rest
-  conf.tiltangle          =  10;           % tilt angle for simulating 3D stereo display
+  conf.tiltangle          =  7;           % tilt angle for simulating 3D stereo display
   conf.xshift             =  0;           % shift PLW for using mirror, see mode.mirror_on
   conf.shadowshift        = .4;           % distance between PLWs and their twin shadows
   conf.doubleTactileDiff  = 10 ;          % flips between taps on one tactile stimuli (double tactile);0 to disable
