@@ -7,7 +7,10 @@
 % long-short-long.
 %subs={'anshuai','cuizhenpeng','lilingyu','liuweifang','liuye','liuzi','mawenjing','shaojiayuan','shaorenjie','sihongwei','songqingjun','tantian','wanghao','wenghanxin','zhaoyuan','zhengguomao'};
 
-subs = {'epar_Simple_.mat','mesede_Simple_.mat'}; % pre exp
+% subs = {'epar_Simple_.mat','mesede_Simple_.mat'}; % pre exp
+
+% simple task, day 1 and day 2
+subs = {'cuihao_Simple_.mat','diaoruochen_Simple_.mat','epar_Simple_.mat','hujiying_Simple_.mat','liuzhao_Simple_.mat','liyawen_Simple_.mat','luobinfeng_Simple_.mat','mesede_Simple_.mat','renshanshan_Simple_.mat','wanghui_Simple_.mat','wanglin_Simple_.mat','wangzhongrui_Simple_.mat','xulihua_Simple_.mat','zhangzehua_Simple_.mat','zhaoyaping_Simple_.mat','zhaoyuan2_Simple_.mat','zhengmei_Simple_.mat','zhengqianning_Simple_.mat','zhoupeng_simple_Simple_.mat'};
 
 M=[];
 durtemp=[];
@@ -47,6 +50,3 @@ legend('Inwards','Outwards');
 xlabel('tactile conditions');
 set(gca,'Xtick',1:3);
 set(gca,'XtickLabel',{'short-long-short','Synchronous','long-short-long'});
-
-
-
