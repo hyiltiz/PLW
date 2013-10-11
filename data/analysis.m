@@ -15,38 +15,47 @@ subs = {'cuihao_Simple_.mat','diaoruochen_Simple_.mat','epar_Simple_.mat','hujiy
 M=[];
 durtemp=[];
 for isub=1:length(subs)
-load(subs{isub},'totaltrials');
-idx=find(totaltrials(:,1)==0);
-totaltrials(idx,:)=[];
-totaltrials(:,2)=totaltrials(:,2)/(mean(totaltrials(:,2)));
-[m1,g1] = grpstats(totaltrials(:,2),{totaltrials(:,5),totaltrials(:,1)},{'mean','gname'});
-        for j=1:length(g1)
-            m1(j,2)=str2num(g1{j,1});
-            m1(j,3)=str2num(g1{j,2});
-        end
-for k=1:3 % cond
+    load(subs{isub},'totaltrials');
+    idx=find(totaltrials(:,1)==0);
+    totaltrials(idx,:)=[];
+    totaltrials(:,2)=totaltrials(:,2)/(mean(totaltrials(:,2)));
+    [m1,g1] = grpstats(totaltrials(:,2),{totaltrials(:,5)},{'mean','gname'});
+    for j=1:length(g1)
+        m1(j,2)=str2num(g1{j,1});
+%         m1(j,3)=str2num(g1{j,2});
+    end
+    
+    
+    for k=1:3 % cond
         idxtemp=find(m1(:,2)==k);
-        durtemp=m1(idxtemp,:);
-        for resp=1:2 % for four conditions-"congruent","incongruent","bistable","baseline";
-            if isempty(find(durtemp(:,3)==resp))
-                durtemp(size(durtemp,1)+1,:) = [0.001 k resp];
+%         durtemp=m1(idxtemp,:);
+%         for resp=1:2 % for four conditions-"congruent","incongruent","bistable","baseline";
+            if isempty(idxtemp)
+                m1(size(m1,1)+1,:) = [0.001 k];
             end
-        end
-         M=[M; durtemp];
+%         end
+    end
+    M=[M; m1(:,1)'];
+%     keyboard
+%     M1=reshape(M(:,1),[6,16])'; % resort
 end
-% M1=reshape(M(:,1),[6,16])'; % resort
-end
-M1=reshape(M(:,1),[6,numel(subs)])';
-M1=mean(M1);
+
+% M1=reshape(M(:,1),[6,numel(subs)])';
+
+% M1 = reshape(M(:,1),[sum(M(:,2)==1),numel(M(:,1))/sum(M(:,2)==1)]);
+% M1=mean(M1);
 figure;
 hold on;
 
-    plot(1:3, M1(1,[1,3,5]),'rs-');
-    plot(1:3, M1(1,[2,4,6])','s-.');
-    ylabel('duration');
+%     plot(1:3, M1(1,[1,3,5]),'rs-');
+%     plot(1:3, M1(1,[2,4,6])','s-.');
+plot(1:3,mean(M),'o-');
+ylabel('触觉刺激似动主导方向持续时间(s)');
 
 hold off;
-legend('Inwards','Outwards');
+% legend('Inwards','Outwards');
+% legend('Outwards','Inwards');
 xlabel('tactile conditions');
+xlabel('实验触觉条件');
 set(gca,'Xtick',1:3);
-set(gca,'XtickLabel',{'short-long-short','Synchronous','long-short-long'});
+set(gca,'XtickLabel',{'短-长-短','同时','长-短-长'});
