@@ -18,15 +18,15 @@ close all;
 time_on = 1;  % 0: do NOT plot for response time
 encode_on = 1; % encoding for resp type; always set this to 1
 
-subs.all = {'cuihaoMirrorD_simple_08-Oct-2013.mat','diaoruochenMirrorD_simple_08-Oct-2013.mat','eparMirrorD_simple_ColorBalance_29-Sep-2013.mat','hujiyingMirrorD_simple_09-Oct-2013.mat','huohuifangMirrorD_simple_08-Oct-2013.mat','litianyiMirrorD_simple_ColorBalance_08-Oct-2013.mat','liuzhaoMirrorD_simple_ColorBalance_08-Oct-2013.mat','liyawenMirrorD_simple_08-Oct-2013.mat','luobinfengMirrorD_simple_09-Oct-2013.mat','mesudeMirrorD_simple_ColorBalance_29-Sep-2013.mat','renshanshanMirrorD_simple_09-Oct-2013.mat','sihongweiMirrorD_simple_09-Oct-2013.mat','wanghuiMirrorD_simple_09-Oct-2013.mat','wanglinMirrorD_simple_09-Oct-2013.mat','wangzhongruiMirrorD_simple_08-Oct-2013.mat','xulihuaMirrorD_simple_08-Oct-2013.mat','yuhongfengMirrorD_simple_08-Oct-2013.mat','zhangzehuaMirrorD_simple_08-Oct-2013.mat','zhaoyapingMirrorD_simple_08-Oct-2013.mat','zhaoyuanMirrorD_simple_08-Oct-2013.mat','zhengmeiMirrorD_simple_08-Oct-2013.mat','zhengqianningMirrorD_simple_09-Oct-2013.mat','zhoupengMirrorD_simple_09-Oct-2013.mat','zhufengfengMirrorD_simple_09-Oct-2013.mat'};  % day 1 and day 2
+subs.all = {'luobinfengMirrorD_simple_09-Oct-2013.mat','zhaoyapingMirrorD_simple_08-Oct-2013.mat','eparMirrorD_simple_ColorBalance_29-Sep-2013.mat', 'zhengmeiMirrorD_simple_08-Oct-2013.mat','wanghuiMirrorD_simple_09-Oct-2013.mat','wanglinMirrorD_simple_09-Oct-2013.mat','zhaoyuanMirrorD_simple_08-Oct-2013.mat','liyawenMirrorD_simple_08-Oct-2013.mat','cuihaoMirrorD_simple_08-Oct-2013.mat','hujiyingMirrorD_simple_09-Oct-2013.mat','zhoupengMirrorD_simple_09-Oct-2013.mat',  'liuzhaoMirrorD_simple_ColorBalance_08-Oct-2013.mat',  'lichenMirrorD_simple_13-Oct-2013.mat','chenxiyueMirrorD_simple_13-Oct-2013.mat','penghuilinMirrorD_simple_13-Oct-2013.mat','fushenjiangMirrorD_simple_12-Oct-2013.mat','zhouyifanMirrorD_simple_13-Oct-2013.mat','chenpeikaiMirrorD_simple_13-Oct-2013.mat','yuanhuibangMirrorD_simple_13-Oct-2013.mat','chenxinyanMirrorD_simple_13-Oct-2013.mat','xulihuaMirrorD_simple_08-Oct-2013.mat','zhengqianningMirrorD_simple_09-Oct-2013.mat','sihongweiMirrorD_simple_09-Oct-2013.mat','renshanshanMirrorD_simple_09-Oct-2013.mat','mesudeMirrorD_simple_ColorBalance_29-Sep-2013.mat','yuhongfengMirrorD_simple_08-Oct-2013.mat','zhangzehuaMirrorD_simple_08-Oct-2013.mat','zhufengfengMirrorD_simple_09-Oct-2013.mat','huohuifangMirrorD_simple_08-Oct-2013.mat','diaoruochenMirrorD_simple_08-Oct-2013.mat','litianyiMirrorD_simple_ColorBalance_08-Oct-2013.mat', 'wangzhongruiMirrorD_simple_08-Oct-2013.mat',  'chengchengMirrorD_simple_12-Oct-2013.mat','chenjunMirrorD_simple_13-Oct-2013.mat','zhaokaiMirrorD_simple_13-Oct-2013.mat','hujuntaoMirrorD_simple_13-Oct-2013.mat','wangkangdaMirrorD_simple_13-Oct-2013.mat','hanjiayunMirrorD_simple_13-Oct-2013.mat','libixingMirrorD_simple_13-Oct-2013.mat','hansiqiMirrorD_simple_13-Oct-2013.mat'};
 
-subs.PT.low = {'yuhongfengMirrorD_simple_08-Oct-2013.mat','eparMirrorD_simple_ColorBalance_29-Sep-2013.mat','luobinfengMirrorD_simple_09-Oct-2013.mat','wanglinMirrorD_simple_09-Oct-2013.mat','litianyiMirrorD_simple_ColorBalance_08-Oct-2013.mat','xulihuaMirrorD_simple_08-Oct-2013.mat','zhengqianningMirrorD_simple_09-Oct-2013.mat','renshanshanMirrorD_simple_09-Oct-2013.mat','zhengmeiMirrorD_simple_08-Oct-2013.mat','zhaoyuanMirrorD_simple_08-Oct-2013.mat','mesudeMirrorD_simple_ColorBalance_29-Sep-2013.mat','zhaoyapingMirrorD_simple_08-Oct-2013.mat'};
+subs.PT.low = {'yuhongfengMirrorD_simple_08-Oct-2013.mat','eparMirrorD_simple_ColorBalance_29-Sep-2013.mat','luobinfengMirrorD_simple_09-Oct-2013.mat','wanglinMirrorD_simple_09-Oct-2013.mat','litianyiMirrorD_simple_ColorBalance_08-Oct-2013.mat','xulihuaMirrorD_simple_08-Oct-2013.mat','zhengqianningMirrorD_simple_09-Oct-2013.mat','renshanshanMirrorD_simple_09-Oct-2013.mat','zhengmeiMirrorD_simple_08-Oct-2013.mat','zhaoyuanMirrorD_simple_08-Oct-2013.mat','mesudeMirrorD_simple_ColorBalance_29-Sep-2013.mat','zhaoyapingMirrorD_simple_08-Oct-2013.mat', 'lichenMirrorD_simple_13-Oct-2013.mat','chenxiyueMirrorD_simple_13-Oct-2013.mat','penghuilinMirrorD_simple_13-Oct-2013.mat','fushenjiangMirrorD_simple_12-Oct-2013.mat','zhouyifanMirrorD_simple_13-Oct-2013.mat','chenpeikaiMirrorD_simple_13-Oct-2013.mat','yuanhuibangMirrorD_simple_13-Oct-2013.mat','chenxinyanMirrorD_simple_13-Oct-2013.mat'};
 % middle of PT: 15, min:1  max:11  SD=4.1090 N=22
-subs.PT.high = {'huohuifangMirrorD_simple_08-Oct-2013.mat', 'litianyiMirrorD_simple_ColorBalance_08-Oct-2013.mat', 'diaoruochenMirrorD_simple_08-Oct-2013.mat','hujiyingMirrorD_simple_09-Oct-2013.mat','sihongweiMirrorD_simple_09-Oct-2013.mat','liyawenMirrorD_simple_08-Oct-2013.mat','cuihaoMirrorD_simple_08-Oct-2013.mat','zhangzehuaMirrorD_simple_08-Oct-2013.mat','zhoupengMirrorD_simple_09-Oct-2013.mat','wanghuiMirrorD_simple_09-Oct-2013.mat','zhufengfengMirrorD_simple_09-Oct-2013.mat', 'wangzhongruiMirrorD_simple_08-Oct-2013.mat'};
+subs.PT.high = {'huohuifangMirrorD_simple_08-Oct-2013.mat', 'litianyiMirrorD_simple_ColorBalance_08-Oct-2013.mat', 'diaoruochenMirrorD_simple_08-Oct-2013.mat','hujiyingMirrorD_simple_09-Oct-2013.mat','sihongweiMirrorD_simple_09-Oct-2013.mat','liyawenMirrorD_simple_08-Oct-2013.mat','cuihaoMirrorD_simple_08-Oct-2013.mat','zhangzehuaMirrorD_simple_08-Oct-2013.mat','zhoupengMirrorD_simple_09-Oct-2013.mat','wanghuiMirrorD_simple_09-Oct-2013.mat','zhufengfengMirrorD_simple_09-Oct-2013.mat', 'wangzhongruiMirrorD_simple_08-Oct-2013.mat', 'chengchengMirrorD_simple_12-Oct-2013.mat','chenjunMirrorD_simple_13-Oct-2013.mat','zhaokaiMirrorD_simple_13-Oct-2013.mat','hujuntaoMirrorD_simple_13-Oct-2013.mat','wangkangdaMirrorD_simple_13-Oct-2013.mat','hanjiayunMirrorD_simple_13-Oct-2013.mat','libixingMirrorD_simple_13-Oct-2013.mat','hansiqiMirrorD_simple_13-Oct-2013.mat'};
 
-subs.EC.low = {'luobinfengMirrorD_simple_09-Oct-2013.mat','zhaoyapingMirrorD_simple_08-Oct-2013.mat','eparMirrorD_simple_ColorBalance_29-Sep-2013.mat', 'zhengmeiMirrorD_simple_08-Oct-2013.mat','wanghuiMirrorD_simple_09-Oct-2013.mat','wanglinMirrorD_simple_09-Oct-2013.mat','zhaoyuanMirrorD_simple_08-Oct-2013.mat','liyawenMirrorD_simple_08-Oct-2013.mat','cuihaoMirrorD_simple_08-Oct-2013.mat','hujiyingMirrorD_simple_09-Oct-2013.mat','zhoupengMirrorD_simple_09-Oct-2013.mat',  'liuzhaoMirrorD_simple_ColorBalance_08-Oct-2013.mat'};
+subs.EC.low = {'luobinfengMirrorD_simple_09-Oct-2013.mat','zhaoyapingMirrorD_simple_08-Oct-2013.mat','eparMirrorD_simple_ColorBalance_29-Sep-2013.mat', 'zhengmeiMirrorD_simple_08-Oct-2013.mat','wanghuiMirrorD_simple_09-Oct-2013.mat','wanglinMirrorD_simple_09-Oct-2013.mat','zhaoyuanMirrorD_simple_08-Oct-2013.mat','liyawenMirrorD_simple_08-Oct-2013.mat','cuihaoMirrorD_simple_08-Oct-2013.mat','hujiyingMirrorD_simple_09-Oct-2013.mat','zhoupengMirrorD_simple_09-Oct-2013.mat',  'liuzhaoMirrorD_simple_ColorBalance_08-Oct-2013.mat',  'lichenMirrorD_simple_13-Oct-2013.mat','chenxiyueMirrorD_simple_13-Oct-2013.mat','penghuilinMirrorD_simple_13-Oct-2013.mat','fushenjiangMirrorD_simple_12-Oct-2013.mat','zhouyifanMirrorD_simple_13-Oct-2013.mat','chenpeikaiMirrorD_simple_13-Oct-2013.mat','yuanhuibangMirrorD_simple_13-Oct-2013.mat','chenxinyanMirrorD_simple_13-Oct-2013.mat'};
 % middle of EC: 8  min:1  max:15  SD = 4.2501 N=22
-subs.EC.high = {'xulihuaMirrorD_simple_08-Oct-2013.mat','zhengqianningMirrorD_simple_09-Oct-2013.mat','sihongweiMirrorD_simple_09-Oct-2013.mat','renshanshanMirrorD_simple_09-Oct-2013.mat','mesudeMirrorD_simple_ColorBalance_29-Sep-2013.mat','yuhongfengMirrorD_simple_08-Oct-2013.mat','zhangzehuaMirrorD_simple_08-Oct-2013.mat','zhufengfengMirrorD_simple_09-Oct-2013.mat','huohuifangMirrorD_simple_08-Oct-2013.mat','diaoruochenMirrorD_simple_08-Oct-2013.mat','litianyiMirrorD_simple_ColorBalance_08-Oct-2013.mat', 'wangzhongruiMirrorD_simple_08-Oct-2013.mat'};
+subs.EC.high = {'xulihuaMirrorD_simple_08-Oct-2013.mat','zhengqianningMirrorD_simple_09-Oct-2013.mat','sihongweiMirrorD_simple_09-Oct-2013.mat','renshanshanMirrorD_simple_09-Oct-2013.mat','mesudeMirrorD_simple_ColorBalance_29-Sep-2013.mat','yuhongfengMirrorD_simple_08-Oct-2013.mat','zhangzehuaMirrorD_simple_08-Oct-2013.mat','zhufengfengMirrorD_simple_09-Oct-2013.mat','huohuifangMirrorD_simple_08-Oct-2013.mat','diaoruochenMirrorD_simple_08-Oct-2013.mat','litianyiMirrorD_simple_ColorBalance_08-Oct-2013.mat', 'wangzhongruiMirrorD_simple_08-Oct-2013.mat',  'chengchengMirrorD_simple_12-Oct-2013.mat','chenjunMirrorD_simple_13-Oct-2013.mat','zhaokaiMirrorD_simple_13-Oct-2013.mat','hujuntaoMirrorD_simple_13-Oct-2013.mat','wangkangdaMirrorD_simple_13-Oct-2013.mat','hanjiayunMirrorD_simple_13-Oct-2013.mat','libixingMirrorD_simple_13-Oct-2013.mat','hansiqiMirrorD_simple_13-Oct-2013.mat'};
 
 PThigh = ismember(subs.all, subs.PT.high)';
 EChigh = ismember(subs.all, subs.EC.high)';
@@ -36,6 +36,7 @@ fullDur = [];
 % whichsub = {'subs.PT.low','subs.PT.high'};
 % whichsub = {'subs.EC.low','subs.EC.high'};
 whichsub = {'subs.PT.low','subs.PT.high','subs.EC.low','subs.EC.high'};
+% whichsub = {'subs.all'};
 for iwhichsub = 1:numel(whichsub)
     thesubs = eval(whichsub{iwhichsub});
     Dur=[];
@@ -207,8 +208,8 @@ for iwhichsub = 1:numel(whichsub)
         %    redPLWinvertcong=(dur1(:,6)+dur2(:,6))/2;
         %    redPLWinvertincong=(dur1(:,8)+dur2(:,8))/2;
 
-%             figure;
-        hold on;
+%         figure;
+%         hold on;
 
         if time_on
 %             plot(1:4, dur1);
@@ -220,13 +221,13 @@ for iwhichsub = 1:numel(whichsub)
 %             ylabel('number of responses');
         end;
 
-%         hold off;
+        hold off;
         xlabel('tactile conditions');
         xlabel('实验触觉条件');
         set(gca,'Xtick',1:4);
         %     set(gca,'XtickLabel',{'Incongruent','Congruent','Sync', 'Baseline'});
         title(whichsub{iwhichsub});
-%         title(thesubs{isub});
+        title(thesubs{isub});
         set(gca,'XtickLabel',{'不一致','一致','同时', '基线（无触觉刺激）'});
 
 
@@ -251,7 +252,7 @@ for iwhichsub = 1:numel(whichsub)
         Dur = [fliplr(Dur(:,[1 2])) Dur(:,[3 4])];
         fullDur{iwhichsub} = Dur;
 %         keyboard
-        plot(1:4, mean(Dur),'o-');
+        plot(1:4, mean(Dur),'ks-');
         %     plot(1:4, Dur2avr','s-.');
         ylabel('duration (s)');
         ylabel('标准化主导方向持续时间(s)');
@@ -271,6 +272,6 @@ for iwhichsub = 1:numel(whichsub)
 
     % end
 
-    print(gcf, '-dpng', [pwd '\tmp\mean_standardized_' whichsub{iwhichsub} '.png']);
+%     print(gcf, '-dpng', [pwd '\tmp\mean_standardized_' whichsub{iwhichsub} '.png']);
 %     figure
 end
