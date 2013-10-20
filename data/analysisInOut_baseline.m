@@ -5,9 +5,9 @@
 % 4-1 from initial inwards; 2-initial outwards
 % 5-second, 1-tactile short-long-short, 2-tactile equal; 3-tactile
 % long-short-long.
-%subs={'anshuai','cuizhenpeng','lilingyu','liuweifang','liuye','liuzi','mawenjing','shaojiayuan','shaorenjie','sihongwei','songqingjun','tantian','wanghao','wenghanxin','zhaoyuan','zhengguomao'};
+subs={'anshuai','cuizhenpeng','lilingyu','liuweifang','liuye','liuzi','mawenjing','shaojiayuan','shaorenjie','sihongwei','songqingjun','tantian','wanghao','wenghanxin','zhaoyuan','zhengguomao'};
 
-subs = {'epar_Simple_.mat','mesede_Simple_.mat'}; % pre exp
+% subs = {'epar_Simple_.mat','mesede_Simple_.mat'}; % pre exp
 
 M=[];
 durtemp=[];
@@ -34,6 +34,9 @@ end
 % M1=reshape(M(:,1),[6,16])'; % resort
 end
 M1=reshape(M(:,1),[6,numel(subs)])';
+keyboard
+fullM = [M1(:,[1 3 5]); M1(:, [2 4 6])];
+
 M1=mean(M1);
 figure;
 hold on;
