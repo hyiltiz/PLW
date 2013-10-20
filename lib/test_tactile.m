@@ -19,7 +19,7 @@ disp(' ');
 disp(response);
 
 for i=1:3
-    if 0
+    if 1
 pause(1);
 
 putvalue(dioOut, 2);% the left back foot touches the ground.putvalue(dioOut,0); % clear zero
@@ -39,7 +39,7 @@ pause(0.3);
 putvalue(dioOut,0); % clear zero
     else
         pause(1);
-
+% 1 2 4 8 16 32 64
 putvalue(dioOut, 10);% the left back foot touches the ground.putvalue(dioOut,0); % clear zero
 % putvalue(dioOut, 8);% the right back foot touches the ground
 pause(0.3);

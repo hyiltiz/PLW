@@ -6,7 +6,7 @@ function tactileStimuli(tTrack, dioOut, is_mono)
   % [1,2,4,8,16,32,64,128; up to 8 Channels of tactile, we could just used two, such
   % as channel 2 and channel 3, coding 2 and 4]
   %
-
+is_mono = 0;
   if is_mono
     switch tTrack
       case 0
