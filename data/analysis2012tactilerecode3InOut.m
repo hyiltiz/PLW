@@ -157,6 +157,6 @@ legend('不一致','一致');
 xlabel('tactile conditions');
 xlabel('实验触觉条件');
 set(gca,'Xtick',1:4);
-set(gca,'XtickLabel',{'TbeforV','Synchronous','TafterV','baseline'});
 set(gca,'XtickLabel',{'超前','同时','延迟','基线（无触觉刺激）'});
+set(gca,'XtickLabel',{'TbeforV','Synchronous','TafterV','baseline'});
 legend('boxoff')

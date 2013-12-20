@@ -33,37 +33,49 @@ EChigh = ismember(subs.all, subs.EC.high)';
 %% begin statistics
 
 fullDur = [];
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%Chose which group to analyze%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % whichsub = {'subs.PT.low','subs.PT.high'};
 % whichsub = {'subs.EC.low','subs.EC.high'};
-whichsub = {'subs.PT.low','subs.PT.high','subs.EC.low','subs.EC.high'};
-% whichsub = {'subs.all'};
+% whichsub = {'subs.PT.low','subs.PT.high','subs.EC.low','subs.EC.high'};
+whichsub = {'subs.all'};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 for iwhichsub = 1:numel(whichsub)
     thesubs = eval(whichsub{iwhichsub});
     Dur=[];
     Table=[];% collect response switches
     Data=[];
-% figure
+    % figure
     for isub=1:numel(thesubs)
         Durtemp=[]; % temp for transform
         dur=[]; % store data;
         %     load(subs{isub},'Trials');
         load(thesubs{isub});
+        if sum(Trials(:,3)>70)>0
+            disp(thesubs{isub});
+            keyboard
+        end
         Trials(Trials(:,2)==0,:) = [];
         Trials(:,3) = Trials(:,3) / mean(Trials(:,3));
-
+        
         % histfit(Trials(:,3))
         %     keyboard
-
+        
         idx=find(Trials(:,2)==0);
         Trials(idx,:)=[];  % delete the none-response data.
         Trials(Trials(:,7)==3,:)=[];
-
+        
         %% here set the "congruent" and "incongruent" conditions
         Trials(2:end,12)=diff(Trials(:,2));
         idx=find(Trials(:,12)~=0);
         switchrate=length(idx)/length(Trials);
         %Trials(:,2)=((Trials(:,2)-1)==Trials(:,4))+1; % 1--> incong  2-->cong
-
+        
         if encode_on
             for x=1:length(Trials)
                 if Trials(x,1)==1 && Trials(x,7)==1 && Trials(x,2)==1 % tactile lead;initial rightwards motion; right resp
@@ -90,7 +102,7 @@ for iwhichsub = 1:numel(whichsub)
             end
         end
         %
-
+        
         %     if isub>10
         %     for x=1:length(Trials)
         %         if Trials(x,1)==1 && Trials(x,7)==1 && Trials(x,2)==1 % tactile lead;initial rightwards motion; right resp
@@ -119,11 +131,11 @@ for iwhichsub = 1:numel(whichsub)
         %
         %
         %
-
+        
         % step 2: normalized phase duration for each subject
         %     Trials(:,3)=Trials(:,3)/(mean(Trials(:,3)));
         Data=[Data;Trials];
-
+        
         % [normdata g] = grpstats(Data(:,3),{Data(:,12)},{'mean','gname'});
         % for i=1:length(g)
         %     idx = find(Data(:,12)== str2num(g{i})); %find that subject's data
@@ -135,106 +147,106 @@ for iwhichsub = 1:numel(whichsub)
         %    Trials1=Trials(idx1,:); % red PLW is leftwards motion;
         %    idx2 =find(Trials(:,4)==1);
         %    Trials2=Trials(idx2,:); %  red PLW is rightwards motion;
-
-
-%         tbl1 = zeros(4,1);
-%         tbl2 = zeros(4,1);
-%         if IsOctave
-%
-%             if encode_on
-%                 dur = accumarray([Trials(:,1) Trials(:,11)],Trials(:,3),[],@mean);
-%             else
-%                 dur = accumarray([Trials(:,1) Trials(:,2)],Trials(:,3),[],@mean);
-%             end
-%
-%             dur = reshape(dur',[numel(dur),1]);
-%             g = [repmat(1:size(dur,1),[1 numel(dur)/size(dur,1)])' repmat(1:size(dur,2),[1 numel(dur)/size(dur,2)])'];
-%             dur = [dur g];
-%
-%             [tbl1v tblidx1]= table(Trials(Trials(:,2)==1,1));%number of incongruent response
-%             [tbl2v tblidx2]= table(Trials(Trials(:,2)==2,1));%number of congruent response
-%         else
-
-            if encode_on
-                [dur g] = grpstats(Trials(:,3),{Trials(:,11)},{'mean','gname'}); %  cond: 4; resp: 1-inward; 2-outward
-            else
-                [dur g] = grpstats(Trials(:,3),{Trials(:,1),Trials(:,2)},{'mean','gname'}); %  cond: 4; resp: 1-inward; 2-outward
-            end
-
-
-            for j=1:length(g)
-                dur(j,2)=str2num(g{j,1});
-                %             dur(j,3)=str2num(g{j,2});
-            end
-
-%             if encode_on
-%                 tbl1x = tabulate(Trials(Trials(:,11)==1,1));
-%                 tbl2x = tabulate(Trials(Trials(:,11)==2,1));
-%                 tbl3x = tabulate(Trials(Trials(:,11)==3,1));
-%             else
-%                 tbl1x = tabulate(Trials(Trials(:,2)==1,1));
-%                 tbl2x = tabulate(Trials(Trials(:,2)==2,1));
-%             end
-
-            %         tbl1v = tbl1x(:,2);
-            %         tbl2v = tbl2x(:,2);
-
-            %         tblidx1 = tbl1x(:,1);
-            %         tblidx2 = tbl2x(:,1);
-%         end
+        
+        
+        %         tbl1 = zeros(4,1);
+        %         tbl2 = zeros(4,1);
+        %         if IsOctave
+        %
+        %             if encode_on
+        %                 dur = accumarray([Trials(:,1) Trials(:,11)],Trials(:,3),[],@mean);
+        %             else
+        %                 dur = accumarray([Trials(:,1) Trials(:,2)],Trials(:,3),[],@mean);
+        %             end
+        %
+        %             dur = reshape(dur',[numel(dur),1]);
+        %             g = [repmat(1:size(dur,1),[1 numel(dur)/size(dur,1)])' repmat(1:size(dur,2),[1 numel(dur)/size(dur,2)])'];
+        %             dur = [dur g];
+        %
+        %             [tbl1v tblidx1]= table(Trials(Trials(:,2)==1,1));%number of incongruent response
+        %             [tbl2v tblidx2]= table(Trials(Trials(:,2)==2,1));%number of congruent response
+        %         else
+        
+        if encode_on
+            [dur g] = grpstats(Trials(:,3),{Trials(:,11)},{'mean','gname'}); %  cond: 4; resp: 1-inward; 2-outward
+        else
+            [dur g] = grpstats(Trials(:,3),{Trials(:,1),Trials(:,2)},{'mean','gname'}); %  cond: 4; resp: 1-inward; 2-outward
+        end
+        
+        
+        for j=1:length(g)
+            dur(j,2)=str2num(g{j,1});
+            %             dur(j,3)=str2num(g{j,2});
+        end
+        
+        %             if encode_on
+        %                 tbl1x = tabulate(Trials(Trials(:,11)==1,1));
+        %                 tbl2x = tabulate(Trials(Trials(:,11)==2,1));
+        %                 tbl3x = tabulate(Trials(Trials(:,11)==3,1));
+        %             else
+        %                 tbl1x = tabulate(Trials(Trials(:,2)==1,1));
+        %                 tbl2x = tabulate(Trials(Trials(:,2)==2,1));
+        %             end
+        
+        %         tbl1v = tbl1x(:,2);
+        %         tbl2v = tbl2x(:,2);
+        
+        %         tblidx1 = tbl1x(:,1);
+        %         tblidx2 = tbl2x(:,1);
+        %         end
         %     tbl1(tblidx1) = tbl1v;
         %     tbl2(tblidx2) = tbl2v;
-
+        
         %     keyboard
         for j=0:3 % cond
             idxtemp=find(dur(:,2)==j);
-
+            
             %         durtemp=dur(idxtemp,:);
             %         for resp=0:3 % for four conditions-"congruent","incongruent","bistable","baseline";
             if isempty(idxtemp)
                 dur(size(dur,1)+1,:) = [0.001 j];
             end
         end
-
+        
         Durtemp=[Durtemp;sortrows(dur,2)];
         % end
         %     keyboard
         dur1=reshape(Durtemp(:,1),[numel(unique(Durtemp(:,2))) numel(Durtemp(:,1))/numel(unique(Durtemp(:,2)))])'; % four column,
         Dur=[Dur;dur1];
-%         Table = [Table;[tbl1'  tbl2']]; % 1-4 column for incong; 5-8 for cong
+        %         Table = [Table;[tbl1'  tbl2']]; % 1-4 column for incong; 5-8 for cong
         % %    Dur2=[Dur2; dur2];
         %    redPLWupcong=(dur1(:,5)+dur2(:,5))/2;
         %    redPLWupinicong=(dur1(:,7)+dur2(:,7))/2;
         %    redPLWinvertcong=(dur1(:,6)+dur2(:,6))/2;
         %    redPLWinvertincong=(dur1(:,8)+dur2(:,8))/2;
-
-%         figure;
-%         hold on;
-
+        
+        %         figure;
+        %         hold on;
+        
         if time_on
-%             plot(1:4, dur1);
+            %             plot(1:4, dur1);
             ylabel('duration (s)');
             ylabel('标准化主导方向持续时间(s)');
-%         else
-%             plot(1:4, tbl1,'rs-');
-%             plot(1:4, tbl2,'s-.');
-%             ylabel('number of responses');
+            %         else
+            %             plot(1:4, tbl1,'rs-');
+            %             plot(1:4, tbl2,'s-.');
+            %             ylabel('number of responses');
         end;
-
+        
         hold off;
         xlabel('tactile conditions');
         xlabel('实验触觉条件');
         set(gca,'Xtick',1:4);
         %     set(gca,'XtickLabel',{'Incongruent','Congruent','Sync', 'Baseline'});
-        title(whichsub{iwhichsub});
-        title(thesubs{isub});
+%         title(whichsub{iwhichsub});
+%         title(thesubs{isub});
         set(gca,'XtickLabel',{'不一致','一致','同时', '基线（无触觉刺激）'});
-
-
+        
+        
         %print(gcf, '-dpng', ['/scratch/' 'response_time' subs{isub} '.png']);
         %    print(gcf, '-dpng', ['/scratch/' 'switch_rate' subs{isub} '.png']);
     end
-%     keyboard
+    %     keyboard
     % Dur1=Dur(:,1);
     % Dur2=Dur(:,2);
     % Dur1=reshape(Dur1,[4,size(subs,2)]);
@@ -243,35 +255,39 @@ for iwhichsub = 1:numel(whichsub)
     % Dur2=Dur2';
     % Dur1avr=mean(Dur1);
     % Dur2avr=mean(Dur2);
-
-
+    
+    
     %% Averaged plot
-%     figure;
-%     hold on;
+    %     figure;
+        hold on;
     if time_on
         Dur = [fliplr(Dur(:,[1 2])) Dur(:,[3 4])];
         fullDur{iwhichsub} = Dur;
-%         keyboard
-        plot(1:4, mean(Dur),'ks-');
+        %         keyboard
+        tickopt = {'k>-','ks--'};
+        plot(1:4, mean(Dur),tickopt{iwhichsub});
         %     plot(1:4, Dur2avr','s-.');
         ylabel('duration (s)');
         ylabel('标准化主导方向持续时间(s)');
+        ylabel('Standardized Dominant Duration (s)');
+        
     else
         plot(1:4, mean(Table(:,[1:4])),'rs-');
         plot(1:4, mean(Table(:,[5:8])),'s-');
         ylabel('number of responses');
     end
-%     hold off;
-    % legend('Incong','Cong');
-    xlabel('tactile conditions');
+    %     hold off;
+    legend('Incong','Cong');
     xlabel('实验触觉条件');
+    xlabel('Tactile Conditions');
     set(gca,'Xtick',1:4);
-    % set(gca,'XtickLabel',{'Incongruent','Congruent','Sync', 'Baseline'});
-    set(gca,'XtickLabel',{'一致','不一致','同时', '基线（无触觉刺激）'});
+    %     set(gca,'XtickLabel',{'一致','不一致','同时', '基线（无触觉刺激）'});
+    set(gca,'XtickLabel',{'Incongruent','Congruent','Sync', 'Baseline'});
+    legend('boxoff')
     % errorbar(1:4,mean(Dur),std(Dur))
+    
+    end
+    
+        print(gcf, '-dpng', [pwd '\..\tmp\mean_standardized_' whichsub{iwhichsub} '.png']);
+    %     figure
 
-    % end
-
-%     print(gcf, '-dpng', [pwd '\tmp\mean_standardized_' whichsub{iwhichsub} '.png']);
-%     figure
-end

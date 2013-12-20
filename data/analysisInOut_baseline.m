@@ -34,22 +34,22 @@ end
 % M1=reshape(M(:,1),[6,16])'; % resort
 end
 M1=reshape(M(:,1),[6,numel(subs)])';
-keyboard
+% keyboard
 fullM = [M1(:,[1 3 5]); M1(:, [2 4 6])];
 
 M1=mean(M1);
 figure;
 hold on;
 
-    plot(1:3, M1(1,[1,3,5]),'rs-');
-    plot(1:3, M1(1,[2,4,6])','s-.');
-    ylabel('duration');
+    plot(1:3, M1(1,[1,3,5]),'k>-');
+    plot(1:3, M1(1,[2,4,6])','ks--');
+    ylabel('Standardized Dominant Duration (s)');
 
 hold off;
 legend('Inwards','Outwards');
-xlabel('tactile conditions');
+xlabel('Tactile Conditions');
 set(gca,'Xtick',1:3);
-set(gca,'XtickLabel',{'short-long-short','Synchronous','long-short-long'});
-
+set(gca,'XtickLabel',{'Short-Long-Short','Synchronous','Long-Short-Long'});
+legend('boxoff')
 
 
