@@ -138,6 +138,22 @@ if nargin > 0
     dataSuffix = [dataSuffix '_Posture_'] ;
   end
 
+ if mode.simpleInOut_on
+     %use the same visual stimuli
+     mode.inout_on = 1;
+     mode.mono_tactile = 1;
+     conf.doubleTactileDiff  =  0;
+     mode.colorbalance_on    = 0;  % set target PLW green, rather than red
+ end
+ 
+ if mode.colorbalance_on
+     if round(rand)
+         flipud(conf.colors);
+         dataSuffix = [dataSuffix '_greenTarget_'];
+     end
+     dataSuffix = [dataSuffix '_ColorBalance_'];
+ end
+
   %% randomized sample exp. conditions and trial sequences variables
   % condition type:4; recording results in 5 culumns
   if mode.inout_on | mode.posture_on

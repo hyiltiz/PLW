@@ -39,9 +39,9 @@ fullDur = [];
 %%Chose which group to analyze%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % whichsub = {'subs.PT.low','subs.PT.high'};
-% whichsub = {'subs.EC.low','subs.EC.high'};
+whichsub = {'subs.EC.low','subs.EC.high'};
 % whichsub = {'subs.PT.low','subs.PT.high','subs.EC.low','subs.EC.high'};
-whichsub = {'subs.all'};
+% whichsub = {'subs.all'};
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -56,10 +56,7 @@ for iwhichsub = 1:numel(whichsub)
         dur=[]; % store data;
         %     load(subs{isub},'Trials');
         load(thesubs{isub});
-        if sum(Trials(:,3)>70)>0
-            disp(thesubs{isub});
-            keyboard
-        end
+        
         Trials(Trials(:,2)==0,:) = [];
         Trials(:,3) = Trials(:,3) / mean(Trials(:,3));
         
@@ -238,8 +235,8 @@ for iwhichsub = 1:numel(whichsub)
         xlabel('实验触觉条件');
         set(gca,'Xtick',1:4);
         %     set(gca,'XtickLabel',{'Incongruent','Congruent','Sync', 'Baseline'});
-%         title(whichsub{iwhichsub});
-%         title(thesubs{isub});
+        %         title(whichsub{iwhichsub});
+        %         title(thesubs{isub});
         set(gca,'XtickLabel',{'不一致','一致','同时', '基线（无触觉刺激）'});
         
         
@@ -259,7 +256,7 @@ for iwhichsub = 1:numel(whichsub)
     
     %% Averaged plot
     %     figure;
-        hold on;
+    hold on;
     if time_on
         Dur = [fliplr(Dur(:,[1 2])) Dur(:,[3 4])];
         fullDur{iwhichsub} = Dur;
@@ -277,17 +274,18 @@ for iwhichsub = 1:numel(whichsub)
         ylabel('number of responses');
     end
     %     hold off;
-    legend('Incong','Cong');
+    %     legend('Incong','Cong');
     xlabel('实验触觉条件');
     xlabel('Tactile Conditions');
     set(gca,'Xtick',1:4);
     %     set(gca,'XtickLabel',{'一致','不一致','同时', '基线（无触觉刺激）'});
     set(gca,'XtickLabel',{'Incongruent','Congruent','Sync', 'Baseline'});
-    legend('boxoff')
+    
     % errorbar(1:4,mean(Dur),std(Dur))
     
-    end
-    
-        print(gcf, '-dpng', [pwd '\..\tmp\mean_standardized_' whichsub{iwhichsub} '.png']);
-    %     figure
+end
+legend('Low EC','High EC');
+legend('boxoff')
+print(gcf, '-dpng', [pwd '\..\tmp\mean_standardized_' whichsub{iwhichsub} '.png']);
+%     figure
 
