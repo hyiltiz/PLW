@@ -12,10 +12,7 @@
 % Trials(:,10) position for red walker, negative value--left and positive
 % value-right
 % eight subs, delete zhaohongyu(3),fenglili(7),yangzhiqiang(12)
-subs={'lixiaofengMirrorD12-Jan-2013','liujunyangMirrorD13-Jan-2013','ywjMirrorD13-Jan-2013','zhangzitengMirrorD20-Jan-2013',...,
-    'zhangfengqiangMirrorD20-Jan-2013','liuweiMirrorD20-Jan-2013','yumeilingMirrorD19-Jan-2013','wangdanMirrorD19-Jan-2013',...
-    'yeshaoqiangMirrorD26-Jan-2013','maqianliMirrorD27-Jan-2013','songyuchenMirrorD03-Mar-2013','sundanMirrorD03-Mar-2013','zhaolijianMirrorD02-Mar-2013',...,
-    'guoxinMirrorD02-Mar-2013','zhouyanlingMirrorD03-Mar-2013'};
+subs={'lixiaofengMirrorD12-Jan-2013.mat','liujunyangMirrorD13-Jan-2013.mat','ywjMirrorD13-Jan-2013.mat','zhangzitengMirrorD20-Jan-2013.mat','zhangfengqiangMirrorD20-Jan-2013.mat','liuweiMirrorD20-Jan-2013.mat','yumeilingMirrorD19-Jan-2013.mat','wangdanMirrorD19-Jan-2013.mat','yeshaoqiangMirrorD26-Jan-2013.mat','maqianliMirrorD27-Jan-2013.mat','songyuchenMirrorD03-Mar-2013.mat','sundanMirrorD03-Mar-2013.mat','zhaolijianMirrorD02-Mar-2013.mat','guoxinMirrorD02-Mar-2013.mat','zhouyanlingMirrorD03-Mar-2013.mat'};
 
 
 Dur=[];
@@ -26,7 +23,7 @@ for isub=1:length(subs)
     load(subs{isub},'Trials');
     idx=find(Trials(:,2)==0);
     Trials(idx,:)=[];  % delete the none-response data.
-    
+
     %% here set the "congruent" and "incongruent" conditions
     Trials(2:end,12)=diff(Trials(:,2));
     idx=find(Trials(:,12)~=0);
@@ -55,8 +52,8 @@ for isub=1:length(subs)
                     Trials(x,11)= 3;
                 end
             end
-    
-    
+
+
         if isub>10
         for x=1:length(Trials)
             if Trials(x,1)==1 && Trials(x,7)==1 && Trials(x,2)==1 % tactile lead;initial rightwards motion; right resp
@@ -82,11 +79,11 @@ for isub=1:length(subs)
             end
         end
         end
-    
-    
-    
-    
-    
+
+
+
+
+
     % step 2: normalized phase duration for each subject
     Trials(:,3)=Trials(:,3)/(mean(Trials(:,3)));
     Data=[Data;Trials];
@@ -106,7 +103,7 @@ for isub=1:length(subs)
         dur(j,2)=str2num(g{j,1});
         dur(j,3)=str2num(g{j,2});
     end
-    
+
     for j=1:4 % cond
         idxtemp=find(dur(:,2)==j);
         durtemp=dur(idxtemp,:);
@@ -124,14 +121,14 @@ for isub=1:length(subs)
     %    redPLWupinicong=(dur1(:,7)+dur2(:,7))/2;
     %    redPLWinvertcong=(dur1(:,6)+dur2(:,6))/2;
     %    redPLWinvertincong=(dur1(:,8)+dur2(:,8))/2;
-    
+
     figure;
     hold on;
     plot(1:4, dur1(:,1),'rs-');
     plot(1:4, dur1(:,2),'s-.');
     hold off;
     legend('Incong','Cong');
-    
+
     xlabel('tactile conditions');
     ylabel('duration (s)');
     set(gca,'Xtick',1:4);

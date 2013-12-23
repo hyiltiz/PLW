@@ -1,11 +1,12 @@
 %1-response value 1-leftwards response (switch output 3); value
+%keyboard
 %2-rightwards response (footswitch output 1);
 % 2-dur
 % 3-Trial no.
 % 4-1 from initial inwards; 2-initial outwards
 % 5-second, 1-tactile short-long-short, 2-tactile equal; 3-tactile
 % long-short-long.
-subs={'anshuai','cuizhenpeng','lilingyu','liuweifang','liuye','liuzi','mawenjing','shaojiayuan','shaorenjie','sihongwei','songqingjun','tantian','wanghao','wenghanxin','zhaoyuan','zhengguomao'};
+subs={'anshuai.mat','cuizhenpeng.mat','lilingyu.mat','liuweifang.mat','liuye.mat','liuzi.mat','mawenjing.mat','shaojiayuan.mat','shaorenjie.mat','sihongwei.mat','songqingjun.mat','tantian.mat','wanghao.mat','wenghanxin.mat','zhaoyuan.mat','zhengguomao.mat'};
 
 % subs = {'epar_Simple_.mat','mesede_Simple_.mat'}; % pre exp
 

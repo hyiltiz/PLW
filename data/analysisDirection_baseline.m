@@ -10,7 +10,7 @@
 % subs = {'epar_Simple_.mat','mesede_Simple_.mat'}; % pre exp
 
 % direction task
-subs = {'liangsha.mat','liuling.mat','shisensen.mat','sunqianqian.mat','wanwgxing.mat','zhangyunhao.mat','hejiahuang','qiuxu','zhanglibo','zhangshuo'};
+subs={'liangsha.mat','liuling.mat','shisensen.mat','sunqianqian.mat','wanwgxing.mat','zhangyunhao.mat','hejiahuang.mat','qiuxu.mat','zhanglibo.mat','zhangshuo.mat'};
 
 M=[];
 durtemp=[];
