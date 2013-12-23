@@ -4,6 +4,10 @@ nameM.mat: Number of the dots task, responding to the number of the dots,
   respond RIGHT if most of the dots seen is RED. The experiment in theis
   case is controlled via "mode.many_on=1"
 
+
+
+THE FOLLOWING ISSUE HAS ALREADY BEEN HANDLED
+
 log: the last two data has some important issue. The wangchongM*.mat and 
 chenqifanM*.mat was under different task due to the experimenter's mistake.
 Before many_on experiment, they were told to RESPOND "LEFT" TO MANY OF THE 
