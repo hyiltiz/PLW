@@ -36,9 +36,10 @@ function [tex, dstRect] = addNoise(w, wsize, Track, noisescale, T, isGreyMask, l
   % Enable alpha blending for smoothed points:
   Screen('BlendFunction', w, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+
+
   colorCell={[255 0 0],[0 255 255]};
-  
-  
+
   coloredNoiseCell{1} = coloredNoiseMatrix(rectSize, rectSize,colorCell, .01);
   for f = 2:round(T/lagFlip);
       %recreate kill_dot percent of the dots per frame
@@ -47,7 +48,7 @@ function [tex, dstRect] = addNoise(w, wsize, Track, noisescale, T, isGreyMask, l
       coloredNoiseCell{f} = coloredNoiseCell{f-1};
       coloredNoiseCell{f}(repmat(new_dots,[1 1 3]))=tmp_colorspace(repmat(new_dots,[1 1 3]));
   end
-  
+
   colorLoop=lagloop(1:round(T/lagFlip), lagFlip);
 
   tex = zeros(1, length(Track));

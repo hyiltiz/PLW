@@ -1,4 +1,5 @@
 function [ ret ] = listDatPro (tmp)
+    % list data properties
   %tmp=ls('./Small_*.mat');
   %for i=1:size(tmp,1);
   %  dat=load(strtrim(tmp(i,:)));
