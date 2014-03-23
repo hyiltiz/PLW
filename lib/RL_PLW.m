@@ -58,6 +58,10 @@ function RL_PLW(conf, mode)
   conf.repetitions        =  5;           % repetition time of a condition
   conf.resttime           =  30;          % rest for 30s
   conf.restpertrial       =  1;           % every x trial a rest
+  conf.nPLWs              =  8;           % how many PLWs to draw on screen in a circle
+  conf.clockR             =  .75;         % clock, with the center of the screen as (0,0), in pr coordination system
+  conf.raster             =  [1 8];       % visual and masked data raster for x y
+  conf.alphaFace          =  0.1;         % alpha transparency for face stimuli
   conf.doubleTactileDiff  =  0 ;          % flips between taps on one tactile stimuli (double tactile);0 to disable
   conf.tiltangle          =  0;           % tilt angle for simulating 3D stereo display
   conf.xshift             =  .4;          % shift PLW for using mirror, see mode.mirror_on
@@ -77,6 +81,7 @@ mode.baseline_on        = 0;  % baseline trial, without visual stimuli
 mode.inout_on           = 0;  % use incoming and outgoing PLWs for demo
 mode.posture_on         = 0;  % for posture exp. only upright PLWs used
 mode.simpleInOut_on     = 0;  % simple InOut exp, with the same tactile stimuli for both foot
+mode.octal_on           = 0;  % circular Octal display of PLWs
 mode.colorbalance_on    = 0;  % balance the color of the target PLW, which is by default red
 mode.mono_tactile = 0;
 mode.once_on            = 1;  % only one trial, used for demostration before experiment
@@ -95,6 +100,8 @@ if nargin > 0
   % state control variables
   mode.baseline_on        = 0;  % baseline trial, without visual stimuli
   mode.inout_on           = 0;  % use incoming and outgoing PLWs for demo
+  mode.simpleInOut_on     = 0;  % simple InOut exp, with the same tactile stimuli for both foot
+  mode.octal_on           = 0;  % circular Octal display of PLWs
   mode.posture_on         = 0;  % for posture exp. only upright PLWs used
   mode.once_on            = 1;  % only one trial, used for demostration before experiment
   % DO NOT CHANGE UNLESS YOU KNOW EXCACTLY WHAT YOU ARE DOING
@@ -124,6 +131,7 @@ if nargin > 0
     conf.resttime = 5;
     conf.exptime = 5;
     conf.trialdur = 13;
+    mode.octal_on = 1;
   end
 
   if mode.many_on % M is for many_dots task, while D is for direction task
@@ -145,7 +153,7 @@ if nargin > 0
      conf.doubleTactileDiff  =  0;
      mode.colorbalance_on    = 0;  % set target PLW green, rather than red
  end
- 
+
  if mode.colorbalance_on
      if round(rand)
          flipud(conf.colors);
@@ -156,7 +164,7 @@ if nargin > 0
 
   %% randomized sample exp. conditions and trial sequences variables
   % condition type:4; recording results in 5 culumns
-  if mode.inout_on | mode.posture_on
+  if mode.inout_on || mode.posture_on
     % we only want upright PLWs here; congurent or not:4
     [flow.Trialsequence, Trials] = genTrial(conf.repetitions, 9, [1, 4]);
     data.moveDirection = [round(rand([length(flow.Trialsequence), 1])), flow.Trialsequence(:,1)]; %walking direction is random
@@ -269,6 +277,10 @@ if nargin > 0
 
     render.cx = render.wsize(3)/2; %center x
     render.cy = render.wsize(4)/2; %center y
+
+    if mode.octal_on
+        [data.clockarm data.prCoor data.angls] = octalCoor(render.wsize, conf.clockR, conf.nPLWs);
+    end
 
     % Variables used across trials
     %     data.Track = 1:round(conf.exptime*60/(conf.flpi * data.loopPeriod * 8 * conf.repetitions) * length(data.dotx));        % 2 for less longer stimuli
@@ -397,9 +409,19 @@ if nargin > 0
         end
 
 
+    imagePath='resources/facestimuli/6neutral/female/NEF1.BMP';
         if mode.baseline_on
           % do not show the PLWs
-        else
+
+      elseif mode.octal_on
+          % Octal PLWs
+          for iPLW=1:conf.nPLWs
+              % TODO: xy0~PLWwidth; imagePath~conditon;
+              addImage(w, render.wsize, data.clockarm(iPLW,1), data.clockarm(iPLW,2), [render.cx render.cy]/4, imagePath, conf.raster, conf.alphaFace);
+          RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 0 0], [data.prCoor(iPLW,:)], data.maxdot);
+      end
+
+      else
           % and here comes the walkers
           RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 0 0], [-conf.xshift-conf.shadowshift 0], data.maxdot);
           RLonePLW(w,data.initPosition(2) + data.paceRate(2)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx1, data.doty1, data.moveDirection(flow.Trial, :), [0 255 255], [conf.xshift-conf.shadowshift 0], data.maxdot);

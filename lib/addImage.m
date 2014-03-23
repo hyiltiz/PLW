@@ -6,7 +6,7 @@ function [tex, dstRect] = addImage(w, wsize, cx, cy, xy0, imagePath, raster, alp
   % xy0 is the x y end of the image
   % alpha is [0,1]
 
-  isSkip = 0;
+  isSkip = 1;
   if ~isSkip
     imagePath='resources/facestimuli/6neutral/female/NEF1.BMP';
     screens=Screen('Screens');
@@ -34,10 +34,10 @@ function [tex, dstRect] = addImage(w, wsize, cx, cy, xy0, imagePath, raster, alp
 
   imtex = Screen('MakeTexture', w, immasked);
 
-  % rectSize = 4;
-  % objRect = SetRect(0,0, rectSize, rectSize);
-
   dstRect = [cx - round(xy0(1)/2), cy - round(xy0(2)/2), cx + round(xy0(1)/2), cy + round(xy0(2)/2)];
+
+  % not sure whether to put it here or split them up
+  Screen('DrawTexture', w, imtex, [], dstRect, [], 0);
 
   if ~isSkip
       Screen('DrawTexture', w, imtex, [], dstRect, [], 0);
