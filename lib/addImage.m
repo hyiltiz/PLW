@@ -1,4 +1,4 @@
-function [tex, dstRect] = addImage(w, wsize, cx, cy, xy0, imagePath, raster, alpha)
+function [imtex, dstRect] = addImage(w, wsize, cx, cy, xy0, imagePath, raster, alpha)
   % load image, and convert to texture using buffer, then display
   % this function is based on addNoise
   %
@@ -33,11 +33,11 @@ function [tex, dstRect] = addImage(w, wsize, cx, cy, xy0, imagePath, raster, alp
   Screen('BlendFunction', w, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   imtex = Screen('MakeTexture', w, immasked);
+  Display(imtex);
 
   dstRect = [cx - round(xy0(1)/2), cy - round(xy0(2)/2), cx + round(xy0(1)/2), cy + round(xy0(2)/2)];
 
   % not sure whether to put it here or split them up
-  Screen('DrawTexture', w, imtex, [], dstRect, [], 0);
 
   if ~isSkip
       Screen('DrawTexture', w, imtex, [], dstRect, [], 0);
