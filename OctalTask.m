@@ -3,25 +3,23 @@ function OctalTask(is_once_on)
 
 
 % time setting vatiables
-conf.flpi               =  0.02;        % each frame is set to 20ms (the monitor's flip interval is 16.7ms)
-conf.raster             =  [1 4];       % visual and masked data raster for x y
-conf.alphaFace          =  0.9;         % alpha transparency for face stimuli
-conf.trialdur           =  10;          % duration time for every trial
+conf.flpi               =  0.01;        % each frame is set to 20ms (the monitor's flip interval is 16.7ms)
+conf.raster             =  [1 8];       % visual and masked data raster for x y
+conf.alphaFace          =  0.2;         % alpha transparency for face stimuli
+conf.scale1             =  6;           % PLW's visual scale, more the bigger
+conf.trialdur           =  7;           % duration time for every trial
 conf.repetitions        =  5;           % repetition time of a condition
 conf.resttime           =  30;          % rest for 30s
 conf.restpertrial       =  5;           % every x trial a rest
 conf.tiltangle          =  0;           % tilt angle for simulating 3D stereo display
-conf.xshift             =  0;           % shift PLW for using mirror, see mode.mirror_on
-conf.shadowshift        = .4;           % distance between PLWs and their twin shadows
 conf.doubleTactileDiff  = 10 ;          % flips between taps on one tactile stimuli (double tactile);0 to disable
-  conf.scale1             =  6;          % PLW's visual scale, more the bigger
 
 % state control variables
 mode.octal_on      = 1;
 mode.colorbalance_on    = 1;  % balance the color of the target PLW, which is by default red
 mode.mirror_on     = 1;  % use mirror rather that spectacles for binacular rivalry
 mode.many_on       = 0;  % the task is the majority of dots the participant saw
-mode.debug_on      = 1;  % default is 0; 1 is not to use full screen, and skip the synch test
+mode.debug_on      = 0;  % default is 0; 1 is not to use full screen, and skip the synch test
 mode.simpleInOut_on= 1;  % simple InOut exp, with the same tactile stimuli for both foot
 
 if nargin > 0
