@@ -368,8 +368,9 @@ if mode.octal_on
 
       if mode.octal_on
               % TODO: xy0~PLWwidth; imagePath~conditon;
+              data.imagePaths = imList(flow.Trialsequence(flow.Trial), 0);
           for iFaces = 1:conf.nPLWs
-              [render.texface{iFaces} render.faceRect{iFaces}] = addImage(w, render.wsize, data.clockarm(iFaces,1), data.clockarm(iFaces,2), [render.cx render.cy]/4, data.imagePath, conf.raster, conf.alphaFace);
+              [render.texface{iFaces} render.faceRect{iFaces}] = addImage(w, render.wsize, data.clockarm(iFaces,1), data.clockarm(iFaces,2), [render.cx render.cy]/4, data.imagePaths{iFaces}, conf.raster, conf.alphaFace);
           end
       end
 

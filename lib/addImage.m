@@ -33,7 +33,7 @@ function [imtex, dstRect] = addImage(w, wsize, cx, cy, xy0, imagePath, raster, a
   Screen('BlendFunction', w, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   imtex = Screen('MakeTexture', w, immasked);
-  Display(imtex);
+%  Display(imtex);
 
   dstRect = [cx - round(xy0(1)/2), cy - round(xy0(2)/2), cx + round(xy0(1)/2), cy + round(xy0(2)/2)];
 
