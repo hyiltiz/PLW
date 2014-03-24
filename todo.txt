@@ -1,2 +1,8 @@
-Why MATLAB/linux is crashing everytime, complaining some MEX problem? DotRotDemo() is not crashing it, Octave/GNU is not, neither...
-and Windows MATLAB is just all right
+Why MATLAB/linux is crashing everytime, complaining some MEX problem? DotRotDemo() is not crashing it, Octave/GNU is not, neither...and Windows MATLAB is just all right
+
+OctalTask:
+ - tactile stimuli(this is dependent of how many identical PLWs out there)
+ - exp control
+   - four condition controlling image paths
+   - different images at random pos on the pic
+        
