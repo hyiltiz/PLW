@@ -15,12 +15,12 @@ conf.doubleTactileDiff  = 10 ;          % flips between taps on one tactile stim
   conf.scale1             =  6;          % PLW's visual scale, more the bigger
 
 % state control variables
-mode.simpleInOut_on= 1;  % simple InOut exp, with the same tactile stimuli for both foot
+mode.octal_on      = 1;
 mode.colorbalance_on    = 1;  % balance the color of the target PLW, which is by default red
 mode.mirror_on     = 1;  % use mirror rather that spectacles for binacular rivalry
 mode.many_on       = 0;  % the task is the majority of dots the participant saw
-mode.octal_on      = 1;
 mode.debug_on      = 1;  % default is 0; 1 is not to use full screen, and skip the synch test
+mode.simpleInOut_on= 1;  % simple InOut exp, with the same tactile stimuli for both foot
 
 if nargin > 0
     mode.once_on       = is_once_on;  % only one trial, used for demostration before experiment

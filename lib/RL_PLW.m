@@ -148,6 +148,10 @@ if mode.octal_on
     dataSuffix = [dataSuffix '_Posture_'] ;
   end
 
+  if mode.octal_on
+      mode.simpleInOut_on=1;
+  end
+
  if mode.simpleInOut_on
      %use the same visual stimuli
      mode.inout_on = 1;
