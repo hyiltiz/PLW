@@ -140,7 +140,9 @@ if nargin > 0
     dataSuffix = 'D';
   end
 
-  if mode.inout_on % M is for many_dots task, while D is for direction task
+if mode.octal_on
+    dataSuffix = [dataSuffix '_Octal_'] ;
+  elseif mode.inout_on % M is for many_dots task, while D is for direction task
     dataSuffix = [dataSuffix '_InOut_'] ;
   elseif mode.posture_on
     dataSuffix = [dataSuffix '_Posture_'] ;
@@ -509,7 +511,7 @@ else
   catch
     % save the buggy data for debugging
     save data/buggy.mat;
-    Display(char('','','data/buggy.dat saved successfully, use for debugging!',''));
+    Display(char('','','data/buggy.mat saved successfully, use for debugging!',''));
     save(['data/', Subinfo{1}, dataSuffix, date, 'buggy.mat']);
     %     disp(['';'';'data/buggy saved successfully, use for debugging!']);
     Screen('CloseAll');
