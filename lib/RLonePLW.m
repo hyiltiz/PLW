@@ -12,8 +12,12 @@ function RLonePLW(w, f, cx, cy, dotx, doty, isinv, Color, xy0, maxdot)
   % 0 for head, 1 for left parts and 2 for right parts of PLW.
   mapping = [1 1 1 1 1 1 1 1 1 1 1 1 1];
   gcolor = {Color};
-  dot_w = 7;
   %xy0 = [-.4 0];
+
+  ovalFlag = xy0(1)==0;
+  if ovalFlag
+  dot_w = 2;
+  end
 
   xy0 = mapxy0(xy0, cx, cy);
 
@@ -28,13 +32,13 @@ function RLonePLW(w, f, cx, cy, dotx, doty, isinv, Color, xy0, maxdot)
   %         Screen('DrawDots', w, [(cx-dotx(f,mapping == grouping));(cy-doty(f,mapping == grouping))], dot_w, gcolor{grouping + 1}, [cx-xy0(1) cy-xy0(2)], 1);
   Screen('DrawDots', w, [dotx(f,mapping == grouping);doty(f,mapping == grouping)], dot_w, gcolor{grouping }, xy0, 2);
 
-  if xy0(1) == 0
+  if ovalFlag
     % then we know mirror_on=FALSE
   else
     % mirror_on=TRUE, draw ovals with cross at the center
     %xmax = max(max(dotx));
     %ymax = max(max(doty));
-    enlarge = 0.4 * maxdot(2);
+    enlarge = 0.1 * maxdot(2);
     Screen('FrameOval',w ,80*[1 1 1], [xy0(1)-maxdot(1)-enlarge, xy0(2)-maxdot(2)-enlarge, xy0(1)+maxdot(1)+enlarge, xy0(2)+maxdot(2)+enlarge],4);
     Screen('DrawLine',w ,80*[1 1 1], xy0(1)-5,xy0(2),xy0(1)+5,xy0(2),2);
     Screen('DrawLine',w ,80*[1 1 1], xy0(1),xy0(2)+5,xy0(1),xy0(2)-5,2);

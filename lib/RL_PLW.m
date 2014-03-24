@@ -425,7 +425,8 @@ if nargin > 0
           % Octal PLWs
           for iPLW=1:conf.nPLWs
               Screen('DrawTexture', w, render.texface{iPLW}, [], render.faceRect{iPLW}, [], 0);
-          RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 0 0], [data.prCoor(iPLW,:)], data.maxdot);
+%          RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 0 0], [data.prCoor(iPLW,:)]/2, data.maxdot);
+          RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), data.clockarm(iPLW,1), data.clockarm(iPLW,2), data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 0 0], [0 0], data.maxdot);
       end
 
       else
