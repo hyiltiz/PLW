@@ -24,7 +24,7 @@ if nargin > 0
     mode.once_on       = is_once_on;  % only one trial, used for demostration before experiment
 else
     mode.once_on       = 0;  % only one trial, used for demostration before experiment
-    
+
 end
 
 % Call the main function RL_PLW()

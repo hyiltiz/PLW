@@ -3,7 +3,7 @@ function InOutTask(is_once_on)
 
 
   % time setting vatiables
-  conf.flpi               =  0.01;        % each frame is set to 20ms (the monitor's flip interval is 16.7ms)
+  conf.flpi               =  0.02;        % each frame is set to 20ms (the monitor's flip interval is 16.7ms)
   conf.trialdur           =  70;          % duration time for every trial
   conf.repetitions        =  5;           % repetition time of a condition
   conf.resttime           =  30;          % rest for 30s
