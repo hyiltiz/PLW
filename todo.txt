@@ -2,7 +2,3 @@ Why MATLAB/linux is crashing everytime, complaining some MEX problem? DotRotDemo
 
 OctalTask:
  - tactile stimuli(this is dependent of how many identical PLWs out there)
- - exp control
-   - four condition controlling image paths
-   - different images at random pos on the pic
-        
