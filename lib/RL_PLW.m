@@ -368,7 +368,10 @@ if nargin > 0
       end
 
       % display:  +
-      if mode.inout_on % M is for many_dots task, while D is for direction task
+if mode.octal_on
+    % no mirror testing
+
+elseif mode.inout_on % M is for many_dots task, while D is for direction task
         %fixation(w, render.cx, render.cy);
         testMirror(w, render.cx , render.cy, 255, [-conf.shadowshift 0], data.maxdot);
         %testMirror(w, render.cx , render.cy, 255, [conf.xshift 0], data.maxdot1);
@@ -385,7 +388,11 @@ if nargin > 0
       Screen('Flip',w);
 
       % wait until the participant's mirror is ready
+if mode.octal_on
+    % no mirror, no pedal wait
+else
       pedalWait(mode.tactile_on, 10000, render.kb);
+  end
       WaitSecs(conf.waitFixationScreen);  % '+' time randomized
 
 
