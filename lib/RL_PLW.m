@@ -332,7 +332,8 @@ if mode.octal_on
 
     %% Here begins our trial
     for k = 1:length(flow.Trialsequence)
-      tic;
+%      tic;
+
       flow.Trial = k;
       % rest every couple trial once
       if flow.Trial > 1
@@ -480,8 +481,9 @@ else
         % recordImage(flow.Flip,10,'Mirror',w,render.wsize)
         % Display(old, render.vlb, render.vlb - old, length(data.Track),length(data.tTrack));
         % Screen('Flip', w);
-        toc;
-        tic;
+
+%        toc;
+%        tic;
       end
       % quit if the participant pressed ESC
       if flow.isquit, break, end
