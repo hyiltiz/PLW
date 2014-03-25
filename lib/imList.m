@@ -23,7 +23,7 @@ function paths = imList(condition, isFull)
             % no image here; return blank image path
             weight = 0;
         otherwise
-            error ("invalid condition!");
+            error ('invalid condition!');
     end
 
 
@@ -77,7 +77,8 @@ function paths = imList(condition, isFull)
                     path = [path emotions{iemotion} '/' genders{igender} '/' eemm{iemotion} ggee{igender} num2str(imname)];
                     path = [path '.BMP'];
                     iim = iim+1;
-                    paths(iim)=path;
+%                     keyboard
+                    paths{iim}=path;
                 end
             else
                 % do not need this emotion, do nothing
