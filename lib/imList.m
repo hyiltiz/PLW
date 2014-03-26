@@ -62,7 +62,7 @@ function paths = imList(condition, isFull)
         path = [path imname];
         path = [path '.BMP'];
         for iim=1:8
-            paths(iim)=path;
+            paths{iim}=path;
         end
     else
         iim = 0;

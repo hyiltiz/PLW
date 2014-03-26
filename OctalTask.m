@@ -3,11 +3,11 @@ function OctalTask(is_once_on)
 
 
 % time setting vatiables
-conf.flpi               =  0.01;        % each frame is set to 20ms (the monitor's flip interval is 16.7ms)
-conf.raster             =  [1 8];       % visual and masked data raster for x y
-conf.alphaFace          =  0.2;         % alpha transparency for face stimuli
+conf.flpi               =  0.02;        % each frame is set to 20ms (the monitor's flip interval is 16.7ms)
+conf.raster             =  [1 0];       % visual and masked data raster for x y
+conf.alphaFace          =  .3;         % alpha transparency for face stimuli
 conf.scale1             =  6;           % PLW's visual scale, more the bigger
-conf.trialdur           =  70;           % duration time for every trial
+conf.trialdur           =  7;           % duration time for every trial
 conf.repetitions        =  5;           % repetition time of a condition
 conf.resttime           =  30;          % rest for 30s
 conf.restpertrial       =  5;           % every x trial a rest
