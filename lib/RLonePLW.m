@@ -16,7 +16,7 @@ function RLonePLW(w, f, cx, cy, dotx, doty, isinv, Color, xy0, maxdot)
 
   ovalFlag = xy0(1)==0;
   if ovalFlag
-  dot_w = 2;
+  dot_w = 5;
   else
       dot_w = 7;
   end

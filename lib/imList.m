@@ -72,8 +72,9 @@ function paths = imList(condition, isFull)
                     path = './resources/facestimuli/';
                     igender=round(rand)+1;
                     imlist = imidx{igender, iemotion};
-%                    keyboard
-                    imname = imlist(randperm(numel(imlist),1));
+%                     keyboard
+                    randNumbers = randperm(numel(imlist));
+                    imname = imlist(randNumbers(1));
                     path = [path emotions{iemotion} '/' genders{igender} '/' eemm{iemotion} ggee{igender} num2str(imname)];
                     path = [path '.BMP'];
                     iim = iim+1;

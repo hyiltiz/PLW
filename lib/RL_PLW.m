@@ -197,7 +197,8 @@ if mode.octal_on
     % tactile hardware setting
     try
       [render.dioIn, render.dioOut] = loadDigitalIO();
-      mode.tactile_on = 1;
+%       mode.tactile_on = 1;
+mode.tactile_on = 0;
     catch
       mode.tactile_on = 0;  % 0 is no tactile device
     end
@@ -404,7 +405,7 @@ else
       WaitSecs(conf.waitFixationScreen);  % '+' time randomized
 
 
-      Screen('FillRect',w,0);
+      Screen('FillRect',w,[0 0 0]);
       render.vlb = Screen('Flip', w);  % record render.vlb, used for TIMING control
 
       %Here comes the sound
@@ -441,7 +442,7 @@ else
           for iPLW=1:conf.nPLWs
               Screen('DrawTexture', w, render.texface{iPLW}, [], render.faceRect{iPLW}, [], 0);
 %          RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 0 0], [data.prCoor(iPLW,:)]/2, data.maxdot);
-          RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), data.clockarm(iPLW,1), data.clockarm(iPLW,2), data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 0 0], [0 0], data.maxdot);
+          RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), data.clockarm(iPLW,1), data.clockarm(iPLW,2), data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 255 255], [0 0], data.maxdot);
       end
 
       else
