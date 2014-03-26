@@ -49,7 +49,7 @@ function paths = imList(condition, isFull)
 
     end
 
-    emotions = {'1anger', '6neu', '7happy'};
+    emotions = {'1anger', '6neutral', '7happy'};
     eemm = {'A' 'NE' 'H'};
     genders = {'male', 'female'};
     ggee = {'M' 'F'};
