@@ -15,7 +15,8 @@ function paths = imList(condition, isFull)
         case 2
             % balanced
             % SHOULD WE USE NEUTRAL FACES INSTEAD?
-            weight = [4 0 4];
+%             weight = [4 0 4];
+              weight = [0 8 0];
         case 3
             % happy
             weight = [2 0 6];

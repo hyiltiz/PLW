@@ -379,7 +379,7 @@ mode.tactile_on = 0;
       % display:  +
 if mode.octal_on
     % no mirror testing
-
+% fixation(w, render.cx, render.cy);
 elseif mode.inout_on % M is for many_dots task, while D is for direction task
         %fixation(w, render.cx, render.cy);
         testMirror(w, render.cx , render.cy, 255, [-conf.shadowshift 0], data.maxdot);
@@ -440,6 +440,7 @@ else
       elseif mode.octal_on
           % Octal PLWs
           for iPLW=1:conf.nPLWs
+              fixation(w, render.cx, render.cy, [255 255 255]);
               Screen('DrawTexture', w, render.texface{iPLW}, [], render.faceRect{iPLW}, [], 0);
 %          RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 0 0], [data.prCoor(iPLW,:)]/2, data.maxdot);
           RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), data.clockarm(iPLW,1), data.clockarm(iPLW,2), data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 255 255], [0 0], data.maxdot);

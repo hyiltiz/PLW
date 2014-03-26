@@ -7,18 +7,18 @@ conf.flpi               =  0.01;        % each frame is set to 20ms (the monitor
 conf.raster             =  [1 0];       % visual and masked data raster for x y
 conf.alphaFace          =  .7;         % alpha transparency for face stimuli
 conf.scale1             =  6;           % PLW's visual scale, more the bigger
-conf.trialdur           =  7;           % duration time for every trial
+conf.trialdur           =  70;           % duration time for every trial
 conf.repetitions        =  5;           % repetition time of a condition
 conf.resttime           =  30;          % rest for 30s
 conf.restpertrial       =  5;           % every x trial a rest
 conf.tiltangle          =  0;           % tilt angle for simulating 3D stereo display
 conf.doubleTactileDiff  = 10 ;          % flips between taps on one tactile stimuli (double tactile);0 to disable
-  conf.clockR             =  .5;         % clock, with the center of the screen as (0,0), in pr coordination system
+conf.clockR             =  .5;         % clock, with the center of the screen as (0,0), in pr coordination system
 
 
 % state control variables
 mode.octal_on      = 1;
-mode.colorbalance_on    = 1;  % balance the color of the target PLW, which is by default red
+mode.colorbalance_on=1;  % balance the color of the target PLW, which is by default red
 mode.mirror_on     = 1;  % use mirror rather that spectacles for binacular rivalry
 mode.many_on       = 0;  % the task is the majority of dots the participant saw
 mode.debug_on      = 0;  % default is 0; 1 is not to use full screen, and skip the synch test
