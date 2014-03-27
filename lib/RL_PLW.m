@@ -61,7 +61,7 @@ function RL_PLW(conf, mode)
   conf.restpertrial       =  1;           % every x trial a rest
   conf.nPLWs              =  8;           % how many PLWs to draw on screen in a circle
   conf.clockR             =  .75;         % clock, with the center of the screen as (0,0), in pr coordination system
-  conf.raster             =  [1 8];       % visual and masked data raster for x y
+  conf.raster             =  [1 0];       % visual and masked data raster for x y;
   conf.alphaFace          =  0.1;         % alpha transparency for face stimuli
   conf.doubleTactileDiff  =  0 ;          % flips between taps on one tactile stimuli (double tactile);0 to disable
   conf.tiltangle          =  0;           % tilt angle for simulating 3D stereo display
