@@ -82,6 +82,7 @@ mode.inout_on           = 0;  % use incoming and outgoing PLWs for demo
 mode.posture_on         = 0;  % for posture exp. only upright PLWs used
 mode.simpleInOut_on     = 0;  % simple InOut exp, with the same tactile stimuli for both foot
 mode.octal_on           = 0;  % circular Octal display of PLWs
+mode.dotRot_on          = 1;  % Use dot rot or not; depends on octal_on=1;
 mode.colorbalance_on    = 0;  % balance the color of the target PLW, which is by default red
 mode.mono_tactile = 0;
 mode.once_on            = 1;  % only one trial, used for demostration before experiment
@@ -369,8 +370,8 @@ mode.tactile_on = 0;
       [data.vTrack, data.tTrack] = genTrack(flow.Trialsequence(flow.Trial), data.Track, data.lefttouch, data.righttouch, conf.flpi, conf.ntdurflp, conf.nvterrflp, conf.doubleTactileDiff);
 
 
-      if mode.octal_on
           [data.xymatrix, render.DotRot] = dotRotData(render.wsize, 1/render.ifi , [], 1);
+      if mode.octal_on
               % xy0~PLWwidth; imagePath~conditon;
               data.imagePaths = imList(flow.Trialsequence(flow.Trial), 0);
           for iFaces = 1:conf.nPLWs
@@ -439,15 +440,19 @@ else
         if mode.baseline_on
           % do not show the PLWs
 
+
       elseif mode.octal_on
           % Octal PLWs
           [data.xymatrix, render.DotRot] = dotRotData(render.wsize, 1/render.ifi , render.DotRot, 0);
           for iPLW=1:conf.nPLWs
               fixation(w, render.cx, render.cy, [255 255 255]);
               Screen('DrawTexture', w, render.texface{iPLW}, [], render.faceRect{iPLW}, [], 0);
+              if mode.dotRot_on
               Screen('DrawDots', w, data.xymatrix, 5, [255 255 255], [data.clockarm(iPLW,:)],2);
+          else
 %          RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 0 0], [data.prCoor(iPLW,:)]/2, data.maxdot);
           RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), data.clockarm(iPLW,1), data.clockarm(iPLW,2), data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 255 255], [0 0], data.maxdot);
+      end
       end
 
       else
