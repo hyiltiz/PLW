@@ -44,6 +44,7 @@ function RL_PLW(conf, mode)
   data.instruct_filename = 'RL_Instruction_en.txt'; % instructions text file
 
   % input variables, use them via updateStruct() to update the defined variables below
+  % these conf, mode was defined through wrapper shells such as DirectionTask
   if nargin > 0
     render.conf=conf;
     render.mode=mode;
@@ -76,6 +77,7 @@ function RL_PLW(conf, mode)
   conf.kill_dotr          =  .1;          % ratio at which to kill dotr percent of dots
   % conf.exptime          =  45;          % experiment is 45min long
 
+% evaluate the input arguments of this function
 % state control variables
 mode.baseline_on        = 0;  % baseline trial, without visual stimuli
 mode.inout_on           = 0;  % use incoming and outgoing PLWs for demo
@@ -96,24 +98,6 @@ mode.audio_on           = 0;  % set audio stimuli on
 mode.RT_on              = 0;  % Reaction time mode, this is not to be changed!
 mode.debug_on           = 1;  % default is 0; 1 is not to use full screen, and skip the synch test
 
-% evaluate the input arguments of this function
-if nargin > 0
-  % state control variables
-  mode.baseline_on        = 0;  % baseline trial, without visual stimuli
-  mode.inout_on           = 0;  % use incoming and outgoing PLWs for demo
-  mode.simpleInOut_on     = 0;  % simple InOut exp, with the same tactile stimuli for both foot
-  mode.octal_on           = 0;  % circular Octal display of PLWs
-  mode.posture_on         = 0;  % for posture exp. only upright PLWs used
-  mode.once_on            = 1;  % only one trial, used for demostration before experiment
-  % DO NOT CHANGE UNLESS YOU KNOW EXCACTLY WHAT YOU ARE DOING
-  mode.mirror_on          = 1;  % use mirror rather that spectacles for binacular rivalry
-  mode.many_on            = 0;  % the task is the majority of dots the participant saw
-  mode.greyNoise_on       = 1;  % do not use the original grey noise
-  mode.english_on         = 1;  % use English for Instructions etc., 0 for Chinese(not supported for now!)
-  mode.regenerate_on      = 1;  % mode.regenerate_on data for experiment, rather than using the saved one
-  mode.audio_on           = 0;  % set audio stimuli on
-  mode.RT_on              = 0;  % Reaction time mode, this is not to be changed!
-  mode.debug_on           = 1;  % default is 0; 1 is not to use full screen, and skip the synch test
 
   % evaluate the input arguments of this function
   if nargin > 0

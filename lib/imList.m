@@ -93,7 +93,7 @@ function [paths imnames]= imList(condition, isFull)
 
 
         % now shuffle the paths
-        idxrand = randperm(numel(paths))
+        idxrand = randperm(numel(paths));
         paths = paths(idxrand);
         imnames = imnames(idxrand);
 
