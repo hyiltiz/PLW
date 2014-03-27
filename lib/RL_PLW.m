@@ -82,7 +82,7 @@ mode.inout_on           = 0;  % use incoming and outgoing PLWs for demo
 mode.posture_on         = 0;  % for posture exp. only upright PLWs used
 mode.simpleInOut_on     = 0;  % simple InOut exp, with the same tactile stimuli for both foot
 mode.octal_on           = 0;  % circular Octal display of PLWs
-mode.dotRot_on          = 1;  % Use dot rot or not; depends on octal_on=1;
+mode.dotRot_on          = 0;  % Use dot rot or not; depends on octal_on=1;
 mode.colorbalance_on    = 0;  % balance the color of the target PLW, which is by default red
 mode.mono_tactile = 0;
 mode.once_on            = 1;  % only one trial, used for demostration before experiment
