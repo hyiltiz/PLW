@@ -1,5 +1,6 @@
 function OctalTask(is_once_on)
-% In-Out simple task, pass in 1 for demo with only one trial, or just run it with no input;
+% octal task, pass in 1 for demo with only one trial, or just run it with no input;
+% displays 8 PLW with emotional face stumuli
 
 
 % time setting vatiables
@@ -28,7 +29,6 @@ if nargin > 0
     mode.once_on       = is_once_on;  % only one trial, used for demostration before experiment
 else
     mode.once_on       = 0;  % only one trial, used for demostration before experiment
-
 end
 
 % Call the main function RL_PLW()

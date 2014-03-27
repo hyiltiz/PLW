@@ -1,5 +1,7 @@
 function DotRotTask(is_once_on)
-% In-Out simple task, pass in 1 for demo with only one trial, or just run it with no input;
+% DotRot task, pass in 1 for demo with only one trial, or just run it with no input;
+% Baseline task for Octal Task. DotRotDemo with in-out direction at 8 pos
+% on face stimuli
 
 
 % time setting vatiables

@@ -1,5 +1,7 @@
 function InOutSimpleTask(is_once_on)
 % In-Out simple task, pass in 1 for demo with only one trial, or just run it with no input;
+% binocular 2 PLWs with simple tactile stimuli:
+% back1=back2, front1=front2; front1 = back1+ 15(std~conf)
 
 
 % time setting vatiables
@@ -24,7 +26,6 @@ if nargin > 0
     mode.once_on       = is_once_on;  % only one trial, used for demostration before experiment
 else
     mode.once_on       = 0;  % only one trial, used for demostration before experiment
-
 end
 
 % Call the main function RL_PLW()
