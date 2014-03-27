@@ -6,20 +6,18 @@ function [xymatrix, dat] = dotRotData(rect, fps, render_DotRot, isInit)
     % ---------------------------------------
 
     rot_flag = 0; % no rotation
-    ndots       = 200; % number of dots
+    ndots       = 14; % number of dots
     mon_width   = 39;   % horizontal dimension of viewable screen (cm)
     v_dist      = 60;   % viewing distance (cm)
-    dot_speed   = 7;    % dot speed (deg/sec)
-    dot_w       = 0.1;  % width of dot (deg)
+    dot_speed   = 2;    % dot speed (deg/sec)
     fix_r       = 0.15; % radius of fixation point (deg)
-    max_d       = 15;   % maximum radius of  annulus (degrees)
-    min_d       = 1;    % minumum
+    max_d       = 1.8;   % maximum radius of  annulus (degrees)
+    min_d       = 0.4;    % minumum
     differentsizes = 0; % Use different sizes for each point if >= 1. Use one common size if == 0.
     f_kill      = 0.01; % fraction of dots to kill each frame (limited lifetime)
 
     ppd = pi * (rect(3)-rect(1)) / atan(mon_width/v_dist/2) / 360;    % pixels per degree
     pfs = dot_speed * ppd / fps;                            % dot speed (pixels/frame)
-    s = dot_w * ppd;                                        % dot size (pixels)
     [center(1), center(2)] = RectCenter(rect);
     fix_cord = [center-fix_r*ppd center+fix_r*ppd];
 

@@ -276,6 +276,7 @@ mode.tactile_on = 0;
     else
       [w,render.wsize]=Screen('OpenWindow',render.screenNumber,0,[],32);
     end
+    Screen('BlendFunction', w, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     render.ifi=Screen('GetFlipInterval', w);
     if render.ifi > conf.flpi + 0.0005 % allow 0.5ms error
@@ -369,6 +370,7 @@ mode.tactile_on = 0;
 
 
       if mode.octal_on
+          [data.xymatrix, render.DotRot] = dotRotData(render.wsize, 1/render.ifi , [], 1);
               % xy0~PLWwidth; imagePath~conditon;
               data.imagePaths = imList(flow.Trialsequence(flow.Trial), 0);
           for iFaces = 1:conf.nPLWs
@@ -439,9 +441,11 @@ else
 
       elseif mode.octal_on
           % Octal PLWs
+          [data.xymatrix, render.DotRot] = dotRotData(render.wsize, 1/render.ifi , render.DotRot, 0);
           for iPLW=1:conf.nPLWs
               fixation(w, render.cx, render.cy, [255 255 255]);
               Screen('DrawTexture', w, render.texface{iPLW}, [], render.faceRect{iPLW}, [], 0);
+              Screen('DrawDots', w, data.xymatrix, 5, [255 255 255], [data.clockarm(iPLW,:)],2);
 %          RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 0 0], [data.prCoor(iPLW,:)]/2, data.maxdot);
           RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), data.clockarm(iPLW,1), data.clockarm(iPLW,2), data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 255 255], [0 0], data.maxdot);
       end

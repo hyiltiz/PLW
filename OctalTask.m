@@ -3,7 +3,7 @@ function OctalTask(is_once_on)
 
 
 % time setting vatiables
-conf.flpi               =  0.01;        % each frame is set to 20ms (the monitor's flip interval is 16.7ms)
+conf.flpi               =  0.02;        % each frame is set to 20ms (the monitor's flip interval is 16.7ms)
 conf.raster             =  [1 0];       % visual and masked data raster for x y
 conf.alphaFace          =  .7;         % alpha transparency for face stimuli
 conf.scale1             =  6;           % PLW's visual scale, more the bigger
@@ -18,10 +18,10 @@ conf.clockR             =  .5;         % clock, with the center of the screen as
 
 % state control variables
 mode.octal_on      = 1;
+mode.debug_on      = 1;  % default is 0; 1 is not to use full screen, and skip the synch test
 mode.colorbalance_on=1;  % balance the color of the target PLW, which is by default red
 mode.mirror_on     = 1;  % use mirror rather that spectacles for binacular rivalry
 mode.many_on       = 0;  % the task is the majority of dots the participant saw
-mode.debug_on      = 0;  % default is 0; 1 is not to use full screen, and skip the synch test
 mode.simpleInOut_on= 1;  % simple InOut exp, with the same tactile stimuli for both foot
 
 if nargin > 0
