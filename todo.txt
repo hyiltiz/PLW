@@ -2,7 +2,8 @@ Why MATLAB/linux is crashing everytime, complaining some MEX problem? DotRotDemo
 
 OctalTask:
         - 指导语:可0,勿久，整体
-        - DotRot: 白色
         - 量表: 
         - 知情同意书：
+        - RL_PLW 整理
+        - indentation
 

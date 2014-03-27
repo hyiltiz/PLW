@@ -100,9 +100,9 @@ function [xymatrix, dat] = dotRotData(rect, fps, render_DotRot, isInit)
             end
 
         end;
-        xymatrix = transpose(xy);
     end
 
+    xymatrix = transpose(xy);
     dat.xy    =    xy;
     dat.dxdy  =  dxdy;
     dat.r     =     r;

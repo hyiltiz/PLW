@@ -373,7 +373,7 @@ mode.tactile_on = 0;
           [data.xymatrix, render.DotRot] = dotRotData(render.wsize, 1/render.ifi , [], 1);
       if mode.octal_on
               % xy0~PLWwidth; imagePath~conditon;
-              data.imagePaths = imList(flow.Trialsequence(flow.Trial), 0);
+              [data.imagePaths data.imnames{flow.Trial}]= imList(flow.Trialsequence(flow.Trial), 0);
           for iFaces = 1:conf.nPLWs
               [render.texface{iFaces} render.faceRect{iFaces}] = addImage(w, render.wsize, data.clockarm(iFaces,1), data.clockarm(iFaces,2), [render.cx render.cy]/4, data.imagePaths{iFaces}, conf.raster, conf.alphaFace);
           end

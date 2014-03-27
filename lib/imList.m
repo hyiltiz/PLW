@@ -1,4 +1,4 @@
-function paths = imList(condition, isFull)
+function [paths imnames]= imList(condition, isFull)
     % choose images based on the condition
     isSkip = 1;
     if ~isSkip
@@ -56,6 +56,7 @@ function paths = imList(condition, isFull)
 
     path = './resources/facestimuli/';
     paths = cell(8,1);
+    imnames = cell(8,1);
 
     if weight==0
         % return blank page
@@ -64,6 +65,7 @@ function paths = imList(condition, isFull)
         path = [path '.BMP'];
         for iim=1:8
             paths{iim}=path;
+            imnames{iim}=imname;
         end
     else
         iim = 0;
@@ -75,12 +77,14 @@ function paths = imList(condition, isFull)
                     imlist = imidx{igender, iemotion};
 %                     keyboard
                     randNumbers = randperm(numel(imlist));
-                    imname = imlist(randNumbers(1));
-                    path = [path emotions{iemotion} '/' genders{igender} '/' eemm{iemotion} ggee{igender} num2str(imname)];
+                    imid = num2str(imlist(randNumbers(1)));
+                    imname = [eemm{iemotion} ggee{igender} imid];
+                    path = [path emotions{iemotion} '/' genders{igender} '/' imname];
                     path = [path '.BMP'];
                     iim = iim+1;
 %                     keyboard
                     paths{iim}=path;
+                    imnames{iim}=imname;
                 end
             else
                 % do not need this emotion, do nothing
@@ -89,6 +93,8 @@ function paths = imList(condition, isFull)
 
 
         % now shuffle the paths
-        paths = paths(randperm(numel(paths)));
+        idxrand = randperm(numel(paths))
+        paths = paths(idxrand);
+        imnames = imnames(idxrand);
 
     end
