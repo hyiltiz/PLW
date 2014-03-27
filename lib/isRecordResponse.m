@@ -5,7 +5,7 @@ function testflag = isRecordResponse(isRT, prestate, response, isLastResponse, i
   % testflag=True -> record the time, condition and other stuff;
 
   if isRT
-    if ifLastResponse
+    if isLastResponse
       % For the last response, be sure to at least record the response,
       % though the Reaction Time is TOO BIG then!
       testflag = ~isresponse;
