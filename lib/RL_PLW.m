@@ -20,6 +20,7 @@
 % Created: 2012-10-17
 
 function RL_PLW(conf, mode)
+echo on;
 %% this code to generate pointlight display using 3D coordinates file
 %   Originally written by Lihan Chen, Ph.D, Department of Psychology, Peking University
 %   Merged in onePLW, PLWtransform, PLWsound modification to optimaze code
@@ -105,53 +106,58 @@ if nargin > 0
     mode = updateStruct(render.mode, mode);
 end
 
-if mode.mirror_on
-    %good
-else
-    conf.xshift = 0;
-end
-
-if mode.debug_on
-    conf.repetitions = 1;
-    conf.resttime = 5;
-    conf.exptime = 5;
-    conf.trialdur = 13;
-    mode.octal_on = 1;
-end
-
-if mode.many_on % M is for many_dots task, while D is for direction task
-    dataSuffix = 'M';
-else
-    dataSuffix = 'D';
-end
-
-if mode.octal_on
-    dataSuffix = [dataSuffix '_Octal_'] ;
-elseif mode.inout_on % M is for many_dots task, while D is for direction task
-    dataSuffix = [dataSuffix '_InOut_'] ;
-elseif mode.posture_on
-    dataSuffix = [dataSuffix '_Posture_'] ;
-end
-
-if mode.octal_on
-    mode.simpleInOut_on=1;
-end
-
-if mode.simpleInOut_on
-    %use the same visual stimuli
-    mode.inout_on = 1;
-    mode.mono_tactile = 1;
-    conf.doubleTactileDiff  =  0;
-    mode.colorbalance_on    = 0;  % set target PLW green, rather than red
-end
-
-if mode.colorbalance_on
-    if round(rand)
-        flipud(conf.colors);
-        dataSuffix = [dataSuffix '_greenTarget_'];
+%% variable settings that depends mode variables
+if true % used for folding mode~conf variables
+    if mode.mirror_on
+        %good
+    else
+        conf.xshift = 0;
     end
-    dataSuffix = [dataSuffix '_ColorBalance_'];
-end
+    
+    if mode.debug_on
+        conf.repetitions = 1;
+        conf.resttime = 5;
+        conf.exptime = 5;
+        conf.trialdur = 13;
+        mode.octal_on = 1;
+    end
+    
+    if mode.many_on % M is for many_dots task, while D is for direction task
+        dataSuffix = 'M';
+    else
+        dataSuffix = 'D';
+    end
+    
+    if mode.octal_on
+        dataSuffix = [dataSuffix '_Octal_'] ;
+    elseif mode.inout_on % M is for many_dots task, while D is for direction task
+        dataSuffix = [dataSuffix '_InOut_'] ;
+    elseif mode.posture_on
+        dataSuffix = [dataSuffix '_Posture_'] ;
+    end
+    
+    if mode.octal_on;mode.simpleInOut_on=1;end
+    
+    if mode.simpleInOut_on
+        %use the same visual stimuli
+        mode.inout_on = 1;
+        mode.mono_tactile = 1;
+        conf.doubleTactileDiff  =  0;
+        mode.colorbalance_on    = 0;  % set target PLW green, rather than red
+    end
+    
+    if mode.colorbalance_on
+        if round(rand)
+            flipud(conf.colors);
+            dataSuffix = [dataSuffix '_greenTarget_'];
+        end
+        dataSuffix = [dataSuffix '_ColorBalance_'];
+    end
+    
+    if mode.RT_on
+        conf.restpertrial       =  inf;           % every x trial a rest
+    end
+end %true
 
 %% randomized sample exp. conditions and trial sequences variables
 % condition type:4; recording results in 5 culumns
@@ -169,10 +175,19 @@ if mode.once_on
     flow.Trialsequence(1:mode.once_on)=1:mode.once_on;
 end
 
-% unified key definitions
-render.kb = keyDefinition();
-
+%% exp begins
 try
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %% Hardware/Software Check
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    % make sure the software version is new enouch for running the program
+    checkVersion();
+    
+    % unified key definitions
+    render.kb = keyDefinition();
+    
     % psychoaudio hardware setting.
     if mode.audio_on
         freq = 48000;
@@ -180,6 +195,7 @@ try
     end
     
     % tactile hardware setting
+    % TODO: this code is buggy for modes
     try
         [render.dioIn, render.dioOut] = loadDigitalIO();
         %       mode.tactile_on = 1;
@@ -188,13 +204,13 @@ try
         mode.tactile_on = 0;  % 0 is no tactile device
     end
     
-    % make sure the software version is new enouch for running the program
-    checkVersion();
-    
     % Get Subject information
+    % TODO: this info may not needed execution every time
     Subinfo = getSubInfo();
     
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% initialization
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     HideCursor;
     ListenChar(2);
     if mode.debug_on
@@ -205,6 +221,29 @@ try
     Screen('Preference', 'ConserveVRAM', 8);
     InitializeMatlabOpenGL;
     
+    render.screens=Screen('screens');
+    render.screenNumber=max(render.screens);
+    
+    if mode.debug_on
+        [w,render.wsize]=Screen('OpenWindow',render.screenNumber,0,[1,1,801,601],[]);
+    else
+        [w,render.wsize]=Screen('OpenWindow',render.screenNumber,0,[],32);
+    end
+    Screen('BlendFunction', w, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
+    render.ifi=Screen('GetFlipInterval', w);
+    if render.ifi > conf.flpi + 0.0005 % allow 0.5ms error
+        error('HardwareError:MonitorFlushRate',...
+            'Monitor Flip Interval is too large. Please adjust monitor flush rate \n from system preferences, or adjust conf.flpi fron *Task.m file.');
+    end
+    Priority(MaxPriority(w));
+    
+    render.cx = render.wsize(3)/2; %center x
+    render.cy = render.wsize(4)/2; %center y
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %% data generatoin
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     if mode.regenerate_on
         % reading in bvh text files for raw data
         data.readData = PLWread(data.visualfilename);
@@ -250,53 +289,33 @@ try
             [data.dotx1s, data.doty1s, data.init1s, data.maxdot1s] = PLWtransform(data.readData, conf.scale1, conf.imagex, -1);
         end
         
+        if mode.octal_on
+            [data.clockarm data.prCoor data.angls] = octalCoor(render.wsize, conf.clockR, conf.nPLWs);
+            data.imagePath='resources/facestimuli/6neutral/female/NEF1.BMP';
+        end % octal_on
         
-    end
+        if mode.mirror_on
+            % do not create noise, we do not need them if using mirrors
+        else
+            %% create the noise, using buffer
+            % impossible to iterate on a smaller loop, since the loop has direction :(
+            % render.noiseloopT = 50;
+            render.noiseloopT = length(data.Track);
+            render.noiseloop = modloop(1:length(data.Track), render.noiseloopT);
+            [tex, render.dstRect] = addNoise(w, render.wsize, data.Track,conf.noisescale, render.noiseloopT, mode.greyNoise_on, conf.lagFlip, conf.kill_dotr);
+        end
+        
+    end % regenerate
     
-    render.screens=Screen('screens');
-    render.screenNumber=max(render.screens);
-    
-    if mode.debug_on
-        [w,render.wsize]=Screen('OpenWindow',render.screenNumber,0,[1,1,801,601],[]);
-    else
-        [w,render.wsize]=Screen('OpenWindow',render.screenNumber,0,[],32);
-    end
-    Screen('BlendFunction', w, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    
-    render.ifi=Screen('GetFlipInterval', w);
-    if render.ifi > conf.flpi + 0.0005 % allow 0.5ms error
-        error('Monitor Flip Interval is too large. Please use another computer.')
-    end
-    
-    render.cx = render.wsize(3)/2; %center x
-    render.cy = render.wsize(4)/2; %center y
-    
-    if mode.octal_on
-        [data.clockarm data.prCoor data.angls] = octalCoor(render.wsize, conf.clockR, conf.nPLWs);
-        data.imagePath='resources/facestimuli/6neutral/female/NEF1.BMP';
-    end
     
     % Variables used across trials
-    %     data.Track = 1:round(conf.exptime*60/(conf.flpi * data.loopPeriod * 8 * conf.repetitions) * length(data.dotx));        % 2 for less longer stimuli
     data.Track = 1: round(conf.trialdur / (conf.flpi * length(data.dotx)) * length(data.dotx));
-    %     data.Track = 1:5/.01;
     
     flow.prestate = 0;  % the last reponse until now
     flow.response = 0;  % the current current response, just after the last response
     flow.nresp    = 1;  % the total number of response recorded
     flow.restcount= 0;  % the number of trials from last rest
-    Priority(MaxPriority(w));
     
-    if mode.mirror_on
-        % do not create noise, we do not need them if using mirrors
-    else
-        %% create the noise, using buffer
-        % impossible to iterate on a smaller loop, since the loop has direction :(
-        % render.noiseloopT = 50;
-        render.noiseloopT = length(data.Track);
-        render.noiseloop = modloop(1:length(data.Track), render.noiseloopT);
-        [tex, render.dstRect] = addNoise(w, render.wsize, data.Track,conf.noisescale, render.noiseloopT, mode.greyNoise_on, conf.lagFlip, conf.kill_dotr);
-    end
     
     %% Instructions
     %     RL_Instruction(w, mode.debug_on, mode.english_on, render.kb);
@@ -312,8 +331,7 @@ try
         else
             data.instruct_filename = 'RL_Instruction_many_en.txt';
         end
-    end
-    
+    end % instruction
     
     Instruction(data.instruct_filename, w, render.wsize, mode.debug_on, mode.english_on, render.kb, inf, 0, mode.tactile_on);
     
@@ -324,7 +342,7 @@ try
         flow.Trial = k;
         % rest every couple trial once
         if flow.Trial > 1
-            WaitSecs(3);
+%             WaitSecs(3);
             showLeftTrial(flow.Trialsequence, flow.Trial, w, render.wsize, mode.debug_on, mode.english_on, render.kb, 1, mode.tactile_on);
         end
         flow.restcount = restBetweenTrial(flow.restcount, conf.resttime, conf.restpertrial, w, render.wsize, mode.debug_on, mode.english_on, render.kb, 0, mode.tactile_on);
@@ -333,7 +351,7 @@ try
         
         if mode.regenerate_on
             data.initPosition = Randi(round(data.loopPeriod/4),[2 1]);
-            %         data.paceRate = repmat(Randi(2), [2 1]);
+            % data.paceRate = repmat(Randi(2), [2 1]);
             % Remember not to use those quick ones
             data.paceRate = [1; 1];
             %   data.Track = 1:round(length(data.dotx));% 2 for accuracy, and data.loopPeriod for period
@@ -379,8 +397,7 @@ try
             %testMirror(w, render.cx , render.cy, 255, [conf.xshift 0], data.maxdot1);
             % use the same maxdot for both PLW; the frame has to be the same
             testMirror(w, render.cx , render.cy, 255, [conf.xshift 0], data.maxdot);
-            
-        end
+        end % mirror tests
         Screen('Flip',w);
         
         % wait until the participant's mirror is ready
@@ -423,7 +440,6 @@ try
             
             if mode.baseline_on
                 % do not show the PLWs
-                
                 
             elseif mode.octal_on
                 % Octal PLWs
@@ -489,6 +505,7 @@ try
         
         % Get the remaining last response
         render.islastResponse = 1;
+        Display(flow.isresponse);
         [Trials, flow.prestate, flow.response, render.iniTimer, flow.isquit,...
             flow.isresponse, flow.nresp ] = getResponseU(mode.tactile_on, ...
             render.iniTimer, render.dioIn, flow.prestate, ...
@@ -526,6 +543,7 @@ catch
     
 end
 
+%% exp ends
 Screen('CloseAll');
 if mode.audio_on; PsychPortAudio('Close'); end
 Priority(0);

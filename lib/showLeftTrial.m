@@ -16,9 +16,9 @@ function restcount = showLeftTrial(Trialsequence, theTrial, w, wsize, debug_mode
   end
 
   if english_on
-    Instruction(['Remaining ', num2str(length(Trialsequence) - theTrial + 1), '.'], w, wsize, debug_mode, english_on, kb, 2, skipFile, tactile_on);
+    Instruction([num2str(length(Trialsequence) - theTrial + 1), ' Remaining '], w, wsize, debug_mode, english_on, kb, 1, skipFile, tactile_on);
   else
-    Instruction(['还有 ', num2str(length(Trialsequence) - theTrial), '试次。'], w, wsize, debug_mode, english_on, kb, 2, skipFile, tactile_on);
+    Instruction(['还有 ', num2str(length(Trialsequence) - theTrial), '试次'], w, wsize, debug_mode, english_on, kb, 1, skipFile, tactile_on);
   end
 end
 
