@@ -6,20 +6,22 @@ function invtr()
 % kb = keyDefinition();
 % screens=Screen('Screens');
 % screenNumber=max(screens);
-% if 1
-%     [w,wsize]=Screen('OpenWindow',screenNumber,0,[ 1,1,801,601],[]);
-% else
-%     [w,wsize]=Screen('OpenWindow',screenNumber,0);
-% end
+% % if 1
+% %     [w,wsize]=Screen('OpenWindow',screenNumber,0,[ 1,1,801,601],[]);
+% % else
+% %     [w,wsize]=Screen('OpenWindow',screenNumber,0);
+% % end
 % for i = 1:length(items)
-
-    %     h = msgbox(items{i}, '心理量表', 'modal');
-    %     set(h,'Units','normalized','Position',[0 0 1 1])
-    %     ah = get( h, 'CurrentAxes' );
-    %     ch = get( ah, 'Children' );
-    %     set( ch, 'FontSize', 30 );
-    %     set(ch, 'Units', 'normalized', 'Position', [0.025 0.5 0]);
-    %     pause;
+% 
+%         h = msgbox(items{i}, '心理量表', 'modal');
+%         set(h, 'Visible', 'off');
+%         set(h,'Units','normalized','Position',[0 0 1 1])
+%         ah = get( h, 'CurrentAxes' );
+%         ch = get( ah, 'Children' );
+%         set(ch, 'FontSize', 30 );
+%         set(ch, 'Units', 'normalized', 'Position', [0.025 0.5 0]);
+%         set(h, 'Visible', 'on');
+%         pause;
 % end
 
 clear
@@ -58,7 +60,6 @@ disp(['middle of ' types{i} ': ' num2str(Sorted.([types{i} 'score'])(round(end/2
 
 disp(['high ' types{i}]);
 disp(names(round(end/2):end))
-keyboard
 
 %文献 - 人际反应指数量表的信度和效度研究
 % keyboard
@@ -119,5 +120,5 @@ end
 %     '刁若尘'
 %     '李天一'
 %     '许丽华'
-keyboard
+
 end

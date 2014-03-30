@@ -1,4 +1,4 @@
-function Instruction(filename, w, wsize, debug_mode, english_on, kb, time,skipFile, tactile_on)
+function keyCode = Instruction(filename, w, wsize, debug_mode, english_on, kb, time,skipFile, tactile_on)
   % Print instructions in instruction file.
 
   isSkip = 1;
@@ -62,8 +62,8 @@ function Instruction(filename, w, wsize, debug_mode, english_on, kb, time,skipFi
   Screen('TextStyle', w, 1);
 
   % Select specific text font, style and size:
-  Screen('Preference', 'TextRenderer', 1);
-  Screen('Preference', 'TextAntiAliasing', 1);
+%   Screen('Preference', 'TextRenderer', 1);
+%   Screen('Preference', 'TextAntiAliasing', 1);
 
   % golden_ratio = (sqrt(5)-1)/2;
   lenghth = 32;
@@ -75,6 +75,6 @@ function Instruction(filename, w, wsize, debug_mode, english_on, kb, time,skipFi
   Screen('FrameRect', w, 0, bbox);
   Screen('Flip',w);
 
-  pedalWait(tactile_on, time, kb);
+  keyCode = pedalWait(tactile_on, time, kb);
 
 end
