@@ -20,7 +20,7 @@
 % Created: 2012-10-17
 
 function RL_PLW(conf, mode)
-echo on;
+
 %% this code to generate pointlight display using 3D coordinates file
 %   Originally written by Lihan Chen, Ph.D, Department of Psychology, Peking University
 %   Merged in onePLW, PLWtransform, PLWsound modification to optimaze code
@@ -498,14 +498,14 @@ try
         end
         % quit if the participant pressed ESC
         if flow.isquit, break, end
-        
+
         % end of per trial
         Screen('FillRect',w ,0);
         Screen('Flip', w);
-        
+                
+                
         % Get the remaining last response
         render.islastResponse = 1;
-        Display(flow.isresponse);
         [Trials, flow.prestate, flow.response, render.iniTimer, flow.isquit,...
             flow.isresponse, flow.nresp ] = getResponseU(mode.tactile_on, ...
             render.iniTimer, render.dioIn, flow.prestate, ...
