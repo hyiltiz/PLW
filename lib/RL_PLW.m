@@ -311,8 +311,7 @@ try
     % Variables used across trials
     data.Track = 1: round(conf.trialdur / (conf.flpi * length(data.dotx)) * length(data.dotx));
     
-    flow.prestate = 0;  % the last reponse until now
-    flow.response = 0;  % the current current response, just after the last response
+    
     flow.nresp    = 1;  % the total number of response recorded
     flow.restcount= 0;  % the number of trials from last rest
     
@@ -338,11 +337,14 @@ try
     %% Here begins our trial
     for k = 1:length(flow.Trialsequence)
         %      tic;
+        flow.prestate = 0;  % the last reponse until now
+        flow.response = 0;  % the current current response, just after the last response
+        
         
         flow.Trial = k;
         % rest every couple trial once
         if flow.Trial > 1
-%             WaitSecs(3);
+            %             WaitSecs(3);
             showLeftTrial(flow.Trialsequence, flow.Trial, w, render.wsize, mode.debug_on, mode.english_on, render.kb, 1, mode.tactile_on);
         end
         flow.restcount = restBetweenTrial(flow.restcount, conf.resttime, conf.restpertrial, w, render.wsize, mode.debug_on, mode.english_on, render.kb, 0, mode.tactile_on);
@@ -498,12 +500,12 @@ try
         end
         % quit if the participant pressed ESC
         if flow.isquit, break, end
-
+        
         % end of per trial
         Screen('FillRect',w ,0);
         Screen('Flip', w);
-                
-                
+        
+        
         % Get the remaining last response
         render.islastResponse = 1;
         [Trials, flow.prestate, flow.response, render.iniTimer, flow.isquit,...

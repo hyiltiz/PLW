@@ -49,6 +49,7 @@ else  % use keyboard then
 end
 
 if  isRecordResponse(isRT, prestate, response, islastResponse, isresponse)
+    if isRT;prestate=response;end
     Trials(nresp,3) = GetSecs - iniTimer;
     Trials(nresp,1)=Trialsequence(k);
     Trials(nresp,2) = prestate;
