@@ -43,8 +43,6 @@ switch nameS
         %
         % 分类依据： 根据以上材料，初步筛选掉分数在 [35,45] 区间的被试。
         
-        
-        
     otherwise
         error('no such questionaire in the database!');
 end

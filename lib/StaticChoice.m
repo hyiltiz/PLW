@@ -1,12 +1,11 @@
-function StaticChoice()
+function [ques ] = StaticChoice(questionaire)
 
 mode.debug_on = 0;
 
-ques = quesDB('STAI');
+ques = quesDB(questionaire);
 
 
 try
-    
     kb = keyDefinition();
     screens=Screen('Screens');
     screenNumber=max(screens);
@@ -23,6 +22,7 @@ try
     %     Screen('DrawText', w, ques.instr, 0, 150, [255, 255, 255, 255]);
     Screen('Preference', 'TextAntiAliasing', 1);
     
+    
     for i = 1:length(ques.items)
         scalemap = ['1: ' ques.scales{i, 1}];
         for j=2:size(ques.scales, 2)
@@ -32,6 +32,7 @@ try
         DrawFormattedText(w, ques.instr{i}, 0, 80, [255, 255, 255, 255]);
         Screen('DrawText', w, ['请用键盘上数字 1 到 ', num2str(size(ques.scales, 2)), ' 作出反应：'], 0, 300, [255, 255, 255, 255]);
         Screen('DrawText', w, scalemap, 0, 330, [255, 255, 255, 255]);
+        
         kbCode = Instruction(ques.items{i}, w, wsize, 0, 1, kb, 5 ,1, 0);
         if sum(kbCode)==0
             [t, kbCode] = KbWait;
@@ -41,6 +42,7 @@ try
     end
     
     % encoding
+    ques.response = responseC';
     responseM = str2num(cell2mat(responseC'));
     responseM(ques.encode.inv) = -1*responseM(ques.encode.inv);
     
@@ -60,10 +62,11 @@ try
         WaitSecs(5);
     end
     
+    save tmp
     if isempty(ques.thrsh)
         % do nothing, just record
     else
-        if ques.thrsh{3} & (ques.thrsh{2}(1) <= ques.encode.scale{ques.thrsh{1},3} & ques.encode.scale{ques.thrsh{1},3} <= ques.thrsh{2}(2))
+        if ~xor(ques.thrsh{3}, (ques.thrsh{2}(1) <= ques.encode.scale{ques.thrsh{1},3} & ques.encode.scale{ques.thrsh{1},3} <= ques.thrsh{2}(2)))
             % we wanted results to be inside [a,b] and now they are
             %             Screen('DrawText', w, ['Passed! Please continue to the next experiment.'], 0, 190, [0, 50, 0, 255]);
             DrawFormattedText(w, ['Passed! Please continue to the next experiment.'], 'center', 'center', [0, 255, 0, 255]);
@@ -73,7 +76,6 @@ try
         end
         Screen('Flip',w);
         KbWait;
-        
     end
     
 catch
@@ -86,6 +88,5 @@ catch
 end
 sca
 ListenChar(0);
-
 
 end
