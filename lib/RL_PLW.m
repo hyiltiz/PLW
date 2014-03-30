@@ -344,7 +344,7 @@ try
         flow.Trial = k;
         % rest every couple trial once
         if flow.Trial > 1
-            %             WaitSecs(3);
+            WaitSecs(0.001);
             showLeftTrial(flow.Trialsequence, flow.Trial, w, render.wsize, mode.debug_on, mode.english_on, render.kb, 1, mode.tactile_on);
         end
         flow.restcount = restBetweenTrial(flow.restcount, conf.resttime, conf.restpertrial, w, render.wsize, mode.debug_on, mode.english_on, render.kb, 0, mode.tactile_on);
