@@ -86,6 +86,7 @@ mode.posture_on         = 0;  % for posture exp. only upright PLWs used
 mode.simpleInOut_on     = 0;  % simple InOut exp, with the same tactile stimuli for both foot
 mode.octal_on           = 0;  % circular Octal display of PLWs
 mode.dotRot_on          = 0;  % Use dot rot or not; depends on octal_on=1;
+mode.imEval             = 0;  % image evaluation task, only images needed
 mode.colorbalance_on    = 0;  % balance the color of the target PLW, which is by default red
 mode.mono_tactile = 0;
 mode.once_on            = 1;  % only one trial, used for demostration before experiment
@@ -449,11 +450,13 @@ try
                 for iPLW=1:conf.nPLWs
                     fixation(w, render.cx, render.cy, [255 255 255]);
                     Screen('DrawTexture', w, render.texface{iPLW}, [], render.faceRect{iPLW}, [], 0);
+                    if ~mode.imEval % this does not require anything else on the screen
                     if mode.dotRot_on
                         Screen('DrawDots', w, data.xymatrix, 5, [255 255 255], [data.clockarm(iPLW,:)],2);
                     else
                         %          RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 0 0], [data.prCoor(iPLW,:)]/2, data.maxdot);
                         RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), data.clockarm(iPLW,1), data.clockarm(iPLW,2), data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 255 255], [0 0], data.maxdot);
+                    end
                     end
                 end
                 

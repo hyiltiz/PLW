@@ -13,7 +13,7 @@ conf.repetitions        =  5;           % repetition time of a condition
 conf.resttime           =  30;          % rest for 30s
 conf.restpertrial       =  5;           % every x trial a rest
 conf.tiltangle          =  0;           % tilt angle for simulating 3D stereo display
-conf.doubleTactileDiff  = 10 ;          % flips between taps on one tactile stimuli (double tactile);0 to disable
+conf.doubleTactileDiff  = 10;          % flips between taps on one tactile stimuli (double tactile);0 to disable
 conf.clockR             =  .5;         % clock, with the center of the screen as (0,0), in pr coordination system
 
 
@@ -26,6 +26,7 @@ mode.colorbalance_on=1;  % balance the color of the target PLW, which is by defa
 mode.mirror_on     = 1;  % use mirror rather that spectacles for binacular rivalry
 mode.many_on       = 0;  % the task is the majority of dots the participant saw
 mode.simpleInOut_on= 1;  % simple InOut exp, with the same tactile stimuli for both foot
+mode.imEval        = 1;  % image evaluation task, only images needed
 
 if nargin > 0
     mode.once_on       = is_once_on;  % only one trial, used for demostration before experiment
