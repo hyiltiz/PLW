@@ -337,7 +337,7 @@ try
             data.instruct_filename = 'RL_Instruction_en.txt';
         end
     end % instruction
-
+    
     Instruction(data.instruct_filename, w, render.wsize, mode.debug_on, mode.english_on, render.kb, inf, 0, mode.tactile_on);
     
     %% Here begins our trial
@@ -456,12 +456,12 @@ try
                     fixation(w, render.cx, render.cy, [255 255 255]);
                     Screen('DrawTexture', w, render.texface{iPLW}, [], render.faceRect{iPLW}, [], 0);
                     if ~mode.imEval_on % this does not require anything else on the screen
-                    if mode.dotRot_on
-                        Screen('DrawDots', w, data.xymatrix, 5, [255 255 255], [data.clockarm(iPLW,:)],2);
-                    else
-                        %          RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 0 0], [data.prCoor(iPLW,:)]/2, data.maxdot);
-                        RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), data.clockarm(iPLW,1), data.clockarm(iPLW,2), data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 255 255], [0 0], data.maxdot);
-                    end
+                        if mode.dotRot_on
+                            Screen('DrawDots', w, data.xymatrix, 5, [255 255 255], [data.clockarm(iPLW,:)],2);
+                        else
+                            %          RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 0 0], [data.prCoor(iPLW,:)]/2, data.maxdot);
+                            RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), data.clockarm(iPLW,1), data.clockarm(iPLW,2), data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 255 255], [0 0], data.maxdot);
+                        end
                     end
                 end
                 
