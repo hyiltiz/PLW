@@ -98,6 +98,7 @@ mode.english_on         = 1;  % use English for Instructions etc., 0 for Chinese
 mode.regenerate_on      = 1;  % mode.regenerate_on data for experiment, rather than using the saved one
 mode.audio_on           = 0;  % set audio stimuli on
 mode.RT_on              = 0;  % Reaction time mode, this is not to be changed!
+mode.usekb_on           = 0;  % force use keyboard for input (also suppress output from digitalIO)
 mode.debug_on           = 1;  % default is 0; 1 is not to use full screen, and skip the synch test
 
 
@@ -162,6 +163,9 @@ if true % used for folding mode~conf variables
     if mode.RT_on
         conf.restpertrial       =  inf;           % every x trial a rest
     end
+    
+    if mode.octal_on || mode.dotRot_on || mode.imEval_on ;mode.usekb_on=1;end
+    
 end %true
 
 %% randomized sample exp. conditions and trial sequences variables
@@ -200,18 +204,18 @@ try
     end
     
     % tactile hardware setting
-    % TODO: this code is buggy for modes
     try
         [render.dioIn, render.dioOut] = loadDigitalIO();
-        %       mode.tactile_on = 1;
-        mode.tactile_on = 0;
+        mode.tactile_on = 1;
     catch
         mode.tactile_on = 0;  % 0 is no tactile device
     end
     
-    % Get Subject information
-    % TODO: this info may not needed execution every time
+    if mode.usekb_on
+        mode.tactile_on = 0;  % TODO: should not have suppressed output though
+    end
     
+    % Get Subject information
     if ~exist('Subinfo','var');Subinfo = getSubInfo();end
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
