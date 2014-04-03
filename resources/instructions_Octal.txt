@@ -1,0 +1,7 @@
+In this exprtiment one set of dots in the shape of a walking man will be displayed. 
+Please PRESS and HOLD the UP/DOWN key corresponding to the walkers's  OVERALL walking direction.
+
+Press as long as you can decide. If you are not certain, you can press no key. But this time
+should not last too long!
+
+Press any key to continue.

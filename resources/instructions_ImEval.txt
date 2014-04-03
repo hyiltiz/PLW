@@ -2,3 +2,7 @@ Evaluate the overall emotion of the face stimuli.
 Choose a number from 1 to 7, and press Number key.
 
 1:angry - 4:neutral - 7:happy
+
+
+
+Press any key to continue.

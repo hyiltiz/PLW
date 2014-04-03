@@ -1,6 +1,4 @@
 Why MATLAB/linux is crashing everytime, complaining some MEX problem? DotRotDemo() is not crashing it, Octave/GNU is not, neither...and Windows MATLAB is just all right
 
 OctalTask:
-        - 指导语?,勿久，整?
-        - 量表: 
         - 知情同意书：
