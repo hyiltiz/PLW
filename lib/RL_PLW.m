@@ -19,7 +19,7 @@
 % Author: Hormetjan Yiltiz  hyiltiz@gmail.com
 % Created: 2012-10-17
 
-function RL_PLW(conf, mode)
+function RL_PLW(conf, mode, Subinfo)
 
 %% this code to generate pointlight display using 3D coordinates file
 %   Originally written by Lihan Chen, Ph.D, Department of Psychology, Peking University
@@ -207,7 +207,8 @@ try
     
     % Get Subject information
     % TODO: this info may not needed execution every time
-    Subinfo = getSubInfo();
+    
+    if ~exist('Subinfo','var');Subinfo = getSubInfo();end
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% initialization
