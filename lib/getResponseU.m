@@ -21,7 +21,7 @@ else  % use keyboard then
     if islastResponse
         if ~(isRT & isresponse) % only wait if no previous response was there
         [~, keyCode] = KbWait; %wait for the response
-        responseFlag = (keyCode(kb.leftArrow) || keyCode(kb.rightArrow)) || keyCode(kb.upArrow) || keyCode(kb.downArrow);
+        responseFlag = (keyCode(kb.leftArrow) || keyCode(kb.rightArrow)) || keyCode(kb.upArrow) || keyCode(kb.downArrow) || ( 49<=find(keyCode) && find(keyCode) <= 57 );
         else
             % isRT & isresponse, so we already have our response
             % do nothing and return
@@ -29,11 +29,11 @@ else  % use keyboard then
         end
     else
         [ keyIsDown, ~, keyCode ] = KbCheck;
-        responseFlag = keyIsDown & (keyCode(kb.leftArrow) || keyCode(kb.rightArrow)) || keyCode(kb.upArrow) || keyCode(kb.downArrow);
+        responseFlag = keyIsDown & (keyCode(kb.leftArrow) || keyCode(kb.rightArrow)) || keyCode(kb.upArrow) || keyCode(kb.downArrow) || ( 49<=find(keyCode) && find(keyCode) <= 57 );
     end
     
     if responseFlag
-        response = keyCode(kb.rightArrow) + keyCode(kb.leftArrow)*2 + keyCode(kb.upArrow)*3 + keyCode(kb.downArrow)*4;
+        response = keyCode(kb.rightArrow) + keyCode(kb.leftArrow)*2 + keyCode(kb.upArrow)*3 + keyCode(kb.downArrow)*4 + find(keyCode(49:57))*7;
         
     elseif any(keyCode(kb.escapeKey)) %quit program
         isquit = 1;

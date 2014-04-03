@@ -35,7 +35,7 @@ try
         
         kbCode = Instruction(ques.items{i}, w, wsize, 0, 1, kb, 5 ,1, 0);
         if sum(kbCode)==0
-            [t, kbCode] = KbWait;
+            [t, kbCode] = KbWait([],2);
         end
         kbName = KbName(kbCode);
         responseC{i} = kbName(1);
