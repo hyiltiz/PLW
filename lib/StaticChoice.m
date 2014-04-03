@@ -66,7 +66,8 @@ try
     if isempty(ques.thrsh)
         % do nothing, just record
     else
-        if ~xor(ques.thrsh{3}, (ques.thrsh{2}(1) <= ques.encode.scale{ques.thrsh{1},3} & ques.encode.scale{ques.thrsh{1},3} <= ques.thrsh{2}(2)))
+        ques.isOK = ~xor(ques.thrsh{3}, (ques.thrsh{2}(1) <= ques.encode.scale{ques.thrsh{1},3} & ques.encode.scale{ques.thrsh{1},3} <= ques.thrsh{2}(2)));
+        if ques.isOK
             % we wanted results to be inside [a,b] and now they are
             %             Screen('DrawText', w, ['Passed! Please continue to the next experiment.'], 0, 190, [0, 50, 0, 255]);
             DrawFormattedText(w, ['Passed! Please continue to the next experiment.'], 'center', 'center', [0, 255, 0, 255]);
