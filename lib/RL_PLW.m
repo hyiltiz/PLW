@@ -327,13 +327,15 @@ try
             data.instruct_filename = 'RL_Instruction_many_zh.txt';
         end
     else
-        if ~mode.many_on
-            data.instruct_filename = 'RL_Instruction_en.txt';
-        else
+        if mode.many_on
             data.instruct_filename = 'RL_Instruction_many_en.txt';
+        elseif mode.imEval
+            data.instruct_filename = 'instructions_ImEval.txt';
+        else
+            data.instruct_filename = 'RL_Instruction_en.txt';
         end
     end % instruction
-    
+
     Instruction(data.instruct_filename, w, render.wsize, mode.debug_on, mode.english_on, render.kb, inf, 0, mode.tactile_on);
     
     %% Here begins our trial
@@ -561,4 +563,3 @@ save data/test.mat
 boxplot(Trials(:,3),Trials(:,2));
 format short;
 Display('Experiment was successful!');
-end
