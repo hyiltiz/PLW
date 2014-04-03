@@ -19,7 +19,7 @@
 % Author: Hormetjan Yiltiz  hyiltiz@gmail.com
 % Created: 2012-10-17
 
-function RL_PLW(conf, mode, Subinfo)
+function [wrkspc] = RL_PLW(conf, mode, Subinfo)
 
 %% this code to generate pointlight display using 3D coordinates file
 %   Originally written by Lihan Chen, Ph.D, Department of Psychology, Peking University
@@ -129,8 +129,12 @@ if true % used for folding mode~conf variables
         dataSuffix = 'D';
     end
     
-    if mode.octal_on
-        dataSuffix = [dataSuffix '_Octal_'] ;
+    if mode.dotRot_on
+        dataSuffix = ['Group/' dataSuffix '_DotRot_'] ;
+    elseif mode.octal_on
+        dataSuffix = ['Group/' dataSuffix '_Octal_'] ;
+    elseif mode.imEval_on
+        dataSuffix = ['Group/' dataSuffix '_ImEval_'] ;
     elseif mode.inout_on % M is for many_dots task, while D is for direction task
         dataSuffix = [dataSuffix '_InOut_'] ;
     elseif mode.posture_on
@@ -531,8 +535,9 @@ try
     % End of experiment
     
     %save(['data/',Subinfo{1},'/', Subinfo{1}, dataSuffix, date, '.mat'],'Trials','conf', 'Subinfo','flow','mode','data');
-    render.matFileName = ['data/', Subinfo{1}, 'Mirror', dataSuffix, date, '.mat'];
+    render.matFileName = ['data/', Subinfo{1} , dataSuffix, date, '.mat'];
     save(render.matFileName,'Trials','conf', 'Subinfo','flow','mode','data');
+    wrkspc = load(render.matFileName);
     Display(render.matFileName);
     % Display 'Thanks' Screen
     RL_Regards(w, mode.english_on);
@@ -542,6 +547,7 @@ catch
     save data/buggy.mat;
     Display(char('','','data/buggy.mat saved successfully, use for debugging!',''));
     save(['data/', Subinfo{1}, dataSuffix, date, 'buggy.mat']);
+    wrkspc = load(['data/', Subinfo{1}, dataSuffix, date, 'buggy.mat']);
     %     disp(['';'';'data/buggy saved successfully, use for debugging!']);
     Screen('CloseAll');
     if mode.audio_on; PsychPortAudio('Close'); end
