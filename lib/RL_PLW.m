@@ -130,12 +130,16 @@ if true % used for folding mode~conf variables
         dataSuffix = 'D';
     end
     
+    dataPrefix=[];
     if mode.dotRot_on
-        dataSuffix = ['Group/' dataSuffix '_DotRot_'] ;
+        dataPrefix = ['Group/'];
+        dataSuffix = [dataSuffix '_DotRot_'] ;
     elseif mode.octal_on
-        dataSuffix = ['Group/' dataSuffix '_Octal_'] ;
+        dataPrefix = ['Group/'];
+        dataSuffix = [dataSuffix '_Octal_'] ;
     elseif mode.imEval_on
-        dataSuffix = ['Group/' dataSuffix '_ImEval_'] ;
+        dataPrefix = ['Group/'];
+        dataSuffix = [dataSuffix '_ImEval_'] ;
     elseif mode.inout_on % M is for many_dots task, while D is for direction task
         dataSuffix = [dataSuffix '_InOut_'] ;
     elseif mode.posture_on
@@ -539,7 +543,7 @@ try
     % End of experiment
     
     %save(['data/',Subinfo{1},'/', Subinfo{1}, dataSuffix, date, '.mat'],'Trials','conf', 'Subinfo','flow','mode','data');
-    render.matFileName = ['data/', Subinfo{1} , dataSuffix, date, '.mat'];
+    render.matFileName = ['data/',dataPrefix, Subinfo{1} , dataSuffix, date, '.mat'];
     save(render.matFileName,'Trials','conf', 'Subinfo','flow','mode','data');
     wrkspc = load(render.matFileName);
     Display(render.matFileName);
@@ -550,8 +554,8 @@ catch
     % save the buggy data for debugging
     save data/buggy.mat;
     Display(char('','','data/buggy.mat saved successfully, use for debugging!',''));
-    save(['data/', Subinfo{1}, dataSuffix, date, 'buggy.mat']);
-    wrkspc = load(['data/', Subinfo{1}, dataSuffix, date, 'buggy.mat']);
+    save(['data/', dataPrefix, Subinfo{1}, dataSuffix, date, 'buggy.mat']);
+    wrkspc = load(['data/', dataPrefix, Subinfo{1}, dataSuffix, date, 'buggy.mat']);
     %     disp(['';'';'data/buggy saved successfully, use for debugging!']);
     Screen('CloseAll');
     if mode.audio_on; PsychPortAudio('Close'); end

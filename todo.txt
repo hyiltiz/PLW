@@ -2,5 +2,5 @@ Why MATLAB/linux is crashing everytime, complaining some MEX problem? DotRotDemo
 
 OctalTask:
         - 知情同意书：
-        - reverse encoding: just reverse, not minus
+        - NaN for StaticChoice
         - exp conf

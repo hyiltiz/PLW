@@ -1,4 +1,4 @@
-function OctalTask(is_once_on, Subinfo)
+function wrkspc = OctalTask(is_once_on, Subinfo)
 % octal task, pass in 1 for demo with only one trial, or just run it with no input;
 % displays 8 PLW with emotional face stumuli
 
@@ -32,9 +32,9 @@ else
 end
 
 % Call the main function RL_PLW()
-if exist(Subinfo, 'var')
-    RL_PLW(conf, mode, Subinfo);
+if exist('Subinfo', 'var')
+    wrkspc = RL_PLW(conf, mode, Subinfo);
 else
-    RL_PLW(conf, mode);
+    wrkspc = RL_PLW(conf, mode);
 end
 end

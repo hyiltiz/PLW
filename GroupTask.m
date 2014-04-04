@@ -9,10 +9,14 @@ function GroupTask
 try
     startup;
     backdoor = '12345';
+    isForced = 0;
+    sques = struct();
+    wrkspc= struct();
     
     Subinfo = getSubInfo();
     
-    ques.STAI = STAITask();
+%     ques.STAI = STAITask();
+    ques.STAI.isOK=1;
     
     if ~ques.STAI.isOK
         % backdoor, manually continue
@@ -42,10 +46,11 @@ try
         
         ques.IRI = IRITask();
     end
-    
+
     save(['data/Group/Whole/', Subinfo{1}, grp.suffix, date, '.mat'],'wrkspc','ques', 'isPLWFirst','isForced');
 catch
-
+    psychrethrow(psychlasterror);
+    sca;
     save(['data/Group/Whole/', Subinfo{1}, grp.suffix, date, '_buggy.mat'],'wrkspc','ques', 'isPLWFirst','isForced');
 end
 end

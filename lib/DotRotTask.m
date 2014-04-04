@@ -1,4 +1,4 @@
-function DotRotTask(is_once_on, Subinfo)
+function wrkspc = DotRotTask(is_once_on, Subinfo)
 % DotRot task, pass in 1 for demo with only one trial, or just run it with no input;
 % Baseline task for Octal Task. DotRotDemo with in-out direction at 8 pos
 % on face stimuli
@@ -34,9 +34,9 @@ else
 end
 
 % Call the main function RL_PLW()
-if exist(Subinfo, 'var')
-    RL_PLW(conf, mode, Subinfo);
+if exist('Subinfo', 'var')
+    wrkspc = RL_PLW(conf, mode, Subinfo);
 else
-    RL_PLW(conf, mode);
+    wrkspc = RL_PLW(conf, mode);
 end
 end
