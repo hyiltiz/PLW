@@ -44,7 +44,7 @@ try
     % encoding
     ques.response = responseC';
     responseM = str2num(cell2mat(responseC'));
-    responseM(ques.encode.inv) = -1*responseM(ques.encode.inv);
+    responseM(ques.encode.inv) = size(ques.scales, 2) + -1*responseM(ques.encode.inv);
     
     for ipar=1:size(ques.encode.scale,1)
         ques.encode.scale{ipar,3} = sum(responseM(ques.encode.scale{ipar,2}));

@@ -7,6 +7,7 @@ function GroupTask
 % 4)    IRITask
 
 try
+    startup;
     backdoor = '12345';
     
     Subinfo = getSubInfo();
@@ -15,18 +16,18 @@ try
     
     if ~ques.STAI.isOK
         % backdoor, manually continue
-        tmp.reply = input('Force proceed?\n', 's');
-        if strcmp(tmp.reply, backdoor)
+        grp.reply = input('Force proceed?\n', 's');
+        if strcmp(grp.reply, backdoor)
             isForced =1;
-            tmp.suffix = '_Whole11_';
+            grp.suffix = '_Whole11_';
         end
     else
         % CANNOT go on to the following procedure
-        tmp.suffix = '_Whole0_';
+        grp.suffix = '_Whole0_';
     end
     
     if ques.STAI.isOK || isForced
-        tmp.suffix = '_Whole1_';
+        grp.suffix = '_Whole1_';
         
         % decide the order of OctalTask and DotRotTask
         isPLWFirst = round(rand);
@@ -42,8 +43,9 @@ try
         ques.IRI = IRITask();
     end
     
-    save(['data/Group/Whole/', Subinfo{1}, tmp.suffix, date, '.mat'],'wrkspc','ques', 'isPLWFirst','isForced');
+    save(['data/Group/Whole/', Subinfo{1}, grp.suffix, date, '.mat'],'wrkspc','ques', 'isPLWFirst','isForced');
 catch
-    save(['data/Group/Whole/', Subinfo{1}, tmp.suffix, date, '_buggy.mat'],'wrkspc','ques', 'isPLWFirst','isForced');
+
+    save(['data/Group/Whole/', Subinfo{1}, grp.suffix, date, '_buggy.mat'],'wrkspc','ques', 'isPLWFirst','isForced');
 end
 end

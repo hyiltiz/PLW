@@ -1,4 +1,4 @@
-function IRITask()
+function IRIques = IRITask()
 questionaire='IRI';
-data.IRIques = StaticChoice(questionaire);
+IRIques = StaticChoice(questionaire);
 end

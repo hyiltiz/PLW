@@ -1,5 +1,5 @@
-function STAITask()
+function STAIques = STAITask()
 questionaire='STAI';
-data.STAIques = StaticChoice(questionaire);
+STAIques = StaticChoice(questionaire);
 save tmp;
 end
