@@ -22,28 +22,29 @@ try
     %     Screen('DrawText', w, ques.instr, 0, 150, [255, 255, 255, 255]);
     Screen('Preference', 'TextAntiAliasing', 1);
     
-    
+    responseC={};
     for i = 1:length(ques.items)
-        scalemap = ['1: ' ques.scales{i, 1}];
-        for j=2:size(ques.scales, 2)
-            scalemap = [scalemap, '  ', num2str(j) ': ', ques.scales{i, j}];
-        end
-        
-        DrawFormattedText(w, ques.instr{i}, 0, 80, [255, 255, 255, 255]);
-        Screen('DrawText', w, ['请用键盘上数字 1 到 ', num2str(size(ques.scales, 2)), ' 作出反应：'], 0, 300, [255, 255, 255, 255]);
-        Screen('DrawText', w, scalemap, 0, 330, [255, 255, 255, 255]);
-        
-        kbCode = Instruction(ques.items{i}, w, wsize, 0, 1, kb, 5 ,1, 0);
-        if sum(kbCode)==0
-            [t, kbCode] = KbWait([],2);
-        end
-        kbName = KbName(kbCode);
-        responseC{i} = kbName(1);
+        % here we callect each item idx with i; helper function
+        responseC =  oneItem(ques, i, w, wsize, kb, responseC);
     end
     
     % encoding
-    ques.response = responseC';
-    responseM = str2num(cell2mat(responseC'));
+    ques.response = responseC;
+    
+    responseM = str2double(responseC);
+    isMissing = ~ismember(responseM, 1:size(ques.scales,2));
+    while sum(isMissing) % we [still] have missing values
+    responseM(isMissing) = NaN;
+    
+    % collect back those missing ones
+    idxMissing = find(isMissing);
+    for i=idxMissing
+        responseC = oneItem(ques, i, w, wsize, kb, responseC);
+    end
+    responseM = str2double(responseC);
+    isMissing = ~ismember(responseM, 1:size(ques.scales,2));
+    end
+    
     responseM(ques.encode.inv) = size(ques.scales, 2) + -1*responseM(ques.encode.inv);
     
     for ipar=1:size(ques.encode.scale,1)
