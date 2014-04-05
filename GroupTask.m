@@ -15,8 +15,7 @@ try
     
     Subinfo = getSubInfo();
     
-%     ques.STAI = STAITask();
-    ques.STAI.isOK=1;
+    ques.STAI = STAITask();
     
     if ~ques.STAI.isOK
         % backdoor, manually continue
