@@ -12,11 +12,11 @@ try
     isForced = 0;
     sques = struct();
     wrkspc= struct();
-    
+
     Subinfo = getSubInfo();
-    
+
     ques.STAI = STAITask();
-    
+
     if ~ques.STAI.isOK
         % backdoor, manually continue
         grp.reply = input('Force proceed?\n', 's');
@@ -28,13 +28,13 @@ try
         % CANNOT go on to the following procedure
         grp.suffix = '_Whole0_';
     end
-    
+
     if ques.STAI.isOK || isForced
         grp.suffix = '_Whole1_';
-        
+
         % decide the order of OctalTask and DotRotTask
         isPLWFirst = round(rand);
-        
+
         if isPLWFirst
             wrkspc.Octal = OctalTask(0, Subinfo);
             wrkspc.DotRot= DotRotTask(0, Subinfo);
@@ -42,7 +42,8 @@ try
             wrkspc.Octal = OctalTask(0, Subinfo);
             wrkspc.DotRot= DotRotTask(0, Subinfo);
         end
-        
+        wrkspc.ImEval = ImEvalTask(0, Subinfo);
+
         ques.IRI = IRITask();
     end
 
