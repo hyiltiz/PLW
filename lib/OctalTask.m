@@ -6,7 +6,7 @@ function wrkspc = OctalTask(is_once_on, Subinfo)
 % time setting vatiables
 conf.flpi               =  0.01;        % each frame is set to 20ms (the monitor's flip interval is 16.7ms)
 conf.alphaFace          =  .7;         % alpha transparency for face stimuli
-conf.scale1             =  6;           % PLW's visual scale, more the bigger
+conf.scale1             =  30;           % PLW's visual scale, more the bigger
 conf.trialdur           =  70;           % duration time for every trial
 conf.repetitions        =  5;           % repetition time of a condition
 conf.resttime           =  30;          % rest for 30s
