@@ -115,21 +115,22 @@ if true % used for folding mode~conf variables
     else
         conf.xshift = 0;
     end
-    
+
     if mode.debug_on
+        conf.flpi = 0.02;
         conf.repetitions = 1;
         conf.resttime = 5;
         conf.exptime = 5;
         conf.trialdur = 13;
         mode.octal_on = 1;
     end
-    
+
     if mode.many_on % M is for many_dots task, while D is for direction task
         dataSuffix = 'M';
     else
         dataSuffix = 'D';
     end
-    
+
     dataPrefix=[];
     if mode.dotRot_on
         dataPrefix = ['Group/'];
@@ -145,9 +146,9 @@ if true % used for folding mode~conf variables
     elseif mode.posture_on
         dataSuffix = [dataSuffix '_Posture_'] ;
     end
-    
+
     if mode.octal_on;mode.simpleInOut_on=1;end
-    
+
     if mode.simpleInOut_on
         %use the same visual stimuli
         mode.inout_on = 1;
@@ -155,7 +156,7 @@ if true % used for folding mode~conf variables
         conf.doubleTactileDiff  =  0;
         mode.colorbalance_on    = 0;  % set target PLW green, rather than red
     end
-    
+
     if mode.colorbalance_on
         if round(rand)
             flipud(conf.colors);
@@ -163,13 +164,13 @@ if true % used for folding mode~conf variables
         end
         dataSuffix = [dataSuffix '_ColorBalance_'];
     end
-    
+
     if mode.RT_on
         conf.restpertrial       =  inf;           % every x trial a rest
     end
-    
+
     if mode.octal_on || mode.dotRot_on || mode.imEval_on ;mode.usekb_on=1;end
-    
+
 end %true
 
 %% randomized sample exp. conditions and trial sequences variables
@@ -190,23 +191,23 @@ end
 
 %% exp begins
 try
-    
+
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% Hardware/Software Check
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
+
     % make sure the software version is new enouch for running the program
     checkVersion();
-    
+
     % unified key definitions
     render.kb = keyDefinition();
-    
+
     % psychoaudio hardware setting.
     if mode.audio_on
         freq = 48000;
         pahandle = loadAutio(freq);
     end
-    
+
     % tactile hardware setting
     try
         [render.dioIn, render.dioOut] = loadDigitalIO();
@@ -214,14 +215,14 @@ try
     catch
         mode.tactile_on = 0;  % 0 is no tactile device
     end
-    
+
     if mode.usekb_on
         mode.tactile_on = 0;  % TODO: should not have suppressed output though
     end
-    
+
     % Get Subject information
     if ~exist('Subinfo','var');Subinfo = getSubInfo();end
-    
+
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% initialization
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -234,27 +235,27 @@ try
     end
     Screen('Preference', 'ConserveVRAM', 8);
     InitializeMatlabOpenGL;
-    
+
     render.screens=Screen('screens');
     render.screenNumber=max(render.screens);
-    
+
     if mode.debug_on
         [w,render.wsize]=Screen('OpenWindow',render.screenNumber,0,[1,1,801,601],[]);
     else
         [w,render.wsize]=Screen('OpenWindow',render.screenNumber,0,[],32);
     end
     Screen('BlendFunction', w, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    
+
     render.ifi=Screen('GetFlipInterval', w);
     if render.ifi > conf.flpi + 0.0005 % allow 0.5ms error
         error('HardwareError:MonitorFlushRate',...
             'Monitor Flip Interval is too large. Please adjust monitor flush rate \n from system preferences, or adjust conf.flpi fron *Task.m file.');
     end
     Priority(MaxPriority(w));
-    
+
     render.cx = render.wsize(3)/2; %center x
     render.cy = render.wsize(4)/2; %center y
-    
+
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% data generatoin
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -263,7 +264,7 @@ try
         data.readData = PLWread(data.visualfilename);
         data.loopPeriod = 130;
         conf.imagex=250;  % image size
-        
+
         % virtual PLW:PLW0 Use for solving the touchground data
         % We need unrotated one (right-left direction) for solving
         % touchground
@@ -271,7 +272,7 @@ try
         data.readData.xyzseq = [1 3 2];  %axis rotation, [1 3 2] by default
         % use exactly the same initial position as the first PLW via data.init
         [data.dotx0,  data.doty0, data.init0, data.maxdot] = PLWtransform(data.readData, conf.scale1, conf.imagex, -1);
-        
+
         % Generate the data for plotting Point Light Walkers
         % PLW-target
         data.readData.thet = 0;  %to rotate along the first axis
@@ -279,14 +280,14 @@ try
         data.readData.xyzseq = [1 3 2];  %axis rotation, [1 3 2] by default
         data.init = data.init0; % the same with virtual PLW, though rotated
         [data.dotx,  data.doty, data.init, data.maxdot] = PLWtransform(data.readData, conf.scale1, conf.imagex, data.init);
-        
+
         % PLW-nontarget
         data.readData.thet = 180;  %to rotate along the first axis
         if mode.inout_on;data.readData.thet = -90 + conf.tiltangle;end
         data.readData.xyzseq = [1 3 2];  %to rotate across xyz
         [data.dotx1, data.doty1, data.init1, data.maxdot1] = PLWtransform(data.readData, conf.scale1, conf.imagex, -1);
-        
-        
+
+
         if mode.inout_on
             % another two PLWs for stereo 3D display
             % PLW-target-shadow
@@ -295,19 +296,19 @@ try
             data.readData.xyzseq = [1 3 2];  %axis rotation, [1 3 2] by default
             data.init = data.init0; % the same with virtual PLW, though rotated
             [data.dotxs,  data.dotys, data.inits, data.maxdots] = PLWtransform(data.readData, conf.scale1, conf.imagex, data.init);
-            
+
             % PLW-nontarget-shadow
             data.readData.thet = 180;  %to rotate along the first axis
             if mode.inout_on;data.readData.thet = -90 - conf.tiltangle;end
             data.readData.xyzseq = [1 3 2];  %to rotate across xyz
             [data.dotx1s, data.doty1s, data.init1s, data.maxdot1s] = PLWtransform(data.readData, conf.scale1, conf.imagex, -1);
         end
-        
+
         if mode.octal_on
             [data.clockarm data.prCoor data.angls] = octalCoor(render.wsize, conf.clockR, conf.nPLWs);
             data.imagePath='resources/facestimuli/6neutral/female/NEF1.BMP';
         end % octal_on
-        
+
         if mode.mirror_on
             % do not create noise, we do not need them if using mirrors
         else
@@ -318,18 +319,18 @@ try
             render.noiseloop = modloop(1:length(data.Track), render.noiseloopT);
             [tex, render.dstRect] = addNoise(w, render.wsize, data.Track,conf.noisescale, render.noiseloopT, mode.greyNoise_on, conf.lagFlip, conf.kill_dotr);
         end
-        
+
     end % regenerate
-    
-    
+
+
     % Variables used across trials
     data.Track = 1: round(conf.trialdur / (conf.flpi * length(data.dotx)) * length(data.dotx));
-    
-    
+
+
     flow.nresp    = 1;  % the total number of response recorded
     flow.restcount= 0;  % the number of trials from last rest
-    
-    
+
+
     %% Instructions
     %     RL_Instruction(w, mode.debug_on, mode.english_on, render.kb);
     if ~mode.english_on
@@ -349,16 +350,16 @@ try
             data.instruct_filename = 'RL_Instruction_en.txt';
         end
     end % instruction
-    
+
     Instruction(data.instruct_filename, w, render.wsize, mode.debug_on, mode.english_on, render.kb, inf, 0, mode.tactile_on);
-    
+
     %% Here begins our trial
     for k = 1:length(flow.Trialsequence)
         %      tic;
         flow.prestate = 0;  % the last reponse until now
         flow.response = 0;  % the current current response, just after the last response
-        
-        
+
+
         flow.Trial = k;
         % rest every couple trial once
         if flow.Trial > 1
@@ -368,12 +369,13 @@ try
         flow.restcount = restBetweenTrial(flow.restcount, conf.resttime, conf.restpertrial, w, render.wsize, mode.debug_on, mode.english_on, render.kb, 0, mode.tactile_on);
         conf.waitBetweenTrials  =  .8+rand*0.2; % wait black screen between Trials, random
         WaitSecs(conf.waitBetweenTrials);  % wait black screen between Trials, random
-        
+
         if mode.regenerate_on
             data.initPosition = Randi(round(data.loopPeriod/4),[2 1]);
             % data.paceRate = repmat(Randi(2), [2 1]);
             % Remember not to use those quick ones
             data.paceRate = [1; 1];
+            if mode.debug_on;data.paceRate = [2; 2];end
             %   data.Track = 1:round(length(data.dotx));% 2 for accuracy, and data.loopPeriod for period
             [data.lefttouch, data.righttouch] = touchground(data.dotx0, data.initPosition(1), data.paceRate(1), data.Track);     %for the index when PLW touches ground
         else
@@ -384,14 +386,14 @@ try
             data.paceRate = repmat(Randi(2), [2 1]);
             data.initPosition = Randi(round(data.loopPeriod/4),[2 1]);
         end
-        
+
         conf.xshift = (round(rand)*2-1) * conf.xshift;
         data.xshift(flow.Trial) = conf.xshift;
-        
+
         % Generate the multisensory data.Track to synch on time
         [data.vTrack, data.tTrack] = genTrack(flow.Trialsequence(flow.Trial), data.Track, data.lefttouch, data.righttouch, conf.flpi, conf.ntdurflp, conf.nvterrflp, conf.doubleTactileDiff);
-        
-        
+
+
         [data.xymatrix, render.DotRot] = dotRotData(render.wsize, 1/render.ifi , [], 1);
         if mode.octal_on
             % xy0~PLWwidth; imagePath~conditon;
@@ -400,7 +402,7 @@ try
                 [render.texface{iFaces} render.faceRect{iFaces}] = addImage(w, render.wsize, data.clockarm(iFaces,1), data.clockarm(iFaces,2), [render.cx render.cy]/4, data.imagePaths{iFaces}, conf.raster, conf.alphaFace);
             end
         end
-        
+
         % display:  +
         if mode.octal_on
             % no mirror testing
@@ -419,7 +421,7 @@ try
             testMirror(w, render.cx , render.cy, 255, [conf.xshift 0], data.maxdot);
         end % mirror tests
         Screen('Flip',w);
-        
+
         % wait until the participant's mirror is ready
         if mode.octal_on
             % no mirror, no pedal wait
@@ -427,26 +429,26 @@ try
             pedalWait(mode.tactile_on, 10000, render.kb);
         end
         WaitSecs(conf.waitFixationScreen);  % '+' time randomized
-        
-        
+
+
         Screen('FillRect',w,[0 0 0]);
         render.vlb = Screen('Flip', w);  % record render.vlb, used for TIMING control
-        
+
         %Here comes the sound
         if mode.audio_on
             playSound(pahandle, freq, data.paceRate, data.moveDirection(flow.Trial, 1));
         end
-        
+
         %% PLW that you can see on the screen
         flow.isquit = 0;     % to capture ESCAPE for quitting
         flow.isresponse = 0;
         render.iniTimer=GetSecs;
-        
+
         data.iniTactile = data.tTrack(find(data.tTrack>0,1));%initial type of tactile stimuli
         if isempty(data.iniTactile);
             data.iniTactile = 0;  %baseline is 0
         end
-        
+
         for i=data.Track  %loop leghth
             flow.Flip = i;
             if mode.mirror_on
@@ -456,27 +458,26 @@ try
                 %addNoise(w, 256, render.wsize);%Do not use this, since buffer tex is used
                 Screen('DrawTexture', w, tex(render.noiseloop(flow.Flip)), [], render.dstRect, [], 0);
             end
-            
-            
+
+
             if mode.baseline_on
                 % do not show the PLWs
-                
+
             elseif mode.octal_on
                 % Octal PLWs
                 [data.xymatrix, render.DotRot] = dotRotData(render.wsize, 1/render.ifi , render.DotRot, 0);
-                for iPLW=1:conf.nPLWs
-                    fixation(w, render.cx, render.cy, [255 255 255]);
+                fixation(w, render.cx, render.cy, [255 255 255]);
+                for iPLW=1:conf.nPLWs % these are the faces on screen
                     Screen('DrawTexture', w, render.texface{iPLW}, [], render.faceRect{iPLW}, [], 0);
+                end
                     if ~mode.imEval_on % this does not require anything else on the screen
                         if mode.dotRot_on
-                            Screen('DrawDots', w, data.xymatrix, 5, [255 255 255], [data.clockarm(iPLW,:)],2);
+                            Screen('DrawDots', w, data.xymatrix, 3, [255 255 255], [render.cx, render.cy],2);
                         else
-                            %          RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 0 0], [data.prCoor(iPLW,:)]/2, data.maxdot);
-                            RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), data.clockarm(iPLW,1), data.clockarm(iPLW,2), data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 255 255], [0 0], data.maxdot);
+                            RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx, render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 255 255], [0 0], data.maxdot);
                         end
                     end
-                end
-                
+
             else
                 % and here comes the walkers
                 RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 0 0], [-conf.xshift-conf.shadowshift 0], data.maxdot);
@@ -485,10 +486,10 @@ try
                     RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotxs, data.dotys, data.moveDirection(flow.Trial, :), [255 0 0], [-conf.xshift+conf.shadowshift 0], data.maxdot);
                     RLonePLW(w,data.initPosition(2) + data.paceRate(2)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx1s, data.doty1s, data.moveDirection(flow.Trial, :), [0 255 255], [conf.xshift+conf.shadowshift 0], data.maxdot);
                 end
-                
+
             end
             Screen('DrawingFinished', w); % no further drawing commands will follow before Screen('Flip')
-            
+
             % here comes their footsteps
             if mode.tactile_on
                 % save data/postbuggy;
@@ -497,7 +498,7 @@ try
             end
             %% catch the response
             if ~mode.tactile_on; render.dioIn = false; end
-            
+
             % get the response
             render.islastResponse = 0;
             [Trials, flow.prestate, flow.response, render.iniTimer, flow.isquit,...
@@ -507,25 +508,25 @@ try
                 flow.Trial, data.moveDirection, render.kb, flow.isresponse,...
                 flow.isquit, Trials, flow.nresp, data.paceRate' , data.iniTactile, mode.RT_on, conf.xshift, render.islastResponse);
             if mode.RT_on; if flow.isresponse; break; end; end
-            
+
             % Flip the visual stimuli on the screen, along with timing
             % old = render.vlb;
             render.vlb = Screen('Flip', w, render.vlb + (1-0.5)*conf.flpi);%use the center of the interval
             % recordImage(flow.Flip,10,'Mirror',w,render.wsize)
             % Display(old, render.vlb, render.vlb - old, length(data.Track),length(data.tTrack));
             % Screen('Flip', w);
-            
+
             %        toc;
             %        tic;
         end
         % quit if the participant pressed ESC
         if flow.isquit, break, end
-        
+
         % end of per trial
         Screen('FillRect',w ,0);
         Screen('Flip', w);
-        
-        
+
+
         % Get the remaining last response
         render.islastResponse = 1;
         [Trials, flow.prestate, flow.response, render.iniTimer, flow.isquit,...
@@ -534,14 +535,14 @@ try
             flow.response, flow.Trialsequence,...
             flow.Trial, data.moveDirection, render.kb, flow.isresponse,...
             flow.isquit, Trials, flow.nresp, data.paceRate' , data.iniTactile, mode.RT_on, conf.xshift, render.islastResponse);
-        
+
         % do exactly once_on times
         mode.once_on = mode.once_on-1;
         if ~mode.once_on; error('Preparation Finished! (No worries. This is no bug, buddy.)'); end
     end;
-    
+
     % End of experiment
-    
+
     %save(['data/',Subinfo{1},'/', Subinfo{1}, dataSuffix, date, '.mat'],'Trials','conf', 'Subinfo','flow','mode','data');
     render.matFileName = ['data/',dataPrefix, Subinfo{1} , dataSuffix, date, '.mat'];
     save(render.matFileName,'Trials','conf', 'Subinfo','flow','mode','data');
@@ -549,7 +550,7 @@ try
     Display(render.matFileName);
     % Display 'Thanks' Screen
     RL_Regards(w, mode.english_on);
-    
+
 catch
     % save the buggy data for debugging
     save data/buggy.mat;
@@ -564,7 +565,7 @@ catch
     ListenChar(0);
     psychrethrow(psychlasterror);
     format short;
-    
+
 end
 
 %% exp ends
