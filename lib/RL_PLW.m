@@ -42,7 +42,7 @@ function [wrkspc] = RL_PLW(conf, mode, Subinfo)
 addpath('./data', './lib', './resources');
 format long;
 data.visualfilename = '07_01.data3d.txt'; % visaul data resource file
-data.instruct_filename = 'RL_Instruction_en.txt'; % instructions text file
+data.instruct_filename = 'RL_Instruction.txt'; % instructions text file
 
 % input variables, use them via updateStruct() to update the defined variables below
 % these conf, mode was defined through wrapper shells such as DirectionTask
@@ -332,25 +332,21 @@ try
 
 
     %% Instructions
-    %     RL_Instruction(w, mode.debug_on, mode.english_on, render.kb);
-    if ~mode.english_on
-        if ~mode.many_on
-            data.instruct_filename = 'RL_Instruction_zh.txt';
-        else
-            data.instruct_filename = 'RL_Instruction_many_zh.txt';
-        end
-    else
+    %     RL_Instruction(w, mode.debug_on, mode.english_on, render.kb);    
         if mode.many_on
-            data.instruct_filename = 'RL_Instruction_many_en.txt';
-        elseif mode.imEval_on
-            data.instruct_filename = 'instructions_ImEval.txt';
+            data.instruct_filename = 'RL_Instruction_many.txt';
         elseif mode.octal_on
             data.instruct_filename = 'instructions_Octal.txt';
+        elseif mode.imEval_on
+            data.instruct_filename = 'instructions_ImEval.txt';
         else
-            data.instruct_filename = 'RL_Instruction_en.txt';
-        end
-    end % instruction
+            data.instruct_filename = 'RL_Instruction.txt';
+        end % instruction
+        
+        if ~mode.english_on; data.instruct_filename = [instruct_filename(:,end-4) '_zh' '.txt'];end
+    
 
+    Display(data.instruct_filename);
     Instruction(data.instruct_filename, w, render.wsize, mode.debug_on, mode.english_on, render.kb, inf, 0, mode.tactile_on);
 
     %% Here begins our trial
