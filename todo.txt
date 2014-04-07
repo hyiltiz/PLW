@@ -2,5 +2,4 @@ Why MATLAB/linux is crashing everytime, complaining some MEX problem? DotRotDemo
 
 OctalTask:
         - 知情同意书：
-        - NaN for StaticChoice
-        - exp conf
+        - Reaction time recording for ImEval
