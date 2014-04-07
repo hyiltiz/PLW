@@ -10,7 +10,7 @@ switch nameS
         %反向记分题：
         ques.encode.inv = [3, 4, 7, 12, 13, 14, 15, 18, 19];
         ques.thrsh = {1, [-inf, inf], 0}; % for ques.encode.scale, {idx, [a b], isInGood}; or [] if no thrreshold required
-        ques.isShowResult = 1; % whether show result for the participant
+        ques.isShowResult = 0; % whether show result for the participant
         % %问卷说明：该问卷分4个维度，分数越高，说明共情能力越高。
         % %观点采择（perspective-taking，
         % PT = [3, 8, 11, 15, 21, 25, 28];
@@ -28,7 +28,7 @@ switch nameS
         ques.encode.scale = {'SAI', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]; 'TAI', [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40]};
         ques.encode.inv = [2,5,8,10,11,15,16,19,20,23,24,26,27,30,33,34,36,39];
         ques.thrsh = {1, [35, 45], 0}; % threshould for SAI, we do not want those between [35, 45];
-        ques.isShowResult = 1;
+        ques.isShowResult = 0;
         % ### STAI 状态一特质焦虑问卷
         %         由指导语和二个分量表共40项描述题组成。第1-20项为状态焦虑量表(STAI，Form Y-I，以下简称S-AD。其中半数为描述负性情绪的条目，半数为正性情绪条目。主要用于评定即刻的或最近某一特定时间或情景的恐惧、紧张、忧虑和神经质的体验或感受。可用来评价应激情况下的状态焦虑。第21-40题为特质焦虑量表（STAI，Form Y-l，简称T-AI)，用于评定人们经常的情绪体验。其中有11项为描述负性情绪条目，9项为正性情绪条目。
         %
@@ -42,6 +42,52 @@ switch nameS
         % 北医大精神卫生研究所与长春第一汽车公司职工医院精神科合作在长春地区和北京分别对正常人群与抑郁症病人进行了STAI中译版的测试。获得了与原作者近似的结果：1.正常人群总样本S-AI评分为39.71±8.89（男，375例），38.97±8.45（女，443例）；T-AI评分为41.11±7.74（男），41.31±7.54（女）。抑郁症组(50例）：S-AI为57.22±10.48，T-AI为46.22±26.22，明显高于正常人群。2.各年龄组与S-Al评分无明显差异；T-AI评分以50-55岁的男性组最高（平均42.8)。3.不同文化组的评分无差异。4.不同职业者中S-AI与T-AI的评分均以女性干部为最低（平均36. 7和39.6)。
         %
         % 分类依据： 根据以上材料，初步筛选掉分数在 [35,45] 区间的被试。
+        
+    case 'LSAS'
+        ques.items =  repmat({'公众场合打电话', '参加小组活动', '公众场合吃东西', '公共场合与人共饮', '与重要人物谈话', '在听众前表演、演示或演讲', '参加聚会', '在有人注视下工作', '被人注视下书写', '与不太熟悉的人打电话', '与不太熟悉的人交谈', '与陌生人会面', '在公共卫生间小便', '进入已有人就坐到房间', '成为关注的中心', '在会议上发言', '参加测试', '对不太熟悉的人表达不同的观点和看法', '与不太熟悉的人目光对视', '在小组中汇报', '试着搭识某人', '去商店退货', '组织聚会', '拒绝推销员的强制推销'}, 2,1);
+        %         ques.instr = repmat({'本量表评估不同情景下社交恐怖对您生活的影响。请仔细阅读每个情景，并回答两个相关的问题。第一个问题关于您在该情景下感到焦虑或恐惧的程度。第二个问题关于您逃避该情景的频率。如果问题中情景您平时不会经历，请您想象该情景。'}, numel(ques.items),1);
+        ques.instr = repmat([{'本量表评估不同情景下社交恐怖对您生活的影响。请仔细阅读每个情景，并回答两个相关的问题。\n如果问题中情景您平时不会经历，请您想象该情景。\n\n在该情景下感到焦虑或恐惧的程度：'}, {'本量表评估不同情景下社交恐怖对您生活的影响。请仔细阅读每个情景，并回答两个相关的问题。\n如果问题中情景您平时不会经历，请您想象该情景。\n\n您逃避该情景的频率：'}], 2, numel(ques.items));
+        ques.scales = repmat([{'完全没有','有些','中等程度','非常明显'}, {'几乎没有','有些','经常','几乎总是如此'}], 2, numel(ques.items));
+        ques.encode.scale = {'fear', 1:2:numel(ques.items); 'avoidance', 2:2:numel(ques.items)};
+        ques.encode.inv = [];
+        ques.thrsh = {[1 2], [15, 35], 0}; % threshould for LSAS, total score between [15, 35] not wanted
+        ques.isShowResult = 1;
+        
+        ques.items = ques.items(:);
+        ques.instr = ques.instr(:);
+        ques.scales= ques.scales(:);
+        
+        
+        % Liebowitz Social Anxiety Scale Test
+        % The Liebowitz Social Anxiety Scale (LSAS) is a questionnaire developed by Dr. Michael R. Liebowitz, a psychiatrist and researcher.
+        %
+        %     This measure assesses the way that social phobia plays a role in your life across a variety of situations.
+        %     Read each situation carefully and answer two questions about that situation.
+        %     The first question asks how anxious or fearful you feel in the situation.
+        %     The second question asks how often you avoid the situation.
+        %     If you come across a situation that you ordinarily do not experience, we ask that you imagine "what if you were faced with that situation," and then rate the degree to which you would fear this hypothetical situation and how often you would tend to avoid it. Please base your ratings on the way that the situations have affected you in the last week.
+        %     Heimburg, R. G. & Becker, R. E. (2002). Cognitive-Behavioral Group Therapy for Social Phobia. New York, NY: The Guilford Press.
+        %
+        % Chinese:
+        %
+        %             SAD             NORMAL
+        % FEAR        37.84(14.61)    12.30(9.21)
+        % AVOID       31.80(14.90)    10.01(9.12)
+        % TOTAL       69.59(28.65)    22.31(16.86)
+        % 诊断学理论与实践 2004, Vol.3, No.2
+        %
+        %
+        %             Total           total.fear                     fear.socialinteraction   fear.performance     total.avoidance      avoidance.socialinteraction         avoidance.performance
+        % patients    66.6/28.3       36.8/14.1                      16.4/6.7                 20.4/8.0             30.0/16.0            13.9/7.7                            16.1/8.7
+        % normal      29.1/17.3       16.5/9.4                       7.4/4.7                  9.1/5.1              12.6/9.6             5.9/4.9                             6.8/5.3
+        % 中国精神疾病杂志 2006, Vol.32, No.3
+        % 0 1 2 3
+        % 'none' 'mild tolerable' 'moderate distressing' 'severe distrubing'
+        % 'never(0%)' 'occasionally(1%-33%)'  'often(33%-66%)' 'usually(67%-100%)'
+        %
+        % 11 social: talking to prople in authority...
+        % 13 performance: working while being observed...
+        
         
     otherwise
         error('no such questionaire in the database!');
