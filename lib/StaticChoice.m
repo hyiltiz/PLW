@@ -45,7 +45,9 @@ try
     isMissing = ~ismember(responseM, 1:size(ques.scales,2));
     end
     
+    if ~isempty(ques.encode.inv)
     responseM(ques.encode.inv) = size(ques.scales, 2) + -1*responseM(ques.encode.inv);
+    end
     
     for ipar=1:size(ques.encode.scale,1)
         ques.encode.scale{ipar,3} = sum(responseM(ques.encode.scale{ipar,2}));
@@ -67,7 +69,7 @@ try
     if isempty(ques.thrsh)
         % do nothing, just record
     else
-        ques.isOK = ~xor(ques.thrsh{3}, (ques.thrsh{2}(1) <= ques.encode.scale{ques.thrsh{1},3} & ques.encode.scale{ques.thrsh{1},3} <= ques.thrsh{2}(2)));
+        ques.isOK = ~xor(ques.thrsh{3}, (ques.thrsh{2}(1) <= sum(ques.encode.scale{ques.thrsh{1},3}) & sum(ques.encode.scale{ques.thrsh{1},3}) <= ques.thrsh{2}(2)));
         if ques.isOK
             % we wanted results to be inside [a,b] and now they are
             %             Screen('DrawText', w, ['Passed! Please continue to the next experiment.'], 0, 190, [0, 50, 0, 255]);
