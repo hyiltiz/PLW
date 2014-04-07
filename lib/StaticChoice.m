@@ -22,14 +22,16 @@ try
     %     Screen('DrawText', w, ques.instr, 0, 150, [255, 255, 255, 255]);
     Screen('Preference', 'TextAntiAliasing', 1);
     
-    responseC={};
+    responseC=cell(numel(ques.items));
+    restime=zeros(numel(ques.items));
     for i = 1:length(ques.items)
         % here we callect each item idx with i; helper function
-        responseC =  oneItem(ques, i, w, wsize, kb, responseC);
+        [responseC{i}, restime(i)] =  oneItem(ques, i, w, wsize, kb, responseC);
     end
     
     % encoding
     ques.response = responseC;
+    ques.restime  = restime;
     
     responseM = str2double(responseC);
     isMissing = ~ismember(responseM, 1:size(ques.scales,2));

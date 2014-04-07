@@ -1,4 +1,4 @@
-function [responseC t] =  oneItem(ques, i, w, wsize, kb, responseC)
+function [responseC t] =  oneItem(ques, i, w, wsize, kb)
 scalemap = ['1: ' ques.scales{i, 1}];
 for j=2:size(ques.scales, 2)
     scalemap = [scalemap, '  ', num2str(j) ': ', ques.scales{i, j}];
@@ -14,5 +14,5 @@ DrawFormattedText(w, ques.items{i}, 'center', 450, [255 255 255], 32);
 [t, kbCode] = KbWait([],2);
 
 kbName = KbName(kbCode);
-responseC{i} = kbName(1);
+responseC = kbName(1);
 end
