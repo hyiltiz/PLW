@@ -5,7 +5,7 @@ for j=2:size(ques.scales, 2)
 end
 
 DrawFormattedText(w, ques.instr{i}, 0, 80, [255, 255, 255, 255]);
-Screen('DrawText', w, ['请用键盘上数字 1 到 ', num2str(size(ques.scales, 2)), ' 作出反应：'], 0, 300, [255, 255, 255, 255]);
+Screen('DrawText', w, ['请用键盘上数字 1 到 ', num2str(size(ques.scales, 2)), ' 作出反应：（请不要按其它键）'], 0, 300, [255, 255, 255, 255]);
 Screen('DrawText', w, scalemap, 0, 330, [255, 255, 255, 255]);
 
 % kbCode = Instruction(ques.items{i}, w, wsize, 0, 1, kb, 5 ,1, 0);

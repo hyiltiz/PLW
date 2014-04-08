@@ -18,7 +18,7 @@ conf.clockR             =  .5;         % clock, with the center of the screen as
 
 % state control variables
 mode.octal_on      = 1;
-mode.debug_on      = 0;  % default is 0; 1 is not to use full screen, and skip the synch test
+mode.debug_on      = 1;  % default is 0; 1 is not to use full screen, and skip the synch test
 mode.dotRot_on     = 0;  % Use dot rot or not; depends on octal_on=1;
 mode.colorbalance_on=1;  % balance the color of the target PLW, which is by default red
 mode.mirror_on     = 1;  % use mirror rather that spectacles for binacular rivalry

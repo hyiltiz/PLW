@@ -17,7 +17,7 @@ try
 
     ques.LSAS = StaticChoice('LSAS');
 
-    if ~ques.STAI.isOK
+    if ~ques.LSAS.isOK
         % backdoor, manually continue
         grp.reply = input('Force proceed?\n', 's');
         if strcmp(grp.reply, backdoor)
@@ -29,7 +29,7 @@ try
         grp.suffix = '_Whole0_';
     end
 
-    if ques.STAI.isOK || isForced
+    if ques.LSAS.isOK || isForced
         grp.suffix = '_Whole1_';
 
         % decide the order of OctalTask and DotRotTask
@@ -48,6 +48,7 @@ try
     end
 
     save(['data/Group/Whole/', Subinfo{1}, grp.suffix, date, '.mat'],'wrkspc','ques', 'isPLWFirst','isForced');
+    Display(['data/Group/Whole/', Subinfo{1}, grp.suffix, date, '.mat']);
 catch
     psychrethrow(psychlasterror);
     sca;
