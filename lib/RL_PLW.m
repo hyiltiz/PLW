@@ -334,6 +334,8 @@ try
     %     RL_Instruction(w, mode.debug_on, mode.english_on, render.kb);    
         if mode.many_on
             data.instruct_filename = 'RL_Instruction_many.txt';
+        elseif mode.dotRot_on
+            data.instruct_filename = 'instruction_DotRot.txt';
         elseif mode.octal_on
             data.instruct_filename = 'instructions_Octal.txt';
         elseif mode.imEval_on
