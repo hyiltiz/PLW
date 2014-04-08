@@ -12,9 +12,11 @@ Screen('DrawText', w, scalemap, 0, 330, [255, 255, 255, 255]);
 DrawFormattedText(w, ques.items{i}, 'center', 450, [255 255 255], 32);
 Screen('Flip',w);
 
-[kbCode, t] = pedalWait(0, inf,kb);
+preT = GetSecs;
+[kbCode, postT] = pedalWait(0, inf,kb);
 % [t, kbCode] = KbWait([],2);
 
 kbName = KbName(kbCode);
 responseC = kbName(1);
+t = postT - preT;
 end

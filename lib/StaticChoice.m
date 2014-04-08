@@ -22,8 +22,9 @@ try
     %     Screen('DrawText', w, ques.instr, 0, 150, [255, 255, 255, 255]);
     Screen('Preference', 'TextAntiAliasing', 1);
     
-    responseC=cell(numel(ques.items));
-    restime=zeros(numel(ques.items));
+    responseC=cell(numel(ques.items),1);
+    restime=zeros(numel(ques.items),1);
+    
     for i = 1:length(ques.items)
         % here we callect each item idx with i; helper function
         [responseC{i}, restime(i)] =  oneItem(ques, i, w, wsize, kb);
@@ -36,19 +37,19 @@ try
     responseM = str2double(responseC);
     isMissing = ~ismember(responseM, 1:size(ques.scales,2));
     while sum(isMissing) % we [still] have missing values
-    responseM(isMissing) = NaN;
-    
-    % collect back those missing ones
-    idxMissing = find(isMissing);
-    for i=idxMissing
-        [responseC{i}, restime(i)] =  oneItem(ques, i, w, wsize, kb);
-    end
-    responseM = str2double(responseC);
-    isMissing = ~ismember(responseM, 1:size(ques.scales,2));
+        responseM(isMissing) = NaN;
+        
+        % collect back those missing ones
+        idxMissing = find(isMissing);
+        for i=idxMissing'
+            [responseC{i}, restime(i)] =  oneItem(ques, i, w, wsize, kb);
+        end
+        responseM = str2double(responseC);
+        isMissing = ~ismember(responseM, 1:size(ques.scales,2));
     end
     
     if ~isempty(ques.encode.inv)
-    responseM(ques.encode.inv) = size(ques.scales, 2) + -1*responseM(ques.encode.inv);
+        responseM(ques.encode.inv) = size(ques.scales, 2) + -1*responseM(ques.encode.inv);
     end
     
     for ipar=1:size(ques.encode.scale,1)
@@ -67,7 +68,7 @@ try
         WaitSecs(5);
     end
     
-    save tmp
+    
     if isempty(ques.thrsh)
         % do nothing, just record
     else
@@ -95,4 +96,5 @@ end
 sca
 ListenChar(0);
 
+boxplot(ques.restime);
 end
