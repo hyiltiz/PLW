@@ -50,7 +50,7 @@ switch nameS
         ques.scales = repmat([{'完全没有','有些','中等程度','非常明显'}; {'几乎没有','有些','经常','几乎总是如此'}], numel(ques.items)/2, 1);
         ques.encode.scale = {'fear', 1:2:numel(ques.items); 'avoidance', 2:2:numel(ques.items)};
         ques.encode.inv = [];
-        ques.thrsh = {[1 2], [15, 35], 0}; % threshould for LSAS, total score between [15, 35] not wanted
+        ques.thrsh = {[1 2], [15, 35]+numel(ques.items)/2, 0}; % threshould for LSAS, total score between [15, 35] not wanted; exp use 1:4 rather than 0:3, so add 1 for each scale point
         ques.isShowResult = 0;
         
         ques.items = ques.items(:);
@@ -87,6 +87,15 @@ switch nameS
         % 11 social: talking to prople in authority...
         % 13 performance: working while being observed...
         
+    case 'test'
+        ques.items = {'1', '2', '3','4','5'};
+        ques.instr = repmat({'this is test!'}, numel(ques.items),1);
+        ques.scales = repmat({'A','B', 'C', 'D'}, numel(ques.items),1);
+        ques.encode.scale = {'a', 1:2:numel(ques.items); 'b', 2:2:numel(ques.items)};
+        %反向记分题：
+        ques.encode.inv = [numel(ques.items)-1 numel(ques.items)];
+        ques.thrsh = {1, [-inf, inf], 1}; % for ques.encode.scale, {idx, [a b], isInGood}; or [] if no thrreshold required
+        ques.isShowResult = 1; % whether show result for the participant
         
     otherwise
         error('no such questionaire in the database!');
