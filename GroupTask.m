@@ -1,6 +1,6 @@
 function GroupTask
 % this wrapper runs serveral procedures:
-% 1)    STAITask
+% 1)    LSASTask
 % 2.1)  OctalTask  (with PLW )
 % 2.2)  DotRotTask (with dots)
 % 3)    ImEvalTask
@@ -15,7 +15,7 @@ try
 
     Subinfo = getSubInfo();
 
-    ques.STAI = STAITask();
+    ques.LSAS = StaticChoice('LSAS');
 
     if ~ques.STAI.isOK
         % backdoor, manually continue
@@ -44,7 +44,7 @@ try
         end
         wrkspc.ImEval = ImEvalTask(0, Subinfo);
 
-        ques.IRI = IRITask();
+        ques.IRI = StaticChoice('IRI');
     end
 
     save(['data/Group/Whole/', Subinfo{1}, grp.suffix, date, '.mat'],'wrkspc','ques', 'isPLWFirst','isForced');
