@@ -122,7 +122,6 @@ if true % used for folding mode~conf variables
         conf.resttime = 5;
         conf.exptime = 5;
         conf.trialdur = 13;
-        mode.octal_on = 1;
     end
 
     if mode.many_on % M is for many_dots task, while D is for direction task
