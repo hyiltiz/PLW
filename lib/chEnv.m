@@ -17,7 +17,6 @@ function chEnv(env, val)
 libfiles = ls('lib/*Task.m');
 Taskfiles = [cellstr(ls('*Task.m')); cellstr([repmat(['lib', filesep], size(libfiles,1),1) libfiles])];
 
-disp(Taskfiles);
 
 s_debug_mode = '(mode.debug_on\s*=\s*)(\d)(\s*;)';
 s_flpi = '(conf.flpi\s*=\s*)(\d\.\d\d)(\s*;)';
@@ -40,4 +39,6 @@ s_val = ['$1' val '$3'];
 for i=1:size(Taskfiles,1)
     SearchReplace(pwd, Taskfiles{i}, s_rep, s_val)
 end
+
+disp(Taskfiles);
 end
