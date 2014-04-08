@@ -1,4 +1,4 @@
-function keyCode = pedalWait(tactile_on, time, kb)
+function [keyCode t] = pedalWait(tactile_on, time, kb)
   if tactile_on
     dioIn=digitalio('parallel','LPT1'); % DAQ, open the LPT1 port
     addline(dioIn,10:12,'in'); % for footswitch input.
@@ -15,7 +15,7 @@ function keyCode = pedalWait(tactile_on, time, kb)
     end
   else
     % wait for any key press to go on, unless breaking out by calling ESC
-    [~, keyCode] = KbStrokeWait([], time);
+    [t, keyCode] = KbStrokeWait([], time);
 
     if keyCode(kb.escapeKey) %quit program
       sca;

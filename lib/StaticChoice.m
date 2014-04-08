@@ -26,7 +26,7 @@ try
     restime=zeros(numel(ques.items));
     for i = 1:length(ques.items)
         % here we callect each item idx with i; helper function
-        [responseC{i}, restime(i)] =  oneItem(ques, i, w, wsize, kb, responseC);
+        [responseC{i}, restime(i)] =  oneItem(ques, i, w, wsize, kb);
     end
     
     % encoding
@@ -41,7 +41,7 @@ try
     % collect back those missing ones
     idxMissing = find(isMissing);
     for i=idxMissing
-        responseC = oneItem(ques, i, w, wsize, kb, responseC);
+        [responseC{i}, restime(i)] =  oneItem(ques, i, w, wsize, kb);
     end
     responseM = str2double(responseC);
     isMissing = ~ismember(responseM, 1:size(ques.scales,2));
