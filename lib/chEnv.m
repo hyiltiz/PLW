@@ -17,8 +17,10 @@ function chEnv(env, val)
 libfiles = ls('lib/*Task.m');
 Taskfiles = [cellstr(ls('*Task.m')); cellstr([repmat(['lib', filesep], size(libfiles,1),1) libfiles])];
 
+disp(Taskfiles);
+
 s_debug_mode = '(mode.debug_on\s*=\s*)(\d)(\s*;)';
-s_flpi = '(conf.flpi\s*=\s*)(\d)(\s*;)';
+s_flpi = '(conf.flpi\s*=\s*)(\d\.\d\d)(\s*;)';
 
 switch env
     case 'debug'
