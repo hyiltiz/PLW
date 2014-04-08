@@ -1,0 +1,8 @@
+In this exprtiment one set of dots in a circular shape will be displayed, moving
+either INWARDS or OUTWARDS.
+Please PRESS and HOLD the UP/DOWN key corresponding to the dots moving direction.
+
+Press as long as you can decide. If you are not certain, you can press no key. But this time
+should not last too long!
+
+Press any key to continue.
