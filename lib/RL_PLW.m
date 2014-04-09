@@ -275,7 +275,11 @@ try
         % Generate the data for plotting Point Light Walkers
         % PLW-target
         data.readData.thet = 0;  %to rotate along the first axis
-        if mode.inout_on;data.readData.thet = 90 + conf.tiltangle;end
+        if mode.octal_on;
+            data.readData.thet = 90;
+        else
+            if mode.inout_on;data.readData.thet = 90 + conf.tiltangle;end;
+        end
         data.readData.xyzseq = [1 3 2];  %axis rotation, [1 3 2] by default
         data.init = data.init0; % the same with virtual PLW, though rotated
         [data.dotx,  data.doty, data.init, data.maxdot] = PLWtransform(data.readData, conf.scale1, conf.imagex, data.init);
@@ -288,6 +292,9 @@ try
 
 
         if mode.inout_on
+            % useless, since only usefull if were whithin trials for loop
+%             if mode.octal_on;conf.tiltangle = Sample([-1 1])*conf.tiltangle;end
+            
             % another two PLWs for stereo 3D display
             % PLW-target-shadow
             data.readData.thet = 0;  %to rotate along the first axis
@@ -303,6 +310,7 @@ try
             [data.dotx1s, data.doty1s, data.init1s, data.maxdot1s] = PLWtransform(data.readData, conf.scale1, conf.imagex, -1);
         end
 
+        
         if mode.octal_on
             [data.clockarm data.prCoor data.angls] = octalCoor(render.wsize, conf.clockR, conf.nPLWs);
             data.imagePath='resources/facestimuli/6neutral/female/NEF1.BMP';
@@ -472,6 +480,8 @@ try
                             Screen('DrawDots', w, data.xymatrix, 3, [255 255 255], [render.cx, render.cy],2);
                         else
                             RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx, render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 255 255], [0 0], data.maxdot);
+                            RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx, render.cy, data.dotxs, data.dotys, data.moveDirection(flow.Trial, :), [255 255 255], [-0.35 0], data.maxdot);
+                            RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx, render.cy, data.dotx1s,data.doty1s,data.moveDirection(flow.Trial, :), [255 255 255], [+0.35 0], data.maxdot);
                         end
                     end
 

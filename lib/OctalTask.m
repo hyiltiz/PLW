@@ -11,7 +11,7 @@ conf.trialdur           =  70;           % duration time for every trial
 conf.repetitions        =  5;           % repetition time of a condition
 conf.resttime           =  30;          % rest for 30s
 conf.restpertrial       =  5;           % every x trial a rest
-conf.tiltangle          =  0;           % tilt angle for simulating 3D stereo display
+conf.tiltangle          =  20;           % tilt angle for simulating 3D stereo display
 conf.doubleTactileDiff  = 10 ;          % flips between taps on one tactile stimuli (double tactile);0 to disable
 conf.clockR             =  .5;         % clock, with the center of the screen as (0,0), in pr coordination system
 
