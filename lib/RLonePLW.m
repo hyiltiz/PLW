@@ -14,9 +14,9 @@ mapping = [1 1 1 1 1 1 1 1 1 1 1 1 1];
 gcolor = {Color};
 %xy0 = [-.4 0];
 
-ovalFlag = xy0(1)==0;
+ovalFlag = xy0(2)==0;
 if ovalFlag
-    dot_w = 5;
+    dot_w = 10;
 else
     dot_w = 7;
 end

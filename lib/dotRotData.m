@@ -4,7 +4,7 @@ function [xymatrix, dat] = dotRotData(rect, fps, render_DotRot, isInit)
 % ---------------------------------------
 
 rot_flag = 0; % no rotation
-ndots       = 500; % number of dots
+ndots       = 1000; % number of dots
 mon_width   = 39;   % horizontal dimension of viewable screen (cm)
 v_dist      = 60;   % viewing distance (cm)
 dot_speed   = 2;    % dot speed (deg/sec)
