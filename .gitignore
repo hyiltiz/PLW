@@ -6,7 +6,9 @@
 /*.mat
 /bad
 /data/*default*.mat
+/data/*/*default*.mat
 /data/buggy.mat
 /data/test.mat
 octave-core
 tmp
+RL_PLW_default*mat
