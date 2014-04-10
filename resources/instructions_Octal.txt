@@ -1,7 +1,13 @@
-In this exprtiment one set of dots in the shape of a walking man will be displayed. 
-Please PRESS and HOLD the UP/DOWN key corresponding to the walkers's  OVERALL walking direction.
+In this exprtiment 3 sets of dots in the shape of a walking man will be displayed. 
+The direction may change at any time. Please determine th walkers's  OVERALL walking direction.
 
-Press as long as you can decide. If you are not certain, you can press no key. But this time
-should not last too long!
+Press as long as you can decide. If you are not certain, you can press no key. 
+But this time should not last too long!
+
+In this exprtiment one set of dots in a circular shape will be displayed.
+Please determine its moving direction.
+
+Press and hold UP key for INWARD moving direction.
+Press and hold DOWN key for OUTWARD moving direction.
 
 Press any key to continue.
