@@ -18,6 +18,8 @@ function PostureTask(is_once_on)
   mode.posture_on    = 1;  % for posture exp. only upright PLWs used
   mode.many_on       = 0;  % the task is the majority of dots the participant saw
   mode.debug_on      = 0;  % default is 0; 1 is not to use full screen, and skip the synch test
+  mode.english_on    = 0;  % use English for Instructions etc., 0 for Chinese(not supported for now!)
+  
   if nargin > 0
     mode.once_on       = is_once_on;  % only one trial, used for demostration before experiment
   else

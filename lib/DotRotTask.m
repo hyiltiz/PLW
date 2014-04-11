@@ -25,6 +25,7 @@ mode.colorbalance_on=1;  % balance the color of the target PLW, which is by defa
 mode.mirror_on     = 1;  % use mirror rather that spectacles for binacular rivalry
 mode.many_on       = 0;  % the task is the majority of dots the participant saw
 mode.simpleInOut_on= 1;  % simple InOut exp, with the same tactile stimuli for both foot
+mode.english_on    = 0;  % use English for Instructions etc., 0 for Chinese(not supported for now!)
 
 if nargin > 1
     mode.once_on       = is_once_on;  % only one trial, used for demostration before experiment

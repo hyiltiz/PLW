@@ -27,6 +27,7 @@ mode.mirror_on     = 1;  % use mirror rather that spectacles for binacular rival
 mode.many_on       = 0;  % the task is the majority of dots the participant saw
 mode.simpleInOut_on= 1;  % simple InOut exp, with the same tactile stimuli for both foot
 mode.imEval_on     = 1;  % image evaluation task, only images needed
+mode.english_on    = 0;  % use English for Instructions etc., 0 for Chinese(not supported for now!)
 
 if nargin > 0
     mode.once_on       = is_once_on;  % only one trial, used for demostration before experiment
