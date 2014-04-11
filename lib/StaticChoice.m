@@ -63,7 +63,7 @@ try
         [responseC{i}, restime(i)] =  oneItem(ques, i, w, wsize, kb, mode, conf, sign);
     end
     
-    % encoding
+    % any missing values present?
     ques.response = responseC;
     ques.restime  = restime;
     
@@ -88,13 +88,9 @@ try
         isMissing = ~ismember(responseM, 1:size(ques.scales,2));
     end
     
-    if ~isempty(ques.encode.inv)
-        responseM(ques.encode.inv) = size(ques.scales, 2) + -1*responseM(ques.encode.inv);
-    end
-    
-    for ipar=1:size(ques.encode.scale,1)
-        ques.encode.scale{ipar,3} = sum(responseM(ques.encode.scale{ipar,2}));
-    end
+    % convect and calculate output according to response chars and ques.encode
+    % result is ques.encdoe.scale{:,3} and responseM
+    [ques, responseM] = quesEncode(ques, responseC);
     
     
     resultS = '';
