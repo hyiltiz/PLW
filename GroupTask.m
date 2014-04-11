@@ -9,6 +9,15 @@ function GroupTask
 try
     startup;
     backdoor = '12345';
+    
+    % init static choice:begin
+    mode.debug_on = 0;
+    mode.constantInstr_on = 1;
+    mode.english_on = 0;
+    conf.instrWait = 20;
+    conf.byetime = 3;
+    % init static choice:end
+    
     isForced = 0;
     sques = struct();
     wrkspc= struct();

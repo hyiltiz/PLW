@@ -1,15 +1,19 @@
-function [responseC, t] =  oneItem(ques, i, w, wsize, kb)
+function [responseC, t] =  oneItem(ques, i, w, wsize, kb, mode, conf, sign)
 scalemap = ['1: ' ques.scales{i, 1}];
 for j=2:size(ques.scales, 2)
     scalemap = [scalemap, '  ', num2str(j) ': ', ques.scales{i, j}];
 end
 
-DrawFormattedText(w, ques.instr{i}, 0, 80, [255, 255, 255, 255]);
-Screen('DrawText', w, ['请用键盘上数字 1 到 ', num2str(size(ques.scales, 2)), ' 作出反应：（请不要按其它键）'], 0, 300, [255, 255, 255, 255]);
-Screen('DrawText', w, scalemap, 0, 330, [255, 255, 255, 255]);
+
+if mode.constantInstr_on % show isntr every screen
+    DrawFormattedText(w, [ques.instr{i} '\n\n' sign.lang.rule], 0, 30, [255, 255, 255, 255], inf);
+else
+    DrawFormattedText(w, ques.target{i}, 'center', wsize(4)/2-100, 255, inf);
+end
 
 % kbCode = Instruction(ques.items{i}, w, wsize, 0, 1, kb, 5 ,1, 0);
-DrawFormattedText(w, ques.items{i}, 'center', 450, [255 255 255], 32);
+DrawFormattedText(w, [ques.items{i} '\n\n\n' scalemap], 'center', 'center', [255 255 255], inf);
+
 Screen('Flip',w);
 
 preT = GetSecs;
