@@ -20,6 +20,7 @@ Taskfiles = [cellstr(ls('*Task.m')); cellstr([repmat(['lib', filesep], size(libf
 
 s_debug_mode = '(mode.debug_on\s*=\s*)(\d)(\s*;)';
 s_flpi = '(conf.flpi\s*=\s*)(\d\.\d\d)(\s*;)';
+s_eng = '(mode.english_on\s*=\s*)(\d)(\s*;)';
 
 switch env
     case 'debug'
@@ -30,6 +31,10 @@ switch env
         s_rep = s_flpi;
     case 'f'
         s_rep = s_flpi;
+    case 'english'
+        s_rep = s_eng;
+    case 'e'
+        s_rep = s_eng;
     otherwise
         s_rep = s_flpi;
 end
