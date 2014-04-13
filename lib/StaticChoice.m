@@ -2,7 +2,7 @@ function [ques ] = StaticChoice(questionaire, mode, conf)
 
 if nargin < 2
     mode.debug_on = 0;
-    mode.constantInstr_on = 1;
+    mode.constantInstr_on = 0;
     mode.english_on = 0;
     conf.instrWait = 20;
     conf.byetime = 3;
