@@ -1,4 +1,9 @@
 Why MATLAB/linux is crashing everytime, complaining some MEX problem? DotRotDemo() is not crashing it, Octave/GNU is not, neither...and Windows MATLAB is just all right
 
-OctalTask:
-        - test and debug
+c36e8bae1319d5a461b06fe8770f582175319ae8 introduced many data for 
+SimpleTask experiment, for both its main experiment and its baseline experiment.
+But for its baseline experiment, the data .mat files does not have a _Simple_ within data file name, 
+as they should have. Load and check the .mat files to see if they are generated 
+from PLWTactileBaseInOutSimple.m, or one of PLWTactileBase2InOut.m/PLWTactileBase2.m
+
+They are used by coresponding analysis code (simple), which quite surely certifies that their usage is all right.
