@@ -12,7 +12,7 @@ try
     
     % init static choice:begin
     mode.debug_on = 0;
-    mode.constantInstr_on = 1;
+    mode.constantInstr_on = 0;
     mode.english_on = 0;
     conf.instrWait = 20;
     conf.byetime = 3;
@@ -24,7 +24,7 @@ try
 
     Subinfo = getSubInfo();
 
-    ques.LSAS = StaticChoice('LSAS');
+    ques.LSAS = StaticChoice('LSAS', mode, conf);
 
     if ~ques.LSAS.isOK
         % backdoor, manually continue
@@ -53,7 +53,7 @@ try
         end
         wrkspc.ImEval = ImEvalTask(0, Subinfo);
 
-        ques.IRI = StaticChoice('IRI');
+        ques.IRI = StaticChoice('IRI', mode, conf);
     end
 
     save(['data/Group/Whole/', Subinfo{1}, grp.suffix, date, '.mat'],'wrkspc','ques', 'isPLWFirst','isForced');
