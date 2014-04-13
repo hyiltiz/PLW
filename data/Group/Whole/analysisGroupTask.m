@@ -81,7 +81,7 @@ ques.<task>.restime				response time for each items, in seconds. least interval 
 <task> is either IRI, or LSAS
 
 wrkspc.<task>.Trials			contains all data necessary for analysis
-wrkspc.<octal>.data.imagePaths	images used for each Trials
+wrkspc.<octal>.data.imnames     images used for each Trials
 
 Trials:
 1 			2 				3 				4 			5 			6 			7 								
