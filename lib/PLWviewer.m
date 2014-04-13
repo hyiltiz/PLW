@@ -55,7 +55,7 @@ gcolor = {'black', 'blue', 'red'};
 length = 1000;
 dotloop = modloop(1:length, size(dotx,1));
 
-for f=1:5:length  % two for accuracy
+for f=1:2:length  % two for accuracy
     count=count+1;
     % signal parts
     for grouping = 0 : 2
