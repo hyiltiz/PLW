@@ -138,14 +138,14 @@ if true % used for folding mode~conf variables
         dataPrefix = ['Group/'];
         dataSuffix = [dataSuffix '_DotRot_'];
         render.task = 'DotRot';
-    elseif mode.octal_on
-        dataPrefix = ['Group/'];
-        dataSuffix = [dataSuffix '_Octal_'];
-        render.task = 'Octal';
     elseif mode.imEval_on
         dataPrefix = ['Group/'];
         dataSuffix = [dataSuffix '_ImEval_'];
         render.task = 'ImEval';
+    elseif mode.octal_on
+        dataPrefix = ['Group/'];
+        dataSuffix = [dataSuffix '_Octal_'];
+        render.task = 'Octal';
     elseif mode.inout_on % M is for many_dots task, while D is for direction task
         dataSuffix = [dataSuffix '_InOut_'] ;
     elseif mode.posture_on
