@@ -1,1 +1,3 @@
 Why MATLAB/linux is crashing everytime, complaining some MEX problem? DotRotDemo() is not crashing it, Octave/GNU is not, neither...and Windows MATLAB is just all right
+
+data.imagePaths record is abnormal, only the last one
