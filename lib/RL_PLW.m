@@ -1,3 +1,4 @@
+
 % Copyright (C) 2012 Multisensory Lab of Peking University
 %
 % This program is free software; you can redistribute it and/or modify
@@ -361,7 +362,7 @@ try
             WaitSecs(0.001);
             showLeftTrial(flow.Trialsequence, flow.Trial, w, render.wsize, mode.debug_on, mode.english_on, render.kb, 1, mode.tactile_on);
         end
-        flow.restcount = restBetweenTrial(flow.restcount, conf.resttime, conf.restpertrial, w, render.wsize, mode.debug_on, mode.english_on, render.kb, 0, mode.tactile_on);
+        flow.restcount = restBetweenTrial(flow.restcount, conf.resttime, conf.restpertrial, w, render.wsize, mode.debug_on, mode.english_on, render.kb, 1, mode.tactile_on);
         conf.waitBetweenTrials  =  .8+rand*0.2; % wait black screen between Trials, random
         WaitSecs(conf.waitBetweenTrials);  % wait black screen between Trials, random
         

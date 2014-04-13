@@ -23,9 +23,9 @@ function restcount = restBetweenTrial(restcount, resttime, pertrial, w, wsize, d
   if restcount == pertrial
     if english_on
       Display(resttime);
-      Instruction('restBetweenTrial_text_en.txt', w, wsize, debug_mode, english_on, kb, resttime, skipFile, tactile_on);
+      Instruction(['Please rest for ' num2str(resttime) ' seconds.\n\nIf you want to proceed, press any button.'], w, wsize, debug_mode, english_on, kb, resttime, skipFile, tactile_on);
     else
-      Instruction('restBetweenTrial_text_zh.txt', w, wsize, debug_mode, english_on, kb, resttime, skipFile, tactile_on);
+      Instruction(['请休息 ' num2str(resttime) ' 秒。\n\n如果希望继续，请按任意键继续。'], w, wsize, debug_mode, english_on, kb, resttime, skipFile, tactile_on);
     end
     restcount = 1;
   else
