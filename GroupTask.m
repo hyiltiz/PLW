@@ -48,8 +48,8 @@ try
             wrkspc.Octal = OctalTask(0, Subinfo);
             wrkspc.DotRot= DotRotTask(0, Subinfo);
         else
-            wrkspc.Octal = OctalTask(0, Subinfo);
             wrkspc.DotRot= DotRotTask(0, Subinfo);
+            wrkspc.Octal = OctalTask(0, Subinfo);
         end
         wrkspc.ImEval = ImEvalTask(0, Subinfo);
 
