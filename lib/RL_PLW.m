@@ -190,6 +190,7 @@ else
     data.moveDirection = [round(rand([length(flow.Trialsequence), 1])), flow.Trialsequence(:,1) - 1]; %walkers walking direction is random
 end
 flow.Trialsequence(:,1) = [];
+
 if mode.once_on
     flow.Trialsequence(1:mode.once_on)=1:mode.once_on;
 end
@@ -301,12 +302,17 @@ try
             % useless, since only usefull if were whithin trials for loop
             %             if mode.octal_on;conf.tiltangle = Sample([-1 1])*conf.tiltangle;end
             
+            if mode.octal_on
+                data.init = -1;
+            else
+                data.init = data.init0; % the same with virtual PLW, though rotated
+            end
+            
             % another two PLWs for stereo 3D display
             % PLW-target-shadow
             data.readData.thet = 0;  %to rotate along the first axis
             if mode.inout_on;data.readData.thet = 90 - conf.tiltangle;end
             data.readData.xyzseq = [1 3 2];  %axis rotation, [1 3 2] by default
-            data.init = data.init0; % the same with virtual PLW, though rotated
             [data.dotxs,  data.dotys, data.inits, data.maxdots] = PLWtransform(data.readData, conf.scale1, conf.imagex, data.init);
             
             % PLW-nontarget-shadow
