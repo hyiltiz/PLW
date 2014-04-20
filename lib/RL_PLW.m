@@ -553,7 +553,11 @@ try
     wrkspc = load(render.matFileName);
     Display(render.matFileName);
     % Display 'Thanks' Screen
-    RL_Regards(w, mode.english_on);
+    if mode.imEval_on || mode.octal_on || mode.dotRot_on
+        % not end yet
+    else
+        RL_Regards(w, mode.english_on);
+    end
     
 catch
     % save the buggy data for debugging
@@ -581,6 +585,8 @@ ListenChar(0);
 
 % save data for testing for the last experiment
 save data/test.mat
+figure;
 boxplot(Trials(:,3),Trials(:,2));
+title([Subinfo{1} ':' render.task]);
 format short;
 Display('Experiment was successful!');
