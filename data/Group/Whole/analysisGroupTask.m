@@ -112,3 +112,13 @@ response_type: 3, 4, 7*N
 	4 <-> DOWNkey <-> outward
 	7*N: for ImEvalTask, encoded as product of 7. e.g. if response is 4 indicating neutral, then response_type = 7*4 = 28
 %}
+
+matfiles = cellstr(ls('data/Group/Whole/*.mat'));
+for i=1:numel(matfiles)
+    % check if all data is with the same structure as described above
+    % already done, and YES
+    disp(matfiles{i});
+    size(fieldnames(wrkspc))
+    size(fieldnames(ques))
+    disp('-------------------');
+end
