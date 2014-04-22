@@ -1,12 +1,13 @@
+function [DS, dur, durnorm, alldata] = analysisGroupTask
 %% description
-% filename:     <name>_Whole<date>.mat 
+% filename:     <name>_Whole<date>.mat
 % -- data stored in this file ---------------------------------------------
 %   Name        Description
 %   isForced    logical, TRUE iff failed LSAS & continued by experimenter
 %   isPLWFirst  logical, TRUE iff DotRotTask is folowed by OctalTask
 %   ques        struct, contails data from StaticChoice questionaires
 %   wrkspc      struct, contains data from RL_PLW tasks
-% 
+%
 % -- the structure of variables ques, wrkspc -----------------------------
 %{
 
@@ -47,7 +48,7 @@ ques
          restime: [48x1 double]
             isOK: 0
 
-wrkspc 
+wrkspc
      Octal
 	       conf: [1x1 struct]
 	       mode: [1x1 struct]
@@ -84,7 +85,7 @@ wrkspc.<task>.Trials			contains all data necessary for analysis
 wrkspc.<octal>.data.imnames     images used for each Trials
 
 Trials:
-1 			2 				3 				4 			5 			6 			7 								
+1 			2 				3 				4 			5 			6 			7
 condition	response_type	response_time	is_outward	is_upright	trialNo		iniTactile(INVALID,no tactile)
     
 condition: controls the face stimuli, 1:4
@@ -113,12 +114,180 @@ response_type: 3, 4, 7*N
 	7*N: for ImEvalTask, encoded as product of 7. e.g. if response is 4 indicating neutral, then response_type = 7*4 = 28
 %}
 
-matfiles = cellstr(ls('data/Group/Whole/*.mat'));
-for i=1:numel(matfiles)
-    % check if all data is with the same structure as described above
-    % already done, and YES
-    disp(matfiles{i});
-    size(fieldnames(wrkspc))
-    size(fieldnames(ques))
-    disp('-------------------');
+clear all;
+mode.verbose = 0;
+
+try
+    matfiles = cellstr(ls('data/Group/Whole/*.mat'));
+    % matfiles = {'liuyang_Whole1_19-Apr-2014.mat'};
+    alldata = cell(numel(matfiles),1);
+    DS = dataset();
+    for i=1:numel(matfiles)
+        % check if all data is with the same structure as described above
+        % already done, and YES
+        s=load(matfiles{i});
+        s.wrkspc = orderfields(s.wrkspc, {'Octal','DotRot','ImEval'});
+        s.ques = orderfields(s.ques, {'LSAS','IRI'});
+        tasks = fieldnames(s.wrkspc);
+        
+        if mode.verbose
+            disp(matfiles{i});
+            disp(size(fieldnames(wrkspc)));
+            disp(size(fieldnames(ques)));
+        end
+        
+        if mode.verbose
+        figure;
+        set(gcf,'Units','normalized','Position',[0 0 1 1])
+        pn = 2;
+        pidx = reshape(1:numel(tasks)*pn,[],pn);
+        end
+        
+        for ii = 1:numel(tasks)
+            disp(tasks{ii});
+            Trials = s.wrkspc.(tasks{ii}).Trials;
+            switch tasks{ii}
+                case 'ImEval'
+                    validres = [1:7];
+                    Trials(:,2) = Trials(:,2)/7;
+                    dur{i}.(tasks{ii}) = digest1(Trials(:,2),{Trials(:,1)}, validres);
+                    durnorm{i}.(tasks{ii}) = digest1(Trials(:,3),{Trials(:,1)}, validres); % RT stored here
+                    
+                case {'Octal','DotRot'}
+                    validres = [0 3 4];
+                    fltr = ismember(Trials(:,2),validres);
+                    Trials=Trials(fltr,:);
+                    Trials(:,end+1) = Trials(:,3) / mean(Trials(:,3));
+                    dur{i}.(tasks{ii}) = digest2(Trials(:,3),{Trials(:,1), Trials(:,2)}, validres);
+                    durnorm{i}.(tasks{ii}) = digest2(Trials(:,end),{Trials(:,1), Trials(:,2)}, validres);
+                    
+                otherwise
+                    error('what task is this?');
+            end
+            
+            if mode.verbose
+                subplot(pn,numel(tasks),pidx(ii,1));
+                histfit(Trials(:,3));
+                subplot(pn,numel(tasks),pidx(ii,2));
+                boxplot(Trials(:,3),[Trials(:,2) Trials(:,1)]);
+                % boxplot(Trials(:,3),[Trials(:,2)]);
+                xlabel(tasks{ii});
+            end
+            tabulate(Trials(:,2));
+            
+        end
+        
+        if mode.verbose
+        title(['LSAShigh=' num2str(s.isForced==0) ':' matfiles{i}]);
+        end
+        
+        % iswanted = input('wanted?\n');
+        iswanted = 1;
+        if iswanted
+            ids = singleds(s, dur, durnorm, i);
+            DS = [DS; ids];
+            disp([matfiles{i} ' added!']);
+        else
+            disp([matfiles{i} ' skipped!']);
+        end
+        disp('-------------------');
+        
+        alldata{i} = s;
+    end
+    
+catch
+    save buggy;
+    rethrow(lasterror);
+end
+
+%     玉尔麦：你好！我们的基本假设是考察是否高焦虑组将bistable的PLW知觉为更朝里走（即离开自己，facing away)
+%     你目前需要做的几个分析如下：
+%
+%     1 被试在不同平均脸部表情知觉条件下，朝里与朝外运动知觉的绝对时间以及不确定的时间，朝里与朝外以及不确定知觉
+%     的相对主导时间（比值）。音变量是时间或时间比值，自变量为平均表情知觉（正性、中性和负性）。比较散点与PLW的差异
+%
+%     2 用以上同样的方法，将被试分为焦虑高低得分组，比较不同组别的PLW成绩。
+%
+%     3 为以上两者服务，需要求得被试的焦虑得分以及对图片的平均情绪的评价。
+%
+%     如果你能列一个综合的表格，给出被试姓名、性别年龄、量表分，实验条件以及行为结果，
+%     我们可以做一个相关分析。你能工作一下发给我吗？
+%
+%     最重要的，是看一下散点与PLW的差异；以及是否能重复别人的结果：高焦虑组将bistable的PLW知觉为更朝里走。
+%     如果数据有趋势，但未达到统计显著，按照经验我估计需要补被试。
+%
+%     论文的前言和实验部分描述，请开始写起来，自己抓紧时间。
+
+    function [dur g] = digest2(orig, origG, validres)
+        % origG is { , }
+        [dur g] = grpstats(orig, origG, {'mean','gname'}); %  cond: 4; resp: 0:no; 3-inward; 4-outward
+        for j=1:length(g)
+            dur(j,2)=str2num(g{j,1});
+            dur(j,3)=str2num(g{j,2});
+        end
+        
+        for j=1:4 % cond
+            idxtemp=find(dur(:,2)==j); % which cond
+            if isempty(idxtemp)
+                dur(size(dur,1)+1,:) = [eps j validres(1)];
+            end
+            
+            durtemp=dur(idxtemp,:);
+            for resp=validres % for four conditions-"congruent","incongruent","bistable","baseline";
+                idxresp = find(durtemp(:,3)==resp);
+                if isempty(idxresp)
+                    dur(size(dur,1)+1,:) = [eps j resp];
+                end
+            end
+        end
+    end
+
+    function [dur g] = digest1(orig, origG, validres)
+        % origG is { , }
+        [dur g] = grpstats(orig, origG, {'mean','gname'}); %  cond: 4; resp: 0:no; 3-inward; 4-outward
+        for j=1:length(g)
+            dur(j,2)=str2num(g{j,1});
+        end
+        
+        % actually this is not needed; only single response can be made
+        %         for j=1:4 % cond
+        %             idxtemp=find(dur(:,2)==j); % which cond
+        %             if isempty(idxtemp)
+        %                 dur(size(dur,1)+1,:) = [eps j validres(1)];
+        %             end
+        %         end
+    end
+
+    function ids = singleds(s, dur, durnorm, i)
+        
+        N = numel(dur{i}.Octal(:,2));
+        
+        ds.id   = repmat(i,N,1);
+        ds.name = repmat(cellstr(s.wrkspc.Octal.Subinfo{1}),N,1);
+        ds.phone= repmat(cellstr(s.wrkspc.Octal.Subinfo{8}),N,1);
+        ds.age  = repmat(str2double(s.wrkspc.Octal.Subinfo{2}),N,1);
+        ds.gender=repmat(s.wrkspc.Octal.Subinfo{3},N,1);
+        ds.fear = repmat(s.ques.LSAS.encode.scale{1,3},N,1);
+        ds.avoid = repmat(s.ques.LSAS.encode.scale{2,3},N,1);
+        ds.PT = repmat(s.ques.IRI.encode.scale{1,3},N,1);
+        ds.FS = repmat(s.ques.IRI.encode.scale{2,3},N,1);
+        ds.EC = repmat(s.ques.IRI.encode.scale{3,3},N,1);
+        ds.PD = repmat(s.ques.IRI.encode.scale{4,3},N,1);
+        ds.LSAShigh = repmat(s.isForced==0,N,1);
+        ds.condition = dur{i}.Octal(:,2);
+        ds.restype = dur{i}.Octal(:,3);
+        ds.tplw = dur{i}.Octal(:,1);
+        ds.tdot = dur{i}.DotRot(:,1);
+        ds.tnormplw = durnorm{i}.Octal(:,1);
+        ds.tnormdot = durnorm{i}.DotRot(:,1);
+        ds.rplw = dur{i}.Octal(:,1)./reshape(repmat(dur{i}.Octal(dur{i}.Octal(:,3)==3,1),1,3)',[],1);
+        ds.rdot = dur{i}.DotRot(:,1)./reshape(repmat(dur{i}.DotRot(dur{i}.DotRot(:,3)==3,1),1,3)',[],1);
+        ds.rnormplw = durnorm{i}.Octal(:,1)./reshape(repmat(durnorm{i}.Octal(durnorm{i}.Octal(:,3)==3,1),1,3)',[],1);
+        ds.rnormdot = durnorm{i}.DotRot(:,1)./reshape(repmat(durnorm{i}.DotRot(durnorm{i}.DotRot(:,3)==3,1),1,3)',[],1);
+        ds.eval = reshape(repmat(dur{i}.ImEval(:,1),1,3)',[],1);
+        ds.evalt= reshape(repmat(durnorm{i}.ImEval(:,1),1,3)',[],1);
+        
+        ids = struct2dataset(ds);
+    end
+
 end
