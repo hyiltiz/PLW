@@ -1,5 +1,67 @@
-function [DS, dur, durnorm, alldata] = analysisGroupTask
-%% description
+function [DS, dur, durnorm, durr, alldata] = analysisGroupTask
+%% analyse Group task
+% input: all mat-files under data/Group/Whole/; see matfiles variable below
+% output:
+% DS: a data set array that has condition(4)*responsetype(3) rows for each
+% subject, with corresponding data for each condition*responsetype
+% combination; all data were collected from the mat-file, specifically from
+% ques.*.encode.scales, wrkspc.Octal.Subinfo, wrkspc.*.Trials; see helper
+% function singleds below, that generates single dataset array ids for each
+% subject; see below:
+
+% id    dur      condition  resptype    otherinfo
+% 1    1.5190    1.0000         0
+% 1   16.4243    1.0000    3.0000
+% 1   29.8217    1.0000    4.0000
+% 1    3.4529    2.0000         0
+% 1   28.5258    2.0000    3.0000
+% 1   35.7774    2.0000    4.0000
+% 1    3.7762    3.0000         0
+% 1    4.7768    3.0000    3.0000
+% 1   23.4488    3.0000    4.0000
+% 1    1.3791    4.0000         0
+% 1    6.6571    4.0000    3.0000
+% 1   30.4061    4.0000    4.0000
+%
+%
+% there are 4 type of duration time in the dateset DS
+% 1. 
+% absolute dur value:            tplw, tdot; 
+% also returned as struct DUR
+%
+% 2.
+% absolute dur value(normalized): tnormplw, tnormdot; 
+% also returned as struct DURNORM
+% used Trials(:,3)/mean(Trials(:,3) for normalization
+%
+% 3.
+% relative dur value(as mentioned in the email by Prof. Chen): rplw, rdot;
+% also returned as struct DURR 
+% 绝对时间算三种的-朝里、朝外和不动作；
+% 相对时间算每个被试算所有朝里和朝外的平均数，
+% 然后本别将朝里和朝外的时间除以这个平均数
+%
+% 4.
+% dur ratio(for each condition per sub, ratio of the differect dur means to
+% inward dur means); taking the above table as example:
+% it is the ratio of column1./column2
+%     tdur     tdur(restype==3)
+%     1.5190   16.4243
+%    16.4243   16.4243
+%    29.8217   16.4243
+%     3.4529   28.5258
+%    28.5258   28.5258
+%    35.7774   28.5258
+%     3.7762    4.7768
+%     4.7768    4.7768
+%    23.4488    4.7768
+%     1.3791    6.6571
+%     6.6571    6.6571
+%    30.4061    6.6571
+
+
+
+%% description of the mat file
 % filename:     <name>_Whole<date>.mat
 % -- data stored in this file ---------------------------------------------
 %   Name        Description
@@ -114,8 +176,12 @@ response_type: 3, 4, 7*N
 	7*N: for ImEvalTask, encoded as product of 7. e.g. if response is 4 indicating neutral, then response_type = 7*4 = 28
 %}
 
-clear all;
 mode.verbose = 0;
+mode.interactive = 0;
+
+if mode.interactive
+    mode.verbose = 1;
+end
 
 try
     matfiles = cellstr(ls('data/Group/Whole/*.mat'));
@@ -137,10 +203,10 @@ try
         end
         
         if mode.verbose
-        figure;
-        set(gcf,'Units','normalized','Position',[0 0 1 1])
-        pn = 2;
-        pidx = reshape(1:numel(tasks)*pn,[],pn);
+            figure;
+            set(gcf,'Units','normalized','Position',[0 0 1 1])
+            pn = 2;
+            pidx = reshape(1:numel(tasks)*pn,[],pn);
         end
         
         for ii = 1:numel(tasks)
@@ -160,7 +226,7 @@ try
                     Trials(:,end+1) = Trials(:,3) / mean(Trials(:,3));
                     dur{i}.(tasks{ii}) = digest2(Trials(:,3),{Trials(:,1), Trials(:,2)}, validres);
                     durnorm{i}.(tasks{ii}) = digest2(Trials(:,end),{Trials(:,1), Trials(:,2)}, validres);
-                    
+                    durr{i}.(tasks{ii}) = digest1(Trials(:,3),{Trials(:,2)}, validres);
                 otherwise
                     error('what task is this?');
             end
@@ -178,13 +244,17 @@ try
         end
         
         if mode.verbose
-        title(['LSAShigh=' num2str(s.isForced==0) ':' matfiles{i}]);
+            title(['LSAShigh=' num2str(s.isForced==0) ':' matfiles{i}]);
         end
         
-        % iswanted = input('wanted?\n');
-        iswanted = 1;
+        if mode.interactive
+            iswanted = input('wanted?\n');
+        else
+            iswanted = 1;
+        end
+        
         if iswanted
-            ids = singleds(s, dur, durnorm, i);
+            ids = singleds(s, dur, durnorm, durr, i);
             DS = [DS; ids];
             disp([matfiles{i} ' added!']);
         else
@@ -193,19 +263,23 @@ try
         disp('-------------------');
         
         alldata{i} = s;
+        
     end
+    
+    export(DS,'file','data/Group/Whole/PLWGroup.csv','Delimiter',',');
+    disp('dataframe data/Group/Whole/PLWGroup.csv saved.');
     
 catch
     save buggy;
     rethrow(lasterror);
 end
-
+%% Method
 %     玉尔麦：你好！我们的基本假设是考察是否高焦虑组将bistable的PLW知觉为更朝里走（即离开自己，facing away)
 %     你目前需要做的几个分析如下：
 %
 %     1 被试在不同平均脸部表情知觉条件下，朝里与朝外运动知觉的绝对时间以及不确定的时间，朝里与朝外以及不确定知觉
 %     的相对主导时间（比值）。音变量是时间或时间比值，自变量为平均表情知觉（正性、中性和负性）。比较散点与PLW的差异
-%
+%（绝对时间算三种的-朝里、朝外和不动作；相对时间算每个被试算所有朝里和朝外的平均数，然后本别将朝里和朝外的时间除以这个平均数）
 %     2 用以上同样的方法，将被试分为焦虑高低得分组，比较不同组别的PLW成绩。
 %
 %     3 为以上两者服务，需要求得被试的焦虑得分以及对图片的平均情绪的评价。
@@ -217,6 +291,8 @@ end
 %     如果数据有趋势，但未达到统计显著，按照经验我估计需要补被试。
 %
 %     论文的前言和实验部分描述，请开始写起来，自己抓紧时间。
+
+%% Helper functions
 
     function [dur g] = digest2(orig, origG, validres)
         % origG is { , }
@@ -240,6 +316,7 @@ end
                 end
             end
         end
+        dur = sortrows(dur,[2 3]);
     end
 
     function [dur g] = digest1(orig, origG, validres)
@@ -258,7 +335,8 @@ end
         %         end
     end
 
-    function ids = singleds(s, dur, durnorm, i)
+    function ids = singleds(s, dur, durnorm, durr, i)
+        % create dataset array
         
         N = numel(dur{i}.Octal(:,2));
         
@@ -280,10 +358,12 @@ end
         ds.tdot = dur{i}.DotRot(:,1);
         ds.tnormplw = durnorm{i}.Octal(:,1);
         ds.tnormdot = durnorm{i}.DotRot(:,1);
-        ds.rplw = dur{i}.Octal(:,1)./reshape(repmat(dur{i}.Octal(dur{i}.Octal(:,3)==3,1),1,3)',[],1);
-        ds.rdot = dur{i}.DotRot(:,1)./reshape(repmat(dur{i}.DotRot(dur{i}.DotRot(:,3)==3,1),1,3)',[],1);
-        ds.rnormplw = durnorm{i}.Octal(:,1)./reshape(repmat(durnorm{i}.Octal(durnorm{i}.Octal(:,3)==3,1),1,3)',[],1);
-        ds.rnormdot = durnorm{i}.DotRot(:,1)./reshape(repmat(durnorm{i}.DotRot(durnorm{i}.DotRot(:,3)==3,1),1,3)',[],1);
+        ds.ratioplw = dur{i}.Octal(:,1)./reshape(repmat(dur{i}.Octal(dur{i}.Octal(:,3)==3,1),1,3)',[],1);
+        ds.ratiodot = dur{i}.DotRot(:,1)./reshape(repmat(dur{i}.DotRot(dur{i}.DotRot(:,3)==3,1),1,3)',[],1);
+        ds.rationormplw = durnorm{i}.Octal(:,1)./reshape(repmat(durnorm{i}.Octal(durnorm{i}.Octal(:,3)==3,1),1,3)',[],1);
+        ds.rationormdot = durnorm{i}.DotRot(:,1)./reshape(repmat(durnorm{i}.DotRot(durnorm{i}.DotRot(:,3)==3,1),1,3)',[],1);
+        ds.rplw = dur{i}.Octal(:,1)./repmat(durr{i}.Octal(:,1),4,1);
+        ds.rdot = dur{i}.DotRot(:,1)./repmat(durr{i}.DotRot(:,1),4,1);
         ds.eval = reshape(repmat(dur{i}.ImEval(:,1),1,3)',[],1);
         ds.evalt= reshape(repmat(durnorm{i}.ImEval(:,1),1,3)',[],1);
         
