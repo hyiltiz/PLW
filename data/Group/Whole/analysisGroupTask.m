@@ -25,18 +25,18 @@ function [DS, dur, durnorm, durr, alldata] = analysisGroupTask
 %
 %
 % there are 4 type of duration time in the dateset DS
-% 1. 
-% absolute dur value:            tplw, tdot; 
+% 1.
+% absolute dur value:            tplw, tdot;
 % also returned as struct DUR
 %
 % 2.
-% absolute dur value(normalized): tnormplw, tnormdot; 
+% absolute dur value(normalized): tnormplw, tnormdot;
 % also returned as struct DURNORM
 % used Trials(:,3)/mean(Trials(:,3) for normalization
 %
 % 3.
 % relative dur value(as mentioned in the email by Prof. Chen): rplw, rdot;
-% also returned as struct DURR 
+% also returned as struct DURR
 % 绝对时间算三种的-朝里、朝外和不动作；
 % 相对时间算每个被试算所有朝里和朝外的平均数，
 % 然后本别将朝里和朝外的时间除以这个平均数
@@ -176,11 +176,14 @@ response_type: 3, 4, 7*N
 	7*N: for ImEvalTask, encoded as product of 7. e.g. if response is 4 indicating neutral, then response_type = 7*4 = 28
 %}
 
-mode.verbose = 0;
 mode.interactive = 0;
+mode.verbose = 1;
+mode.picture = 0;
+mode.keepnoresponse = 1;
 
 if mode.interactive
     mode.verbose = 1;
+    mode.picture = 1;
 end
 
 try
@@ -196,13 +199,11 @@ try
         s.ques = orderfields(s.ques, {'LSAS','IRI'});
         tasks = fieldnames(s.wrkspc);
         
-        if mode.verbose
-            disp(matfiles{i});
-            disp(size(fieldnames(wrkspc)));
-            disp(size(fieldnames(ques)));
-        end
+        Disp(matfiles{i},mode.verbose);
+        Disp(size(fieldnames(s.wrkspc)),mode.verbose);
+        Disp(size(fieldnames(s.ques)),mode.verbose);
         
-        if mode.verbose
+        if mode.picture
             figure;
             set(gcf,'Units','normalized','Position',[0 0 1 1])
             pn = 2;
@@ -210,7 +211,7 @@ try
         end
         
         for ii = 1:numel(tasks)
-            disp(tasks{ii});
+            Disp(tasks{ii},mode.verbose)
             Trials = s.wrkspc.(tasks{ii}).Trials;
             switch tasks{ii}
                 case 'ImEval'
@@ -220,7 +221,11 @@ try
                     durnorm{i}.(tasks{ii}) = digest1(Trials(:,3),{Trials(:,1)}, validres); % RT stored here
                     
                 case {'Octal','DotRot'}
-                    validres = [0 3 4];
+                    if mode.keepnoresponse
+                        validres = [0 3 4];
+                    else
+                        validres = [3 4];
+                    end
                     fltr = ismember(Trials(:,2),validres);
                     Trials=Trials(fltr,:);
                     Trials(:,end+1) = Trials(:,3) / mean(Trials(:,3));
@@ -231,7 +236,7 @@ try
                     error('what task is this?');
             end
             
-            if mode.verbose
+            if mode.picture
                 subplot(pn,numel(tasks),pidx(ii,1));
                 histfit(Trials(:,3));
                 subplot(pn,numel(tasks),pidx(ii,2));
@@ -239,16 +244,25 @@ try
                 % boxplot(Trials(:,3),[Trials(:,2)]);
                 xlabel(tasks{ii});
             end
-            tabulate(Trials(:,2));
+            if mode.verbose
+                tabulate(Trials(:,2));
+            else
+                tmp=tabulate(Trials(:,2));
+            end
+            
+%             Disp(s.ques.LSAS.encode.scale(:,1)',mode.verbose);
+%             Disp([cell2mat(s.ques.LSAS.encode.scale(:,3))-24]',mode.verbose);
+            Disp(correct(s.ques.LSAS.encode.scale),mode.verbose);
+            Disp(s.ques.IRI.encode.scale,mode.verbose);
             
         end
         
-        if mode.verbose
+        if mode.picture
             title(['LSAShigh=' num2str(s.isForced==0) ':' matfiles{i}]);
         end
         
         if mode.interactive
-            iswanted = input('wanted?\n');
+            iswanted = input('Include this sub for processing? 1 for yes, 0 for no:\n');
         else
             iswanted = 1;
         end
@@ -256,11 +270,11 @@ try
         if iswanted
             ids = singleds(s, dur, durnorm, durr, i);
             DS = [DS; ids];
-            disp([matfiles{i} ' added!']);
+            Disp([matfiles{i} ' added!'],mode.verbose);
         else
-            disp([matfiles{i} ' skipped!']);
+            Disp([matfiles{i} ' skipped!'],mode.verbose);
         end
-        disp('-------------------');
+        Disp('-------------------',mode.verbose);
         
         alldata{i} = s;
         
@@ -345,29 +359,46 @@ end
         ds.phone= repmat(cellstr(s.wrkspc.Octal.Subinfo{8}),N,1);
         ds.age  = repmat(str2double(s.wrkspc.Octal.Subinfo{2}),N,1);
         ds.gender=repmat(s.wrkspc.Octal.Subinfo{3},N,1);
-        ds.fear = repmat(s.ques.LSAS.encode.scale{1,3},N,1);
-        ds.avoid = repmat(s.ques.LSAS.encode.scale{2,3},N,1);
+        ds.isForced = repmat(s.isForced,N,1);
+        ds.fear = repmat(s.ques.LSAS.encode.scale{1,3},N,1)-24;
+        ds.avoid = repmat(s.ques.LSAS.encode.scale{2,3},N,1)-24;
+        ds.LSAS = sum([ds.fear ds.avoid],2);
+        ds.LSAShigh = (ds.fear+ds.avoid)>29.1+17.3;
         ds.PT = repmat(s.ques.IRI.encode.scale{1,3},N,1);
         ds.FS = repmat(s.ques.IRI.encode.scale{2,3},N,1);
         ds.EC = repmat(s.ques.IRI.encode.scale{3,3},N,1);
         ds.PD = repmat(s.ques.IRI.encode.scale{4,3},N,1);
-        ds.LSAShigh = repmat(s.isForced==0,N,1);
+        ds.IRI = sum([ds.PT, ds.FS, ds.EC, ds.PD],2);
         ds.condition = dur{i}.Octal(:,2);
         ds.restype = dur{i}.Octal(:,3);
         ds.tplw = dur{i}.Octal(:,1);
         ds.tdot = dur{i}.DotRot(:,1);
         ds.tnormplw = durnorm{i}.Octal(:,1);
         ds.tnormdot = durnorm{i}.DotRot(:,1);
-        ds.ratioplw = dur{i}.Octal(:,1)./reshape(repmat(dur{i}.Octal(dur{i}.Octal(:,3)==3,1),1,3)',[],1);
-        ds.ratiodot = dur{i}.DotRot(:,1)./reshape(repmat(dur{i}.DotRot(dur{i}.DotRot(:,3)==3,1),1,3)',[],1);
-        ds.rationormplw = durnorm{i}.Octal(:,1)./reshape(repmat(durnorm{i}.Octal(durnorm{i}.Octal(:,3)==3,1),1,3)',[],1);
-        ds.rationormdot = durnorm{i}.DotRot(:,1)./reshape(repmat(durnorm{i}.DotRot(durnorm{i}.DotRot(:,3)==3,1),1,3)',[],1);
-        ds.rplw = dur{i}.Octal(:,1)./repmat(durr{i}.Octal(:,1),4,1);
-        ds.rdot = dur{i}.DotRot(:,1)./repmat(durr{i}.DotRot(:,1),4,1);
-        ds.eval = reshape(repmat(dur{i}.ImEval(:,1),1,3)',[],1);
-        ds.evalt= reshape(repmat(durnorm{i}.ImEval(:,1),1,3)',[],1);
+        ds.ratioplw = dur{i}.Octal(:,1)./reshape(repmat(dur{i}.Octal(dur{i}.Octal(:,3)==3,1),1,numel(unique(ds.restype)))',[],1);
+        ds.ratiodot = dur{i}.DotRot(:,1)./reshape(repmat(dur{i}.DotRot(dur{i}.DotRot(:,3)==3,1),1,numel(unique(ds.restype)))',[],1);
+        ds.rationormplw = durnorm{i}.Octal(:,1)./reshape(repmat(durnorm{i}.Octal(durnorm{i}.Octal(:,3)==3,1),1,numel(unique(ds.restype)))',[],1);
+        ds.rationormdot = durnorm{i}.DotRot(:,1)./reshape(repmat(durnorm{i}.DotRot(durnorm{i}.DotRot(:,3)==3,1),1,numel(unique(ds.restype)))',[],1);
+        ds.rplw = dur{i}.Octal(:,1)./repmat(durr{i}.Octal(:,1),numel(unique(ds.condition)),1);
+        ds.rdot = dur{i}.DotRot(:,1)./repmat(durr{i}.DotRot(:,1),numel(unique(ds.condition)),1);
+        ds.eval = reshape(repmat(dur{i}.ImEval(:,1),1,numel(unique(ds.restype)))',[],1);
+        ds.evalt= reshape(repmat(durnorm{i}.ImEval(:,1),1,numel(unique(ds.restype)))',[],1);
         
         ids = struct2dataset(ds);
     end
 
+    function Disp(x, verbose)
+        if verbose
+            disp(x);
+        else
+            % do nothing
+        end
+    end
+
+    function scale=correct(scale)
+        % LSAS -24 correction
+        for ij=1:size(scale,1)
+            scale{ij,3}=scale{ij,3}-24;
+        end
+    end
 end
