@@ -149,7 +149,7 @@ wrkspc.<octal>.data.imnames     images used for each Trials
 Trials:
 1 			2 				3 				4 			5 			6 			7
 condition	response_type	response_time	is_outward	is_upright	trialNo		iniTactile(INVALID,no tactile)
-    
+
 condition: controls the face stimuli, 1:4
     case 1
         % anger
@@ -177,9 +177,9 @@ response_type: 3, 4, 7*N
 %}
 
 mode.interactive = 0;
-mode.verbose = 1;
+mode.verbose = 0;
 mode.picture = 0;
-mode.keepnoresponse = 1;
+mode.keepnoresponse = 0;
 
 if mode.interactive
     mode.verbose = 1;
@@ -198,18 +198,18 @@ try
         s.wrkspc = orderfields(s.wrkspc, {'Octal','DotRot','ImEval'});
         s.ques = orderfields(s.ques, {'LSAS','IRI'});
         tasks = fieldnames(s.wrkspc);
-        
+
         Disp(matfiles{i},mode.verbose);
         Disp(size(fieldnames(s.wrkspc)),mode.verbose);
         Disp(size(fieldnames(s.ques)),mode.verbose);
-        
+
         if mode.picture
             figure;
             set(gcf,'Units','normalized','Position',[0 0 1 1])
             pn = 2;
             pidx = reshape(1:numel(tasks)*pn,[],pn);
         end
-        
+
         for ii = 1:numel(tasks)
             Disp(tasks{ii},mode.verbose)
             Trials = s.wrkspc.(tasks{ii}).Trials;
@@ -217,9 +217,11 @@ try
                 case 'ImEval'
                     validres = [1:7];
                     Trials(:,2) = Trials(:,2)/7;
-                    dur{i}.(tasks{ii}) = digest2(Trials(:,2),{Trials(:,1)}, {validres});
-                    durnorm{i}.(tasks{ii}) = digest2(Trials(:,3),{Trials(:,1)}, {validres}); % RT stored here
-                    
+                    fltr = ismember(Trials(:,2),validres);
+                    Trials=Trials(fltr,:);
+                    dur{i}.(tasks{ii}) = digest2(Trials(:,2),{Trials(:,1)}, {1:4},'mean');
+                    durnorm{i}.(tasks{ii}) = digest2(Trials(:,3),{Trials(:,1)}, {1:4}, 'mean'); % RT stored here
+
                 case {'Octal','DotRot'}
                     if mode.keepnoresponse
                         validres = [0 3 4];
@@ -229,13 +231,14 @@ try
                     fltr = ismember(Trials(:,2),validres);
                     Trials=Trials(fltr,:);
                     Trials(:,end+1) = Trials(:,3) / mean(Trials(:,3));
-                    dur{i}.(tasks{ii}) = digest2(Trials(:,3),{Trials(:,1), Trials(:,2)}, {[1:4] validres});
-                    durnorm{i}.(tasks{ii}) = digest2(Trials(:,end),{Trials(:,1), Trials(:,2)}, {[1:4] validres});
-                    durr{i}.(tasks{ii}) = digest2(Trials(:,3),{Trials(:,2)}, {validres});
+                    dur{i}.(tasks{ii}) = digest2(Trials(:,3),{Trials(:,1), Trials(:,2)}, {[1:4] validres},'mean');
+                    durnorm{i}.(tasks{ii}) = digest2(Trials(:,end),{Trials(:,1), Trials(:,2)}, {[1:4] validres},'mean');
+                    durr{i}.(tasks{ii}) = digest2(Trials(:,3),{Trials(:,2)}, {validres}, 'mean');
+                    nshift{i}.(tasks{ii}) = digest2(Trials(:,5),{Trials(:,1), Trials(:,2)}, {[1:4] validres},'sum');
                 otherwise
                     error('what task is this?');
             end
-            
+
             if mode.picture
                 subplot(pn,numel(tasks),pidx(ii,1));
                 histfit(Trials(:,3));
@@ -249,40 +252,40 @@ try
             else
                 tmp=tabulate(Trials(:,2));
             end
-            
+
 %             Disp(s.ques.LSAS.encode.scale(:,1)',mode.verbose);
 %             Disp([cell2mat(s.ques.LSAS.encode.scale(:,3))-24]',mode.verbose);
             Disp(correct(s.ques.LSAS.encode.scale),mode.verbose);
             Disp(s.ques.IRI.encode.scale,mode.verbose);
-            
+
         end
-        
+
         if mode.picture
             title(['LSAShigh=' num2str(s.isForced==0) ':' matfiles{i}]);
         end
-        
+
         if mode.interactive
             iswanted = input('Include this sub for processing? 1 for yes, 0 for no:\n');
         else
             iswanted = 1;
         end
-        
+
         if iswanted
-            ids = singleds(s, dur, durnorm, durr, i);
+            ids = singleds(s, dur, durnorm, durr, nshift, i);
             DS = [DS; ids];
             Disp([matfiles{i} ' added!'],mode.verbose);
         else
             Disp([matfiles{i} ' skipped!'],mode.verbose);
         end
         Disp('-------------------',mode.verbose);
-        
+
         alldata{i} = s;
-        
+
     end
-    
+
     export(DS,'file','data/Group/Whole/PLWGroup.csv','Delimiter',',');
     disp('dataframe data/Group/Whole/PLWGroup.csv saved.');
-    
+
 catch
     save buggy;
     rethrow(lasterror);
@@ -305,26 +308,30 @@ end
 %     如果数据有趋势，但未达到统计显著，按照经验我估计需要补被试。
 %
 %     论文的前言和实验部分描述，请开始写起来，自己抓紧时间。
+%
+%
+%玉尔麦：基本结果有了。 用GLM的univariate分析，PLW情形下，高焦虑组有更多的facing viewer bias (朝外）（resp和LSASgroup的交互显著，以tnormalPLW, tnormalDot为自变量）而Dot的条件下不存在这个偏差，说明焦虑调节的是高级认知加工的事件(PLW而非散点运动）。但是，未见平均情绪这一条件的影响。总体上，朝外的知觉(即facing bias)占主导，这和之前的很多研究一致，参见之前给你的文献2013-van de Cruys-An anxiety-induced bias in the perception of a bistable point-light walker，但我们焦虑组的结果和这个文献的发现相反，需要考虑一下是什么原因，还有未观察到情绪的影响。
 
 %% Helper functions
 
-    function [dur, g] = digest2(orig, origG, rulesC)
+    function [dur, g] = digest2(orig, origG, rulesC, func)
         % origG is { , }
         % rulesC is { , }
-        [dur, g] = grpstats(orig, origG, {'mean','gname'}); %  cond: 4; resp: 0:no; 3-inward; 4-outward
+        % func: 'mean', 'sum'
+        [dur, g] = grpstats(orig, origG, {func,'gname'}); %  cond: 4; resp: 0:no; 3-inward; 4-outward
         dur = [dur str2double(g)];
-        
+
         for j=1:numel(rulesC)
             cond(j)=numel(rulesC{j});
         end
         dur = fillhole(dur, cond, rulesC);
     end
 
-    function ids = singleds(s, dur, durnorm, durr, i)
+    function ids = singleds(s, dur, durnorm, durr, nshift, i)
         % create dataset array
-        
+
         N = numel(dur{i}.Octal(:,2));
-        
+
         ds.id   = repmat(i,N,1);
         ds.name = repmat(cellstr(s.wrkspc.Octal.Subinfo{1}),N,1);
         ds.phone= repmat(cellstr(s.wrkspc.Octal.Subinfo{8}),N,1);
@@ -352,9 +359,11 @@ end
         ds.rationormdot = durnorm{i}.DotRot(:,1)./reshape(repmat(durnorm{i}.DotRot(durnorm{i}.DotRot(:,3)==3,1),1,numel(unique(ds.restype)))',[],1);
         ds.rplw = dur{i}.Octal(:,1)./repmat(durr{i}.Octal(:,1),numel(unique(ds.condition)),1);
         ds.rdot = dur{i}.DotRot(:,1)./repmat(durr{i}.DotRot(:,1),numel(unique(ds.condition)),1);
+        ds.nshiftplw = nshift{i}.Octal(:,1);
+        ds.nshiftdot = nshift{i}.DotRot(:,1);
         ds.eval = reshape(repmat(dur{i}.ImEval(:,1),1,numel(unique(ds.restype)))',[],1);
         ds.evalt= reshape(repmat(durnorm{i}.ImEval(:,1),1,numel(unique(ds.restype)))',[],1);
-        
+
         ids = struct2dataset(ds);
     end
 
