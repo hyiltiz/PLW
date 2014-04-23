@@ -14,10 +14,12 @@ for i=1:length(rules)
 end
 target = [eps.*ones(size(target,1),1) target];
 
-nrow = 1;
-for row=1:size(orig,1)
-    while ~all(orig(row,2:end)==target(nrow,2:end)) %not there yet
-        nrow=nrow+1;
+if ~all(size(target)==size(orig)) % only if there are holes
+    nrow = 1;
+    for row=1:size(orig,1)
+        while ~all(orig(row,2:end)==target(nrow,2:end)) %not there yet
+            nrow=nrow+1;
+        end
+        target(nrow, 1) = orig(row, 1);
     end
-    target(nrow, 1) = orig(row, 1);
 end
