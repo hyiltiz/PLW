@@ -318,44 +318,6 @@ end
             cond(j)=numel(rulesC{j});
         end
         dur = fillhole(dur, cond, rulesC);
-%         for j=1:length(g)
-%             dur(j,end+1)=str2num(g{j,1});
-%             dur(j,end+2)=str2num(g{j,2});
-%         end
-        
-%         for j=1:4 % cond
-%             idxtemp=find(dur(:,2)==j); % which cond
-%             if isempty(idxtemp)
-%                 dur(size(dur,1)+1,:) = [eps j validres(1)];
-%             end
-%             
-%             durtemp=dur(idxtemp,:);
-%             for resp=validres % for four conditions-"congruent","incongruent","bistable","baseline";
-%                 idxresp = find(durtemp(:,3)==resp);
-%                 if isempty(idxresp)
-%                     dur(size(dur,1)+1,:) = [eps j resp];
-%                 end
-%             end
-%         end
-%         dur = sortrows(dur,[2 3]);
-    end
-
-    function [dur, g] = digest1(orig, origG, validres)
-        % origG is { , }
-        [dur, g] = grpstats(orig, origG, {'mean','gname'}); %  cond: 4; resp: 0:no; 3-inward; 4-outward
-        dur = [dur str2double(g)];
-        
-%         for j=1:length(g)
-%             dur(j,2)=str2num(g{j,1});
-%         end
-        
-        % actually this is not needed; only single response can be made
-        %         for j=1:4 % cond
-        %             idxtemp=find(dur(:,2)==j); % which cond
-        %             if isempty(idxtemp)
-        %                 dur(size(dur,1)+1,:) = [eps j validres(1)];
-        %             end
-        %         end
     end
 
     function ids = singleds(s, dur, durnorm, durr, i)
