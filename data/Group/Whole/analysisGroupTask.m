@@ -177,8 +177,8 @@ response_type: 3, 4, 7*N
 mode.interactive = 0;
 mode.verbose = 0;
 mode.picture = 0;
-mode.keepnoresponse = 0;
-mode.write = 0;
+mode.keepnoresponse = 1;
+mode.write = 1;
 
 if mode.interactive
     mode.verbose = 1;
@@ -426,7 +426,7 @@ end
                 fname=[fname '_delete_nores.csv'];
             end
             export(DS,'file',fname,'Delimiter',',');
-            Disp([fname 'saved.'],mode.verbose);
+            Disp([fname ' saved.'],mode.verbose);
         end
     end
 
