@@ -1,4 +1,4 @@
-function [DS, dur, durnorm, durr, alldata] = analysisGroupTask
+function [DS, dur, durnorm, durr, TDS, alldata] = analysisGroupTask
 %% analyse Group task
 % input: all mat-files under data/Group/Whole/; see matfiles variable below
 % output:
@@ -8,7 +8,6 @@ function [DS, dur, durnorm, durr, alldata] = analysisGroupTask
 % ques.*.encode.scales, wrkspc.Octal.Subinfo, wrkspc.*.Trials; see helper
 % function singleds below, that generates single dataset array ids for each
 % subject; see below:
-
 % id    dur      condition  resptype    otherinfo
 % 1    1.5190    1.0000         0
 % 1   16.4243    1.0000    3.0000
@@ -58,7 +57,6 @@ function [DS, dur, durnorm, durr, alldata] = analysisGroupTask
 %     1.3791    6.6571
 %     6.6571    6.6571
 %    30.4061    6.6571
-
 
 
 %% description of the mat file
@@ -180,6 +178,7 @@ mode.interactive = 0;
 mode.verbose = 0;
 mode.picture = 0;
 mode.keepnoresponse = 0;
+mode.write = 0;
 
 if mode.interactive
     mode.verbose = 1;
@@ -190,7 +189,18 @@ try
     matfiles = cellstr(ls('data/Group/Whole/*.mat'));
     % matfiles = {'liuyang_Whole1_19-Apr-2014.mat'};
     alldata = cell(numel(matfiles),1);
+    %     T.tplw=[];
+    %     T.tdot=[];
+    %     T.tnormplw=[];
+    %     T.tnormdot=[];
+    %     T.rdot=[];
+    %     T.rplw=[];
+    %     T.nshiftplw=[];
+    %     T.nshiftdot=[];
+    %     T.eval=[];
+    %     T.evalt=[];
     DS = dataset();
+    TDS = dataset();
     for i=1:numel(matfiles)
         % check if all data is with the same structure as described above
         % already done, and YES
@@ -198,18 +208,18 @@ try
         s.wrkspc = orderfields(s.wrkspc, {'Octal','DotRot','ImEval'});
         s.ques = orderfields(s.ques, {'LSAS','IRI'});
         tasks = fieldnames(s.wrkspc);
-
+        
         Disp(matfiles{i},mode.verbose);
         Disp(size(fieldnames(s.wrkspc)),mode.verbose);
         Disp(size(fieldnames(s.ques)),mode.verbose);
-
+        
         if mode.picture
             figure;
             set(gcf,'Units','normalized','Position',[0 0 1 1])
             pn = 2;
             pidx = reshape(1:numel(tasks)*pn,[],pn);
         end
-
+        
         for ii = 1:numel(tasks)
             Disp(tasks{ii},mode.verbose)
             Trials = s.wrkspc.(tasks{ii}).Trials;
@@ -221,7 +231,7 @@ try
                     Trials=Trials(fltr,:);
                     dur{i}.(tasks{ii}) = digest2(Trials(:,2),{Trials(:,1)}, {1:4},'mean');
                     durnorm{i}.(tasks{ii}) = digest2(Trials(:,3),{Trials(:,1)}, {1:4}, 'mean'); % RT stored here
-
+                    
                 case {'Octal','DotRot'}
                     if mode.keepnoresponse
                         validres = [0 3 4];
@@ -238,7 +248,7 @@ try
                 otherwise
                     error('what task is this?');
             end
-
+            
             if mode.picture
                 subplot(pn,numel(tasks),pidx(ii,1));
                 histfit(Trials(:,3));
@@ -252,40 +262,40 @@ try
             else
                 tmp=tabulate(Trials(:,2));
             end
-
-%             Disp(s.ques.LSAS.encode.scale(:,1)',mode.verbose);
-%             Disp([cell2mat(s.ques.LSAS.encode.scale(:,3))-24]',mode.verbose);
+            
             Disp(correct(s.ques.LSAS.encode.scale),mode.verbose);
             Disp(s.ques.IRI.encode.scale,mode.verbose);
-
+            
         end
-
+        
         if mode.picture
             title(['LSAShigh=' num2str(s.isForced==0) ':' matfiles{i}]);
         end
-
+        
         if mode.interactive
             iswanted = input('Include this sub for processing? 1 for yes, 0 for no:\n');
         else
             iswanted = 1;
         end
-
+        
         if iswanted
-            ids = singleds(s, dur, durnorm, durr, nshift, i);
+            [ids, itds] = singleds(s, dur, durnorm, durr, nshift, i);
             DS = [DS; ids];
+            TDS = [TDS; itds];
             Disp([matfiles{i} ' added!'],mode.verbose);
         else
             Disp([matfiles{i} ' skipped!'],mode.verbose);
         end
         Disp('-------------------',mode.verbose);
-
+        
         alldata{i} = s;
-
+        
+        
     end
-
-    export(DS,'file','data/Group/Whole/PLWGroup.csv','Delimiter',',');
-    disp('dataframe data/Group/Whole/PLWGroup.csv saved.');
-
+    
+        writeDS('PLWGroup', mode, DS);
+        writeDS('PLWGroupCollapsed', mode, TDS);
+    
 catch
     save buggy;
     rethrow(lasterror);
@@ -320,18 +330,18 @@ end
         % func: 'mean', 'sum'
         [dur, g] = grpstats(orig, origG, {func,'gname'}); %  cond: 4; resp: 0:no; 3-inward; 4-outward
         dur = [dur str2double(g)];
-
+        
         for j=1:numel(rulesC)
             cond(j)=numel(rulesC{j});
         end
         dur = fillhole(dur, cond, rulesC);
     end
 
-    function ids = singleds(s, dur, durnorm, durr, nshift, i)
+    function [ids, itds]= singleds(s, dur, durnorm, durr, nshift, i)
         % create dataset array
-
+        
         N = numel(dur{i}.Octal(:,2));
-
+        
         ds.id   = repmat(i,N,1);
         ds.name = repmat(cellstr(s.wrkspc.Octal.Subinfo{1}),N,1);
         ds.phone= repmat(cellstr(s.wrkspc.Octal.Subinfo{8}),N,1);
@@ -341,7 +351,7 @@ end
         ds.fear = repmat(s.ques.LSAS.encode.scale{1,3},N,1)-24;
         ds.avoid = repmat(s.ques.LSAS.encode.scale{2,3},N,1)-24;
         ds.LSAS = sum([ds.fear ds.avoid],2);
-        ds.LSAShigh = (ds.fear+ds.avoid)>29.1+17.3;
+        ds.LSAShigh = ds.LSAS>29.1+17.3;
         ds.PT = repmat(s.ques.IRI.encode.scale{1,3},N,1);
         ds.FS = repmat(s.ques.IRI.encode.scale{2,3},N,1);
         ds.EC = repmat(s.ques.IRI.encode.scale{3,3},N,1);
@@ -363,8 +373,33 @@ end
         ds.nshiftdot = nshift{i}.DotRot(:,1);
         ds.eval = reshape(repmat(dur{i}.ImEval(:,1),1,numel(unique(ds.restype)))',[],1);
         ds.evalt= reshape(repmat(durnorm{i}.ImEval(:,1),1,numel(unique(ds.restype)))',[],1);
-
+        
+        tds.id=i;
+        tds.name = cellstr(s.wrkspc.Octal.Subinfo{1});
+        tds.phone= cellstr(s.wrkspc.Octal.Subinfo{8});
+        tds.age  = str2double(s.wrkspc.Octal.Subinfo{2});
+        tds.gender=s.wrkspc.Octal.Subinfo{3};
+        tds.isForced = s.isForced;
+        tds.fear = s.ques.LSAS.encode.scale{1,3}-24;
+        tds.avoid = s.ques.LSAS.encode.scale{2,3}-24;
+        tds.LSAS = sum([tds.fear tds.avoid],2);
+        tds.LSAShigh = tds.LSAS>29.1+17.3;
+        tds.PT = s.ques.IRI.encode.scale{1,3};
+        tds.FS = s.ques.IRI.encode.scale{2,3};
+        tds.EC = s.ques.IRI.encode.scale{3,3};
+        tds.PD = s.ques.IRI.encode.scale{4,3};
+        tds.IRI = sum([tds.PT, tds.FS, tds.EC, tds.PD],2)';
+        tds.tplw=dur{i}.Octal(:,1)';
+        tds.tdot=dur{i}.DotRot(:,1)';
+        tds.tnormplw=durnorm{i}.Octal(:,1)';
+        tds.tnormdot=durnorm{i}.DotRot(:,1)';
+        tds.rdot=durr{i}.DotRot(:,1)';
+        tds.rplw=durr{i}.Octal(:,1)';
+        tds.nshiftplw=nshift{i}.Octal(:,1)';
+        tds.nshiftdot=nshift{i}.DotRot(:,1)';
+        
         ids = struct2dataset(ds);
+        itds = struct2dataset(tds);
     end
 
     function Disp(x, verbose)
@@ -381,4 +416,18 @@ end
             scale{ij,3}=scale{ij,3}-24;
         end
     end
+
+    function writeDS(fname, mode, DS)
+        if mode.write
+            fname=['data/Group/Whole/' fname];
+            if mode.keepnoresponse;
+                fname=[fname '_keep_nores.csv'];
+            else
+                fname=[fname '_delete_nores.csv'];
+            end
+            export(DS,'file',fname,'Delimiter',',');
+            Disp([fname 'saved.'],mode.verbose);
+        end
+    end
+
 end
