@@ -1,4 +1,4 @@
-function [DS, dur, durnorm, durr, TDS, alldata] = analysisGroupTask
+function [stat, alldata] = analysisGroupTask
 %% analyse Group task
 % input: all mat-files under data/Group/Whole/; see matfiles variable below
 % output:
@@ -177,7 +177,7 @@ response_type: 3, 4, 7*N
 mode.interactive = 0;
 mode.verbose = 0;
 mode.picture = 0;
-mode.keepnoresponse = 1;
+mode.keepnoresponse = 0;
 mode.write = 1;
 
 if mode.interactive
@@ -296,6 +296,21 @@ try
         writeDS('PLWGroup', mode, DS);
         writeDS('PLWGroupCollapsed', mode, TDS);
     
+        stat.ds = DS;
+        stat.tds = TDS;
+        stat.dur = dur;
+        stat.durnorm = durnorm;
+        stat.durr = durr;
+        
+        % now plot
+        grp.name = {'condition','LSAShigh','restype'};
+        grp.level = {{'负性','中性','正性','基线'},{'高分','低分'},{'朝里','朝外'},{'PLW','散点'}};
+        grp.data = {'tnormplw', 'tnormdot'};
+        grp.txy = {'','情绪面孔背景图片的语义分布','标准化持续主导时间/s'};
+        stat.xtabs = grpstats(DS, grp.name,{'mean','std'},'DataVars',grp.data);
+        
+        stat.plt = plthandle(stat, grp);
+        grpLine(stat.plt.x, stat.plt.idx, stat.plt.gnames, stat.plt.txy);
 catch
     save buggy;
     rethrow(lasterror);
@@ -428,6 +443,16 @@ end
             export(DS,'file',fname,'Delimiter',',');
             Disp([fname ' saved.'],mode.verbose);
         end
+    end
+
+    function plt = plthandle(stat, grp)
+        plt.idx = double(stat.xtabs(:,1:numel(grp.name)));
+        plt.idx = repmat(plt.idx, numel(grp.data),1);
+        plt.idx = [plt.idx [1*ones(size(plt.idx,1)/2,1); 2*ones(size(plt.idx,1)/2,1)]];
+        plt.x = [double(stat.xtabs(:,[end-3 end-2]));double(stat.xtabs(:,[end-1 end]))];
+        %  plt.gnames = {{'负性情绪','中性情绪','正性情绪','基线'},{'高焦虑组','低焦虑组'},{'朝里','朝外'},{'PLW群','散点群'}};
+        plt.gnames = grp.level;
+        plt.txy = grp.txy;
     end
 
 end
