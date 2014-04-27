@@ -58,7 +58,6 @@ function [stat, alldata] = analysisGroupTask
 %     6.6571    6.6571
 %    30.4061    6.6571
 
-
 %% description of the mat file
 % filename:     <name>_Whole<date>.mat
 % -- data stored in this file ---------------------------------------------
@@ -174,6 +173,7 @@ response_type: 3, 4, 7*N
 	7*N: for ImEvalTask, encoded as product of 7. e.g. if response is 4 indicating neutral, then response_type = 7*4 = 28
 %}
 
+%% Begin analysis
 mode.interactive = 0;
 mode.verbose = 0;
 mode.picture = 0;
@@ -182,23 +182,13 @@ mode.write = 1;
 
 if mode.interactive
     mode.verbose = 1;
-    mode.picture = 1;
+    mode.picture = 1; %picture for each sub
 end
 
 try
     matfiles = cellstr(ls('data/Group/Whole/*.mat'));
     % matfiles = {'liuyang_Whole1_19-Apr-2014.mat'};
     alldata = cell(numel(matfiles),1);
-    %     T.tplw=[];
-    %     T.tdot=[];
-    %     T.tnormplw=[];
-    %     T.tnormdot=[];
-    %     T.rdot=[];
-    %     T.rplw=[];
-    %     T.nshiftplw=[];
-    %     T.nshiftdot=[];
-    %     T.eval=[];
-    %     T.evalt=[];
     DS = dataset();
     TDS = dataset();
     for i=1:numel(matfiles)
@@ -302,15 +292,50 @@ try
         stat.durnorm = durnorm;
         stat.durr = durr;
         
-        % now plot
+%% now plot
+        
+        % export(grpstats(a.ds,{'condition','restype','LSAShigh'},{'mean','std'},'DataVars',{'tplw','tdot','tnormplw', 'tnormdot'}),'file','xtabs.csv','Delimiter',',');
+        grp.data = {'tnormplw', 'tnormdot'};
         grp.name = {'condition','LSAShigh','restype'};
         grp.level = {{'负性','中性','正性','基线'},{'高分','低分'},{'朝里','朝外'},{'PLW','散点'}};
-        grp.data = {'tnormplw', 'tnormdot'};
+        grp.fname = 'condLSASTaskDur';
         grp.txy = {'','情绪面孔背景图片的语义分布','标准化持续主导时间/s'};
-        stat.xtabs = grpstats(DS, grp.name,{'mean','std'},'DataVars',grp.data);
+        stat.xtabs{1} = grpstats(stat.ds, grp.name,{'mean','std'},'DataVars',grp.data);
+        stat.plt{1} = plthandle(stat.xtabs{1}, grp);
         
-        stat.plt = plthandle(stat, grp);
-        grpLine(stat.plt.x, stat.plt.idx, stat.plt.gnames, stat.plt.txy);
+        grp.data = {'nshiftplw', 'nshiftdot'};
+        grp.fname = 'condLSASTaskShift';
+        grp.txy = {'','情绪面孔背景图片的语义分布','知觉主导方向切换次数'};
+        stat.xtabs{3} = grpstats(stat.ds, grp.name,{'mean','std'},'DataVars',grp.data);
+        stat.plt{3} = plthandle(stat.xtabs{3}, grp);
+        
+        grp.data = {'tnormplw', 'tnormdot'};
+        grp.name = {'restype','LSAShigh'};
+        grp.level = {{'朝里','朝外'},{'高分','低分'},{'PLW','散点'}};
+        grp.fname = 'typeLSASDur';
+        grp.txy = {'','知觉主导方向（反应类型）','标准化持续主导时间/s'};
+        stat.xtabs{2} = grpstats(stat.ds, grp.name,{'mean','std'},'DataVars',grp.data);
+        stat.plt{2} = plthandle(stat.xtabs{2}, grp);
+        
+        grp.data = {'nshiftplw', 'nshiftdot'};
+        grp.fname = 'typeLSASShift';
+        grp.txy = {'','知觉主导方向（反应类型）','知觉主导方向切换次数'};
+        stat.xtabs{4} = grpstats(stat.ds, grp.name,{'mean','std'},'DataVars',grp.data);
+        stat.plt{4} = plthandle(stat.xtabs{4}, grp);
+        
+        for ih=1:4
+        h{ih}=grpLine(stat.plt{ih}.x, stat.plt{ih}.idx, stat.plt{ih}.gnames, stat.plt{ih}.txy);
+        if mode.write;
+            print(h{ih},'-djpeg','-r120',['tmp/' stat.plt{ih}.fname]);
+            Disp('image saved!', mode.verbose);
+        end
+        end
+
+        
+        stat.corr.name={'tplw','tdot','tnormplw', 'tnormdot', 'rplw', 'rdot', 'nshiftplw', 'nshiftdot', 'PT', 'EC', 'IRI', 'LSAS', 'fear', 'avoid'};
+        [stat.corr.r, stat.corr.p]=corr(double(grpstats(stat.ds,{'id'},{'mean'},'DataVars',stat.corr.name)));
+        corrLayer(stat.corr.r, stat.corr.p, ['id' 'count' stat.corr.name], 0.05, ~mode.verbose);
+        
 catch
     save buggy;
     rethrow(lasterror);
@@ -445,14 +470,15 @@ end
         end
     end
 
-    function plt = plthandle(stat, grp)
-        plt.idx = double(stat.xtabs(:,1:numel(grp.name)));
+    function plt = plthandle(xtabs, grp)
+        plt.idx = double(xtabs(:,1:numel(grp.name)));
         plt.idx = repmat(plt.idx, numel(grp.data),1);
         plt.idx = [plt.idx [1*ones(size(plt.idx,1)/2,1); 2*ones(size(plt.idx,1)/2,1)]];
-        plt.x = [double(stat.xtabs(:,[end-3 end-2]));double(stat.xtabs(:,[end-1 end]))];
+        plt.x = [double(xtabs(:,[end-3 end-2]));double(xtabs(:,[end-1 end]))];
         %  plt.gnames = {{'负性情绪','中性情绪','正性情绪','基线'},{'高焦虑组','低焦虑组'},{'朝里','朝外'},{'PLW群','散点群'}};
         plt.gnames = grp.level;
         plt.txy = grp.txy;
+        plt.fname = grp.fname;
     end
 
 end

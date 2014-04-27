@@ -1,4 +1,4 @@
-function grpLine(x, idx, gnames, txy)
+function h=grpLine(x, idx, gnames, txy)
 % plot different lines along with their errorbars
 % inputs: [x std], idx, {[group],[names],[]}
 
@@ -11,7 +11,7 @@ function grpLine(x, idx, gnames, txy)
 
 mode.errbar = 0;
 
-line.tex = {'-',':','-.','--'};
+line.tex = {'-','--','-.',':'};
 line.shape = {'^','v','o','x','+','*','s','.','d','<','>','p','h'};
 line.color = {'k', 'r', 'b', 'g', 'c', 'm', 'y', 'w'};
 
@@ -28,22 +28,43 @@ for igrp=1:size(idx,2)
     grp{igrp}=unique(idx(:,igrp));
 end
 
-for ispec = 1:numel(gnames{2})
-    for ishape = 1:numel(gnames{3})
-        for icolor = 1:numel(gnames{4})
-            linespec = [line.tex{ispec} line.shape{ishape} line.color{icolor}];
-            legtext=[legtext; [gnames{2}(ispec) '-' gnames{4}(icolor) '-' gnames{3}(ishape)]];
-            dotidx = idx(:,2)==grp{2}(ispec) & idx(:,3)==grp{3}(ishape) & idx(:,4)==grp{4}(icolor);
-            
-            % now, plot!
-            if mode.errbar
-                errorbar(1:numel(gnames{1}), y(dotidx), err(dotidx), linespec);
-            else
-                plot(1:numel(gnames{1}), y(dotidx), linespec);
+switch numel(gnames)
+    case 3
+        icolor=1;
+        for ispec = 1:numel(gnames{2})
+            for ishape = 1:numel(gnames{3})
+                linespec = [line.tex{ispec} line.shape{ishape} line.color{icolor}];
+                legtext=[legtext; [gnames{2}(ispec) '-' gnames{3}(ishape)]];
+                dotidx = idx(:,2)==grp{2}(ispec) & idx(:,3)==grp{3}(ishape);
+                
+                % now, plot!
+                if mode.errbar
+                    errorbar(1:numel(gnames{1}), y(dotidx), err(dotidx), linespec);
+                else
+                    plot(1:numel(gnames{1}), y(dotidx), linespec);
+                end
             end
         end
-    end
-    
+        
+    case 4
+        for ispec = 1:numel(gnames{2})
+            for ishape = 1:numel(gnames{3})
+                for icolor = 1:numel(gnames{4})
+                    linespec = [line.tex{ispec} line.shape{ishape} line.color{icolor}];
+                    legtext=[legtext; [gnames{2}(ispec) '-' gnames{4}(icolor) '-' gnames{3}(ishape)]];
+                    dotidx = idx(:,2)==grp{2}(ispec) & idx(:,3)==grp{3}(ishape) & idx(:,4)==grp{4}(icolor);
+                    
+                    % now, plot!
+                    if mode.errbar
+                        errorbar(1:numel(gnames{1}), y(dotidx), err(dotidx), linespec);
+                    else
+                        plot(1:numel(gnames{1}), y(dotidx), linespec);
+                    end
+                end
+            end
+        end
+    otherwise
+        error('how come?');
 end
 
 for iline=1:size((legtext),1)
@@ -59,6 +80,6 @@ box off;
 set(gca,'XTick', 1:numel(gnames{1}));
 set(gca,'XTickLabel', gnames{1});
 set(gcf,'Units','normalized','Position',[0 0 1 1])
-
+hold off;
 
 end
