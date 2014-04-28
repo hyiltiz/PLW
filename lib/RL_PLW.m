@@ -353,6 +353,7 @@ try
     %% Instructions
     DrawFormattedText(w, instrDB(render.task, mode.english_on), 'center', 'center', [255 255 255 255]);
     Screen('Flip', w);
+    Speak(sprintf(instrDB(render.task, mode.english_on)));
     pedalWait(mode.tactile_on, inf, render.kb);
     
     %% Here begins our trial
