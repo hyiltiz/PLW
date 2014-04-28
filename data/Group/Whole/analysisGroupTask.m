@@ -187,7 +187,6 @@ end
 
 try
     matfiles = cellstr(ls('data/Group/Whole/*.mat'));
-
     % the original subs
     %     matfiles = {'abduletif_Whole1_13-Apr-2014.mat','chenziyu_Whole1_19-Apr-2014.mat','dongyinan_Whole1_17-Apr-2014.mat','gaorenqiang_Whole1_20-Apr-2014.mat','guoyanlin_Whole1_19-Apr-2014.mat','jinchao_Whole1_19-Apr-2014.mat','lintingrui_Whole1_17-Apr-2014.mat','liuyang_Whole1_19-Apr-2014.mat','maoheting_Whole1_20-Apr-2014.mat','mominjan_Whole1_13-Apr-2014.mat','pahriya_Whole1_13-Apr-2014.mat','tanghuijuan_Whole1_20-Apr-2014.mat','wangsixue_Whole1_19-Apr-2014.mat','xuhuaxuan_Whole1_17-Apr-2014.mat','xumiaomiao_Whole1_19-Apr-2014.mat','yuzhanyuan_Whole1_18-Apr-2014.mat','zhanghuaigong_Whole1_18-Apr-2014.mat','zhanglinlin_Whole1_20-Apr-2014.mat','zhaoxiubo_Whole1_20-Apr-2014.mat','zhaoyutian_Whole1_17-Apr-2014.mat','zhengnanjian_Whole1_19-Apr-2014.mat','zhengqianning_Whole1_20-Apr-2014.mat'};
     alldata = cell(numel(matfiles),1);
@@ -277,11 +276,10 @@ try
             Disp([matfiles{i} ' added!'],mode.verbose);
         else
             Disp([matfiles{i} ' skipped!'],mode.verbose);
+            alldata{i} = s;
         end
+        close all;
         Disp('-------------------',mode.verbose);
-        
-        alldata{i} = s;
-        
         
     end
     
@@ -299,7 +297,11 @@ try
         % export(grpstats(a.ds,{'condition','restype','LSAShigh'},{'mean','std'},'DataVars',{'tplw','tdot','tnormplw', 'tnormdot'}),'file','xtabs.csv','Delimiter',',');
         grp.data = {'tnormplw', 'tnormdot'};
         grp.name = {'condition','LSAShigh','restype'};
-        grp.level = {{'负性','中性','正性','基线'},{'高分','低分'},{'朝里','朝外'},{'PLW','散点'}};
+        if mode.keepnoresponse
+            grp.level = {{'负性','中性','正性','基线'},{'高分','低分'},{'无反应','朝里','朝外'},{'PLW','散点'}};
+        else
+            grp.level = {{'负性','中性','正性','基线'},{'高分','低分'},{'朝里','朝外'},{'PLW','散点'}};
+        end
         grp.fname = 'condLSASTaskDur';
         grp.txy = {'','情绪面孔背景图片的语义分布','标准化持续主导时间/s'};
         stat.xtabs{1} = grpstats(stat.ds, grp.name,{'mean','std'},'DataVars',grp.data);
@@ -313,7 +315,11 @@ try
         
         grp.data = {'tnormplw', 'tnormdot'};
         grp.name = {'restype','LSAShigh'};
+        if mode.keepnoresponse
+            grp.level = {{'无反应','朝里','朝外'},{'高分','低分'},{'PLW','散点'}};
+        else
         grp.level = {{'朝里','朝外'},{'高分','低分'},{'PLW','散点'}};
+        end
         grp.fname = 'typeLSASDur';
         grp.txy = {'','知觉主导方向（反应类型）','标准化持续主导时间/s'};
         stat.xtabs{2} = grpstats(stat.ds, grp.name,{'mean','std'},'DataVars',grp.data);
@@ -439,6 +445,8 @@ end
         tds.rplw=durr{i}.Octal(:,1)';
         tds.nshiftplw=nshift{i}.Octal(:,1)';
         tds.nshiftdot=nshift{i}.DotRot(:,1)';
+        tds.eval=dur{i}.ImEval(:,1)';
+        tds.evalt=durnorm{i}.ImEval(:,1)';
         
         ids = struct2dataset(ds);
         itds = struct2dataset(tds);
