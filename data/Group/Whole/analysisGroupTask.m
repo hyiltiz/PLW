@@ -187,7 +187,9 @@ end
 
 try
     matfiles = cellstr(ls('data/Group/Whole/*.mat'));
-    % matfiles = {'liuyang_Whole1_19-Apr-2014.mat'};
+
+    % the original subs
+    %     matfiles = {'abduletif_Whole1_13-Apr-2014.mat','chenziyu_Whole1_19-Apr-2014.mat','dongyinan_Whole1_17-Apr-2014.mat','gaorenqiang_Whole1_20-Apr-2014.mat','guoyanlin_Whole1_19-Apr-2014.mat','jinchao_Whole1_19-Apr-2014.mat','lintingrui_Whole1_17-Apr-2014.mat','liuyang_Whole1_19-Apr-2014.mat','maoheting_Whole1_20-Apr-2014.mat','mominjan_Whole1_13-Apr-2014.mat','pahriya_Whole1_13-Apr-2014.mat','tanghuijuan_Whole1_20-Apr-2014.mat','wangsixue_Whole1_19-Apr-2014.mat','xuhuaxuan_Whole1_17-Apr-2014.mat','xumiaomiao_Whole1_19-Apr-2014.mat','yuzhanyuan_Whole1_18-Apr-2014.mat','zhanghuaigong_Whole1_18-Apr-2014.mat','zhanglinlin_Whole1_20-Apr-2014.mat','zhaoxiubo_Whole1_20-Apr-2014.mat','zhaoyutian_Whole1_17-Apr-2014.mat','zhengnanjian_Whole1_19-Apr-2014.mat','zhengqianning_Whole1_20-Apr-2014.mat'};
     alldata = cell(numel(matfiles),1);
     DS = dataset();
     TDS = dataset();
