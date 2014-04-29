@@ -187,8 +187,10 @@ end
 
 try
     matfiles = cellstr(ls('data/Group/Whole/*.mat'));
-    % the original subs
-    %     matfiles = {'abduletif_Whole1_13-Apr-2014.mat','chenziyu_Whole1_19-Apr-2014.mat','dongyinan_Whole1_17-Apr-2014.mat','gaorenqiang_Whole1_20-Apr-2014.mat','guoyanlin_Whole1_19-Apr-2014.mat','jinchao_Whole1_19-Apr-2014.mat','lintingrui_Whole1_17-Apr-2014.mat','liuyang_Whole1_19-Apr-2014.mat','maoheting_Whole1_20-Apr-2014.mat','mominjan_Whole1_13-Apr-2014.mat','pahriya_Whole1_13-Apr-2014.mat','tanghuijuan_Whole1_20-Apr-2014.mat','wangsixue_Whole1_19-Apr-2014.mat','xuhuaxuan_Whole1_17-Apr-2014.mat','xumiaomiao_Whole1_19-Apr-2014.mat','yuzhanyuan_Whole1_18-Apr-2014.mat','zhanghuaigong_Whole1_18-Apr-2014.mat','zhanglinlin_Whole1_20-Apr-2014.mat','zhaoxiubo_Whole1_20-Apr-2014.mat','zhaoyutian_Whole1_17-Apr-2014.mat','zhengnanjian_Whole1_19-Apr-2014.mat','zhengqianning_Whole1_20-Apr-2014.mat'};
+    % subs after I filered some out
+    % matfiles = {'LiuMingjie_Whole1_18-Apr-2014.mat','abduletif_Whole1_13-Apr-2014.mat','chentongsheng_Whole1_27-Apr-2014.mat','chenziyu_Whole1_19-Apr-2014.mat','dongyinan_Whole1_17-Apr-2014.mat','gaorenqiang_Whole1_20-Apr-2014.mat','guoyanlin_Whole1_19-Apr-2014.mat','hanya_Whole1_27-Apr-2014.mat','hongyanxue_Whole1_27-Apr-2014.mat','houhao_Whole1_27-Apr-2014.mat','jiangrongjie_Whole1_27-Apr-2014.mat','lintingrui_Whole1_17-Apr-2014.mat','liuziye_Whole1_27-Apr-2014.mat','lixixiao_Whole1_18-Apr-2014.mat','maoheting_Whole1_20-Apr-2014.mat','pahriya_Whole1_13-Apr-2014.mat','shisensen_Whole1_28-Apr-2014.mat','sunqisong_Whole1_27-Apr-2014.mat','tanghuijuan_Whole1_20-Apr-2014.mat','tangyating_Whole1_27-Apr-2014.mat','wangsixue_Whole1_19-Apr-2014.mat','xuhuaxuan_Whole1_17-Apr-2014.mat','xumiaomiao_Whole1_19-Apr-2014.mat','yuhuan_Whole1_27-Apr-2014.mat','yuzhanyuan_Whole1_18-Apr-2014.mat','zhaoxiubo_Whole1_20-Apr-2014.mat','zhaoyutian_Whole1_17-Apr-2014.mat','zhengguomao_Whole1_27-Apr-2014.mat','zhengqianning_Whole1_20-Apr-2014.mat'};
+    % the original subs before adding a whole bunch of subs
+    % matfiles = {'abduletif_Whole1_13-Apr-2014.mat','chenziyu_Whole1_19-Apr-2014.mat','dongyinan_Whole1_17-Apr-2014.mat','gaorenqiang_Whole1_20-Apr-2014.mat','guoyanlin_Whole1_19-Apr-2014.mat','jinchao_Whole1_19-Apr-2014.mat','lintingrui_Whole1_17-Apr-2014.mat','liuyang_Whole1_19-Apr-2014.mat','maoheting_Whole1_20-Apr-2014.mat','mominjan_Whole1_13-Apr-2014.mat','pahriya_Whole1_13-Apr-2014.mat','tanghuijuan_Whole1_20-Apr-2014.mat','wangsixue_Whole1_19-Apr-2014.mat','xuhuaxuan_Whole1_17-Apr-2014.mat','xumiaomiao_Whole1_19-Apr-2014.mat','yuzhanyuan_Whole1_18-Apr-2014.mat','zhanghuaigong_Whole1_18-Apr-2014.mat','zhanglinlin_Whole1_20-Apr-2014.mat','zhaoxiubo_Whole1_20-Apr-2014.mat','zhaoyutian_Whole1_17-Apr-2014.mat','zhengnanjian_Whole1_19-Apr-2014.mat','zhengqianning_Whole1_20-Apr-2014.mat'};
     alldata = cell(numel(matfiles),1);
     DS = dataset();
     TDS = dataset();
@@ -273,10 +275,11 @@ try
             [ids, itds] = singleds(s, dur, durnorm, durr, nshift, i);
             DS = [DS; ids];
             TDS = [TDS; itds];
+            alldata{i} = s;
+            stat.mfile{i} = matfiles{i};
             Disp([matfiles{i} ' added!'],mode.verbose);
         else
             Disp([matfiles{i} ' skipped!'],mode.verbose);
-            alldata{i} = s;
         end
         close all;
         Disp('-------------------',mode.verbose);
