@@ -4,7 +4,8 @@ if nargin < 2
     mode.debug_on = 0;
     mode.constantInstr_on = 0;
     mode.english_on = 0;
-    conf.instrWait = 20;
+    mode.recordImage = 0;
+    conf.instrWait = 2;
     conf.byetime = 3;
 end
 ques = quesDB(questionaire);
@@ -53,14 +54,17 @@ try
             % show instruction as a title for one session if needed
             DrawFormattedText(w, [ques.title{find(cell2mat(ques.title(:,1))==i>0, 1),2} '\n\n' sign.lang.rule], 'center', 'center', 255, inf);
             Screen('Flip', w);
+            if mode.recordImage; recordImage(1,1,[questionaire '_instr'] ,w,wsize);end
             WaitSecs(conf.instrWait);
             DrawFormattedText(w, [ques.title{find(cell2mat(ques.title(:,1))==i>0, 1),2} '\n\n' sign.lang.rule '\n\n' sign.lang.press], 'center', 'center', 255, inf);
             Screen('Flip', w);
+            if mode.recordImage; recordImage(1,1,[questionaire '_instr'] ,w,wsize);end
             pedalWait(0, inf, kb);
         end
         
         % here we callect each item idx with i; helper function
         [responseC{i}, restime(i)] =  oneItem(ques, i, w, wsize, kb, mode, conf, sign);
+        if mode.recordImage; recordImage(1,1,[questionaire],w,wsize);end
     end
     
     % any missing values present?
@@ -75,6 +79,7 @@ try
         WaitSecs(conf.byetime);
         Screen('Flip', w);
         pedalWait(0, inf, kb);
+        
     end
     while sum(isMissing) % we [still] have missing values
         responseM(isMissing) = NaN;

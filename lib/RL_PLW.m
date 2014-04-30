@@ -41,7 +41,6 @@ function [wrkspc] = RL_PLW(conf, mode, Subinfo)
 %   program was written.
 
 addpath('./data', './lib', './resources');
-format long;
 data.visualfilename = '07_01.data3d.txt'; % visaul data resource file
 
 
@@ -101,7 +100,7 @@ mode.audio_on           = 0;  % set audio stimuli on
 mode.RT_on              = 0;  % Reaction time mode, this is not to be changed!
 mode.usekb_on           = 0;  % force use keyboard for input (also suppress output from digitalIO)
 mode.debug_on           = 1;  % default is 0; 1 is not to use full screen, and skip the synch test
-
+mode.recordImage        = 0;  % make screen capture and save as images; used for post-hoc demo
 
 % evaluate the input arguments of this function
 if nargin > 0
@@ -134,7 +133,10 @@ if true % used for folding mode~conf variables
     end
     
     dataPrefix=[];
-    if mode.dotRot_on
+    if mode.simpleInOut_on
+        dataSuffix = [dataSuffix '_Simple_'];
+        render.task = 'Simple';
+    elseif mode.dotRot_on
         dataPrefix = ['Group/'];
         dataSuffix = [dataSuffix '_DotRot_'];
         render.task = 'DotRot';
@@ -353,7 +355,8 @@ try
     %% Instructions
     DrawFormattedText(w, instrDB(render.task, mode.english_on), 'center', 'center', [255 255 255 255]);
     Screen('Flip', w);
-    Speak(sprintf(instrDB(render.task, mode.english_on)));
+    if mode.recordImage; recordImage(1,1,[render.task '_instr'],w,render.wsize);end
+    if ~mode.debug_on;Speak(sprintf(instrDB(render.task, mode.english_on)));end
     pedalWait(mode.tactile_on, inf, render.kb);
     
     %% Here begins our trial
@@ -368,6 +371,7 @@ try
         if flow.Trial > 1
             WaitSecs(0.001);
             showLeftTrial(flow.Trialsequence, flow.Trial, w, render.wsize, mode.debug_on, mode.english_on, render.kb, 1, mode.tactile_on);
+            if mode.recordImage; recordImage(1,1,[render.task '_remaining'],w,render.wsize);end
         end
         flow.restcount = restBetweenTrial(flow.restcount, conf.resttime, conf.restpertrial, w, render.wsize, mode.debug_on, mode.english_on, render.kb, 1, mode.tactile_on);
         conf.waitBetweenTrials  =  .8+rand*0.2; % wait black screen between Trials, random
@@ -423,7 +427,9 @@ try
             % use the same maxdot for both PLW; the frame has to be the same
             testMirror(w, render.cx , render.cy, 255, [conf.xshift 0], data.maxdot);
         end % mirror tests
+        
         Screen('Flip',w);
+        if mode.recordImage; recordImage(1,1,[render.task '_mirror'],w,render.wsize); end
         
         % wait until the participant's mirror is ready
         if mode.octal_on
@@ -517,7 +523,7 @@ try
             % Flip the visual stimuli on the screen, along with timing
             % old = render.vlb;
             render.vlb = Screen('Flip', w, render.vlb + (1-0.5)*conf.flpi);%use the center of the interval
-            % recordImage(flow.Flip,10,'Mirror',w,render.wsize)
+            if mode.recordImage; recordImage(flow.Flip,10,render.task ,w,render.wsize);end
             % Display(old, render.vlb, render.vlb - old, length(data.Track),length(data.tTrack));
             % Screen('Flip', w);
             
