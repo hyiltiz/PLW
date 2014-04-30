@@ -174,19 +174,29 @@ response_type: 3, 4, 7*N
 %}
 
 %% Begin analysis
-mode.interactive = 0;
-mode.verbose = 0;
-mode.picture = 0;
 mode.keepnoresponse = 0;
+
+mode.interactive = 0;
+mode.verbose = 1;
+
 mode.write = 1;
+
+mode.picture = 0;
+mode.inspect = 0;
+mode.errbar = 1;
+mode.isline = 0;
 
 if mode.interactive
     mode.verbose = 1;
     mode.picture = 1; %picture for each sub
+    mode.inspect = 1;
 end
 
 try
-    matfiles = cellstr(ls('data/Group/Whole/*.mat'));
+    % all data files nto moved to tmp
+    % matfiles = cellstr(ls('data/Group/Whole/*.mat'));
+    % subs he suggested
+    matfiles = {'LiuMingjie_Whole1_18-Apr-2014.mat','abduletif_Whole1_13-Apr-2014.mat','chentongsheng_Whole1_27-Apr-2014.mat','dongyinan_Whole1_17-Apr-2014.mat','gaorenqiang_Whole1_20-Apr-2014.mat','guoyanlin_Whole1_19-Apr-2014.mat','hongyanxue_Whole1_27-Apr-2014.mat','houhao_Whole1_27-Apr-2014.mat','jiangrongjie_Whole1_27-Apr-2014.mat','jinchao_Whole1_19-Apr-2014.mat','lintingrui_Whole1_17-Apr-2014.mat','liuziye_Whole1_27-Apr-2014.mat','liweizhao_Whole1_18-Apr-2014.mat','lixixiao_Whole1_18-Apr-2014.mat','maoheting_Whole1_20-Apr-2014.mat','pahriya_Whole1_13-Apr-2014.mat','shisensen_Whole1_28-Apr-2014.mat','sunqisong_Whole1_27-Apr-2014.mat','tanghuijuan_Whole1_20-Apr-2014.mat','tangyating_Whole1_27-Apr-2014.mat','wangsixue_Whole1_19-Apr-2014.mat','xuhuaxuan_Whole1_17-Apr-2014.mat','xumiaomiao_Whole1_19-Apr-2014.mat','yuhuan_Whole1_27-Apr-2014.mat','yuzhanyuan_Whole1_18-Apr-2014.mat','zhanghuaigong_Whole1_18-Apr-2014.mat','zhanglinlin_Whole1_20-Apr-2014.mat','zhaoxiubo_Whole1_20-Apr-2014.mat','zhaoyutian_Whole1_17-Apr-2014.mat','zhengguomao_Whole1_27-Apr-2014.mat','zhengnanjian_Whole1_19-Apr-2014.mat'};
     % subs after I filered some out
     % matfiles = {'LiuMingjie_Whole1_18-Apr-2014.mat','abduletif_Whole1_13-Apr-2014.mat','chentongsheng_Whole1_27-Apr-2014.mat','chenziyu_Whole1_19-Apr-2014.mat','dongyinan_Whole1_17-Apr-2014.mat','gaorenqiang_Whole1_20-Apr-2014.mat','guoyanlin_Whole1_19-Apr-2014.mat','hanya_Whole1_27-Apr-2014.mat','hongyanxue_Whole1_27-Apr-2014.mat','houhao_Whole1_27-Apr-2014.mat','jiangrongjie_Whole1_27-Apr-2014.mat','lintingrui_Whole1_17-Apr-2014.mat','liuziye_Whole1_27-Apr-2014.mat','lixixiao_Whole1_18-Apr-2014.mat','maoheting_Whole1_20-Apr-2014.mat','pahriya_Whole1_13-Apr-2014.mat','shisensen_Whole1_28-Apr-2014.mat','sunqisong_Whole1_27-Apr-2014.mat','tanghuijuan_Whole1_20-Apr-2014.mat','tangyating_Whole1_27-Apr-2014.mat','wangsixue_Whole1_19-Apr-2014.mat','xuhuaxuan_Whole1_17-Apr-2014.mat','xumiaomiao_Whole1_19-Apr-2014.mat','yuhuan_Whole1_27-Apr-2014.mat','yuzhanyuan_Whole1_18-Apr-2014.mat','zhaoxiubo_Whole1_20-Apr-2014.mat','zhaoyutian_Whole1_17-Apr-2014.mat','zhengguomao_Whole1_27-Apr-2014.mat','zhengqianning_Whole1_20-Apr-2014.mat'};
     % the original subs before adding a whole bunch of subs
@@ -202,9 +212,9 @@ try
         s.ques = orderfields(s.ques, {'LSAS','IRI'});
         tasks = fieldnames(s.wrkspc);
         
-        Disp(matfiles{i},mode.verbose);
-        Disp(size(fieldnames(s.wrkspc)),mode.verbose);
-        Disp(size(fieldnames(s.ques)),mode.verbose);
+        Disp(matfiles{i},mode.inspect);
+        Disp(size(fieldnames(s.wrkspc)),mode.inspect);
+        Disp(size(fieldnames(s.ques)),mode.inspect);
         
         if mode.picture
             figure;
@@ -214,7 +224,7 @@ try
         end
         
         for ii = 1:numel(tasks)
-            Disp(tasks{ii},mode.verbose)
+            Disp(tasks{ii},mode.inspect);
             Trials = s.wrkspc.(tasks{ii}).Trials;
             switch tasks{ii}
                 case 'ImEval'
@@ -250,14 +260,10 @@ try
                 % boxplot(Trials(:,3),[Trials(:,2)]);
                 xlabel(tasks{ii});
             end
-            if mode.verbose
-                tabulate(Trials(:,2));
-            else
-                tmp=tabulate(Trials(:,2));
-            end
+            if mode.inspect;tabulate(Trials(:,2));end
             
-            Disp(correct(s.ques.LSAS.encode.scale),mode.verbose);
-            Disp(s.ques.IRI.encode.scale,mode.verbose);
+            Disp(correct(s.ques.LSAS.encode.scale),mode.inspect);
+            Disp(s.ques.IRI.encode.scale,mode.inspect);
             
         end
         
@@ -334,11 +340,14 @@ try
         stat.xtabs{4} = grpstats(stat.ds, grp.name,{'mean','std'},'DataVars',grp.data);
         stat.plt{4} = plthandle(stat.xtabs{4}, grp);
         
+        if mode.isline;prefix=['lines'];else;prefix=['bars'];end
         for ih=1:4
-        h{ih}=grpLine(stat.plt{ih}.x, stat.plt{ih}.idx, stat.plt{ih}.gnames, stat.plt{ih}.txy);
+        h{ih}=grpLine(stat.plt{ih}.x, stat.plt{ih}.idx, stat.plt{ih}.gnames, stat.plt{ih}.txy, mode);
         if mode.write;
-            print(h{ih},'-djpeg','-r120',['tmp/' stat.plt{ih}.fname]);
-            Disp('image saved!', mode.verbose);
+            picname = ['tmp/' prefix '_' stat.plt{ih}.fname];
+            set(gcf,'PaperPositionMode','auto');
+            print(h{ih},'-dpng','-r120',picname);
+            Disp([picname 'image saved!'], mode.verbose);
         end
         end
 
@@ -488,6 +497,7 @@ end
         plt.idx = repmat(plt.idx, numel(grp.data),1);
         plt.idx = [plt.idx [1*ones(size(plt.idx,1)/2,1); 2*ones(size(plt.idx,1)/2,1)]];
         plt.x = [double(xtabs(:,[end-3 end-2]));double(xtabs(:,[end-1 end]))];
+        plt.x(:,2) = plt.x(:,2)./repmat(sqrt(double(xtabs(:,4))),2,1); % sem, not std
         %  plt.gnames = {{'负性情绪','中性情绪','正性情绪','基线'},{'高焦虑组','低焦虑组'},{'朝里','朝外'},{'PLW群','散点群'}};
         plt.gnames = grp.level;
         plt.txy = grp.txy;
