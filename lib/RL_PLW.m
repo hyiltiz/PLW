@@ -356,7 +356,7 @@ try
     DrawFormattedText(w, instrDB(render.task, mode.english_on), 'center', 'center', [255 255 255 255]);
     Screen('Flip', w);
     if mode.recordImage; recordImage(1,1,[render.task '_instr'],w,render.wsize);end
-%     if ~mode.debug_on;Speak(sprintf(instrDB(render.task, mode.english_on)));end
+    if ~mode.debug_on;Speak(sprintf(instrDB(render.task, mode.english_on)));end
     pedalWait(mode.tactile_on, inf, render.kb);
     
     %% Here begins our trial
