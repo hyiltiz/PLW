@@ -8,21 +8,40 @@ end
 % weight of each type of images
 % gender is normalized, only control emotion
 % for now, no neutral face used
+% switch condition
+%     case 1
+%         % anger
+%         weight = [6 0 2 0];
+%     case 2
+%         % balanced
+%         % SHOULD WE USE NEUTRAL FACES INSTEAD?
+%         %             weight = [4 0 4];
+%         weight = [0 8 0 0];
+%     case 3
+%         % happy
+%         weight = [2 0 6 0];
+%     case 4
+%         % no image here; return blank image path
+%         weight = [0 0 0 8];
+%     otherwise
+%         error ('invalid condition!');
+% end
+
 switch condition
     case 1
         % anger
-        weight = [6 0 2];
+        weight = [1 0 0 0];
     case 2
         % balanced
         % SHOULD WE USE NEUTRAL FACES INSTEAD?
         %             weight = [4 0 4];
-        weight = [0 8 0];
+        weight = [0 1 0 0];
     case 3
         % happy
-        weight = [2 0 6];
+        weight = [1 0 0 0];
     case 4
         % no image here; return blank image path
-        weight = 0;
+        weight = [0 0 0 1];
     otherwise
         error ('invalid condition!');
 end
@@ -55,10 +74,10 @@ genders = {'male', 'female'};
 ggee = {'M' 'F'};
 
 path = './resources/facestimuli/';
-paths = cell(8,1);
-imnames = cell(8,1);
+paths = cell(sum(weight),1);
+imnames = cell(sum(weight),1);
 
-if weight==0
+if ~sum(weight(1:3))
     % return blank page
     imname = 'BLANK';
     path = [path imname];

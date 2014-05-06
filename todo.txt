@@ -1,5 +1,4 @@
 Why MATLAB/linux is crashing everytime, complaining some MEX problem? DotRotDemo() is not crashing it, Octave/GNU is not, neither...and Windows MATLAB is just all right
 
 408: zhengyunyi: no DotRot, LSAS, ImEval data
-tanghuijuan, zhaoxiubo should be merged as Whole
-zhanglinlin told ImEval 2,2 should be encoded fromn 1, not 7
+grpLine without switch-case

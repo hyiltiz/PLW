@@ -60,7 +60,7 @@ conf.trialdur           =  70;          % duration time for every trial
 conf.repetitions        =  5;           % repetition time of a condition
 conf.resttime           =  30;          % rest for 30s
 conf.restpertrial       =  1;           % every x trial a rest
-conf.nPLWs              =  8;           % how many PLWs to draw on screen in a circle
+conf.nPLWs              =  1;           % how many PLWs to draw on screen in a circle
 conf.clockR             =  .75;         % clock, with the center of the screen as (0,0), in pr coordination system
 conf.raster             =  [1 0];       % visual and masked data raster for x y;
 conf.alphaFace          =  0.1;         % alpha transparency for face stimuli
@@ -356,7 +356,7 @@ try
     DrawFormattedText(w, instrDB(render.task, mode.english_on), 'center', 'center', [255 255 255 255]);
     Screen('Flip', w);
     if mode.recordImage; recordImage(1,1,[render.task '_instr'],w,render.wsize);end
-    if ~mode.debug_on;Speak(sprintf(instrDB(render.task, mode.english_on)));end
+%     if ~mode.debug_on;Speak(sprintf(instrDB(render.task, mode.english_on)));end
     pedalWait(mode.tactile_on, inf, render.kb);
     
     %% Here begins our trial
@@ -406,7 +406,8 @@ try
             % xy0~PLWwidth; imagePath~conditon;
             [data.imagePaths data.imnames{flow.Trial}]= imList(flow.Trialsequence(flow.Trial), 0);
             for iFaces = 1:conf.nPLWs
-                [render.texface{iFaces} render.faceRect{iFaces}] = addImage(w, render.wsize, data.clockarm(iFaces,1), data.clockarm(iFaces,2), [render.cx render.cy]/4, data.imagePaths{iFaces}, conf.raster, conf.alphaFace);
+                %  [render.texface{iFaces} render.faceRect{iFaces}] = addImage(w, render.wsize, data.clockarm(iFaces,1), data.clockarm(iFaces,2), [render.cx render.cy]/4, data.imagePaths{iFaces}, conf.raster, conf.alphaFace);
+                [render.texface{iFaces} render.faceRect{iFaces}] = addImage(w, render.wsize, render.cx, render.cy, [render.cx render.cy], data.imagePaths{iFaces}, conf.raster, conf.alphaFace);
             end
         end
         
