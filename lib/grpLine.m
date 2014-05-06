@@ -1,7 +1,6 @@
 function h=grpLine(x, idx, gnames, txy, mode)
 % plot different lines along with their errorbars
 % inputs: [x std], idx, {[group],[names],[]}
-
 % the first idx is x axis, or used for grouping for bar chart
 % second is line type
 % third is dot shape
@@ -32,6 +31,8 @@ for igrp=1:size(idx,2)
 end
 
 % TODO: these switches could also be capsuled in a control loop
+% this can be recursive
+% or can be written via matrix manipulation
 switch numel(gnames)
     case 3
         icolor=1;
