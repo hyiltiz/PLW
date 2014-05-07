@@ -133,10 +133,10 @@ if true % used for folding mode~conf variables
     end
     
     dataPrefix=[];
-    if mode.simpleInOut_on
-        dataSuffix = [dataSuffix '_Simple_'];
-        render.task = 'Simple';
-    elseif mode.dotRot_on
+%     if mode.simpleInOut_on
+%         dataSuffix = [dataSuffix '_Simple_'];
+%         render.task = 'Simple';
+    if mode.dotRot_on
         dataPrefix = ['Group/'];
         dataSuffix = [dataSuffix '_DotRot_'];
         render.task = 'DotRot';
