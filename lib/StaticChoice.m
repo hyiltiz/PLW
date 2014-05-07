@@ -8,6 +8,7 @@ if nargin < 2
     conf.instrWait = 2;
     conf.byetime = 3;
 end
+mode.recordImage = 0;
 ques = quesDB(questionaire);
 
 sign.en.bye  = ['Thanks for your participation, goodbye!'];
