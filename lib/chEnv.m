@@ -9,8 +9,8 @@ function chEnv(env, val)
 % 
 % calls                     purpose
 % chEnv('debug', '1');      %set the environment for debugging:mode.debug_on
-% chEng('flpi', '0.02');    %sets flip interval to 50Hz, for LCD; this does does not change whole env to debug=1, differing from above
-% chEng('debug', '0');      %for normal experiment, also sets conf.flpi=0.02 automatically
+% chEnv('flpi', '0.02');    %sets flip interval to 50Hz, for LCD; this does does not change whole env to debug=1, differing from above
+% chEnv('debug', '0');      %for normal experiment, also sets conf.flpi=0.02 automatically
 % chEnv('flpi', '0.01');    %this can only be used for experiment with CRT
 
 
