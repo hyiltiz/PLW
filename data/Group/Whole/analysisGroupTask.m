@@ -179,12 +179,14 @@ mode.keepnoresponse = 0;
 mode.interactive = 0;
 mode.verbose = 1;
 
-mode.write = 1;
+mode.write = 0;
 
 mode.picture = 0;
 mode.inspect = 0;
+mode.meanpic = 1;
 mode.errbar = 1;
 mode.isline = 0;
+
 
 if mode.interactive
     mode.verbose = 1;
@@ -201,6 +203,9 @@ try
     % matfiles = {'LiuMingjie_Whole1_18-Apr-2014.mat','abduletif_Whole1_13-Apr-2014.mat','chentongsheng_Whole1_27-Apr-2014.mat','chenziyu_Whole1_19-Apr-2014.mat','dongyinan_Whole1_17-Apr-2014.mat','gaorenqiang_Whole1_20-Apr-2014.mat','guoyanlin_Whole1_19-Apr-2014.mat','hanya_Whole1_27-Apr-2014.mat','hongyanxue_Whole1_27-Apr-2014.mat','houhao_Whole1_27-Apr-2014.mat','jiangrongjie_Whole1_27-Apr-2014.mat','lintingrui_Whole1_17-Apr-2014.mat','liuziye_Whole1_27-Apr-2014.mat','lixixiao_Whole1_18-Apr-2014.mat','maoheting_Whole1_20-Apr-2014.mat','pahriya_Whole1_13-Apr-2014.mat','shisensen_Whole1_28-Apr-2014.mat','sunqisong_Whole1_27-Apr-2014.mat','tanghuijuan_Whole1_20-Apr-2014.mat','tangyating_Whole1_27-Apr-2014.mat','wangsixue_Whole1_19-Apr-2014.mat','xuhuaxuan_Whole1_17-Apr-2014.mat','xumiaomiao_Whole1_19-Apr-2014.mat','yuhuan_Whole1_27-Apr-2014.mat','yuzhanyuan_Whole1_18-Apr-2014.mat','zhaoxiubo_Whole1_20-Apr-2014.mat','zhaoyutian_Whole1_17-Apr-2014.mat','zhengguomao_Whole1_27-Apr-2014.mat','zhengqianning_Whole1_20-Apr-2014.mat'};
     % the original subs before adding a whole bunch of subs
     % matfiles = {'abduletif_Whole1_13-Apr-2014.mat','chenziyu_Whole1_19-Apr-2014.mat','dongyinan_Whole1_17-Apr-2014.mat','gaorenqiang_Whole1_20-Apr-2014.mat','guoyanlin_Whole1_19-Apr-2014.mat','jinchao_Whole1_19-Apr-2014.mat','lintingrui_Whole1_17-Apr-2014.mat','liuyang_Whole1_19-Apr-2014.mat','maoheting_Whole1_20-Apr-2014.mat','mominjan_Whole1_13-Apr-2014.mat','pahriya_Whole1_13-Apr-2014.mat','tanghuijuan_Whole1_20-Apr-2014.mat','wangsixue_Whole1_19-Apr-2014.mat','xuhuaxuan_Whole1_17-Apr-2014.mat','xumiaomiao_Whole1_19-Apr-2014.mat','yuzhanyuan_Whole1_18-Apr-2014.mat','zhanghuaigong_Whole1_18-Apr-2014.mat','zhanglinlin_Whole1_20-Apr-2014.mat','zhaoxiubo_Whole1_20-Apr-2014.mat','zhaoyutian_Whole1_17-Apr-2014.mat','zhengnanjian_Whole1_19-Apr-2014.mat','zhengqianning_Whole1_20-Apr-2014.mat'};
+    
+    % single face subs
+%     matfiles = {'changzhao_Whole1_07-May-2014.mat','guoxin_Whole1_07-May-2014.mat','liangxiao_Whole1_07-May-2014.mat','zhangfengqiang_Whole1_07-May-2014.mat'};
     alldata = cell(numel(matfiles),1);
     DS = dataset();
     TDS = dataset();
@@ -292,8 +297,8 @@ try
         
     end
     
-        writeDS('PLWGroup', mode, DS);
-        writeDS('PLWGroupCollapsed', mode, TDS);
+        writeDS('PLWGroup-single', mode, DS);
+        writeDS('PLWGroupCollapsed-single', mode, TDS);
     
         stat.ds = DS;
         stat.tds = TDS;
@@ -307,9 +312,9 @@ try
         grp.data = {'tnormplw', 'tnormdot'};
         grp.name = {'condition','LSAShigh','restype'};
         if mode.keepnoresponse
-            grp.level = {{'负性','中性','正性','基线'},{'高分','低分'},{'无反应','朝里','朝外'},{'PLW','散点'}};
+            grp.level = {{'负性','中性','正性','基线'},{'低焦虑','高焦虑'},{'无反应','朝里','朝外'},{'PLW','散点'}};
         else
-            grp.level = {{'负性','中性','正性','基线'},{'高分','低分'},{'朝里','朝外'},{'PLW','散点'}};
+            grp.level = {{'负性','中性','正性','基线'},{'低焦虑','高焦虑'},{'朝里','朝外'},{'PLW','散点'}};
         end
         grp.fname = 'condLSASTaskDur';
         grp.txy = {'','情绪面孔背景图片的语义分布','标准化持续主导时间/s'};
@@ -325,9 +330,9 @@ try
         grp.data = {'tnormplw', 'tnormdot'};
         grp.name = {'restype','LSAShigh'};
         if mode.keepnoresponse
-            grp.level = {{'无反应','朝里','朝外'},{'高分','低分'},{'PLW','散点'}};
+            grp.level = {{'无反应','朝里','朝外'},{'低焦虑','高焦虑'},{'PLW','散点'}};
         else
-        grp.level = {{'朝里','朝外'},{'高分','低分'},{'PLW','散点'}};
+        grp.level = {{'朝里','朝外'},{'低焦虑','高焦虑'},{'PLW','散点'}};
         end
         grp.fname = 'typeLSASDur';
         grp.txy = {'','知觉主导方向（反应类型）','标准化持续主导时间/s'};
@@ -340,6 +345,7 @@ try
         stat.xtabs{4} = grpstats(stat.ds, grp.name,{'mean','std'},'DataVars',grp.data);
         stat.plt{4} = plthandle(stat.xtabs{4}, grp);
         
+        if mode.meanpic
         if mode.isline;prefix=['lines'];else;prefix=['bars'];end
         for ih=1:4
         h{ih}=grpLine(stat.plt{ih}.x, stat.plt{ih}.idx, stat.plt{ih}.gnames, stat.plt{ih}.txy, mode);
@@ -350,11 +356,12 @@ try
             Disp([picname 'image saved!'], mode.verbose);
         end
         end
+        end
 
         
         stat.corr.name={'tplw','tdot','tnormplw', 'tnormdot', 'rplw', 'rdot', 'nshiftplw', 'nshiftdot', 'PT', 'EC', 'IRI', 'LSAS', 'fear', 'avoid'};
         [stat.corr.r, stat.corr.p]=corr(double(grpstats(stat.ds,{'id'},{'mean'},'DataVars',stat.corr.name)));
-        corrLayer(stat.corr.r, stat.corr.p, ['id' 'count' stat.corr.name], 0.05, ~mode.verbose);
+        if mode.meanpic;corrLayer(stat.corr.r, stat.corr.p, ['id' 'count' stat.corr.name], 0.05, ~mode.verbose);end
         
 catch
     save buggy;

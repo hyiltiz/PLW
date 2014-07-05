@@ -16,6 +16,7 @@
 clear all;
 close all;
 time_on = 1;  % 0: do NOT plot for response time
+fontsize = 28;
 encode_on = 1; % encoding for resp type; always set this to 1
 
 subs.all = {'luobinfengMirrorD_simple_09-Oct-2013.mat','zhaoyapingMirrorD_simple_08-Oct-2013.mat','eparMirrorD_simple_ColorBalance_29-Sep-2013.mat','zhengmeiMirrorD_simple_08-Oct-2013.mat','wanghuiMirrorD_simple_09-Oct-2013.mat','wanglinMirrorD_simple_09-Oct-2013.mat','zhaoyuanMirrorD_simple_08-Oct-2013.mat','liyawenMirrorD_simple_08-Oct-2013.mat','cuihaoMirrorD_simple_08-Oct-2013.mat','hujiyingMirrorD_simple_09-Oct-2013.mat','zhoupengMirrorD_simple_09-Oct-2013.mat','liuzhaoMirrorD_simple_ColorBalance_08-Oct-2013.mat','lichenMirrorD_simple_13-Oct-2013.mat','chenxiyueMirrorD_simple_13-Oct-2013.mat','penghuilinMirrorD_simple_12-Oct-2013.mat','fushenjiangMirrorD_simple_12-Oct-2013.mat','zhouyifanMirrorD_simple_12-Oct-2013.mat','chenpeikaiMirrorD_simple_13-Oct-2013.mat','yuanhuibangMirrorD_simple_13-Oct-2013.mat','chenxinyanMirrorD_simple_13-Oct-2013.mat','xulihuaMirrorD_simple_08-Oct-2013.mat','zhengqianningMirrorD_simple_09-Oct-2013.mat','sihongweiMirrorD_simple_09-Oct-2013.mat','renshanshanMirrorD_simple_09-Oct-2013.mat','mesudeMirrorD_simple_ColorBalance_29-Sep-2013.mat','yuhongfengMirrorD_simple_08-Oct-2013.mat','zhangzehuaMirrorD_simple_08-Oct-2013.mat','zhufengfengMirrorD_simple_09-Oct-2013.mat','huohuifangMirrorD_simple_08-Oct-2013.mat','diaoruochenMirrorD_simple_08-Oct-2013.mat','litianyiMirrorD_simple_ColorBalance_08-Oct-2013.mat','wangzhongruiMirrorD_simple_08-Oct-2013.mat','chengchengMirrorD_simple_12-Oct-2013.mat','chenjunMirrorD_simple_13-Oct-2013.mat','zhaokaiMirrorD_simple_13-Oct-2013.mat','hujuntaoMirrorD_simple_13-Oct-2013.mat','wangkangdaMirrorD_simple_13-Oct-2013.mat','hanjiayunMirrorD_simple_13-Oct-2013.mat','libixingMirrorD_simple_13-Oct-2013.mat','hansiqiMirrorD_simple_13-Oct-2013.mat'};
@@ -223,7 +224,7 @@ for iwhichsub = 1:numel(whichsub)
         if time_on
             %             plot(1:4, dur1);
             ylabel('duration (s)');
-            ylabel('标准化主导方向持续时间(s)');
+            ylabel('标准化主导方向持续时间(s)','FontSize',fontsize);
             %         else
             %             plot(1:4, tbl1,'rs-');
             %             plot(1:4, tbl2,'s-.');
@@ -231,13 +232,13 @@ for iwhichsub = 1:numel(whichsub)
         end;
 
         hold off;
-        xlabel('tactile conditions');
-        xlabel('实验触觉条件');
+        xlabel('tactile conditions','FontSize',fontsize);
+        xlabel('实验触觉条件','FontSize',fontsize);
         set(gca,'Xtick',1:4);
-        %     set(gca,'XtickLabel',{'Incongruent','Congruent','Sync', 'Baseline'});
+        %     set(gca,'XtickLabel',{'Incongruent','Congruent','Sync', 'Baseline'},'FontSize',fontsize);
         %         title(whichsub{iwhichsub});
         %         title(thesubs{isub});
-        set(gca,'XtickLabel',{'不一致','一致','同时', '基线（无触觉刺激）'});
+        set(gca,'XtickLabel',{'不一致','一致','同时', '基线（无触觉刺激）'},'FontSize',fontsize);
 
 
         %print(gcf, '-dpng', ['/scratch/' 'response_time' subs{isub} '.png']);
@@ -262,30 +263,37 @@ for iwhichsub = 1:numel(whichsub)
         fullDur{iwhichsub} = Dur;
         %         keyboard
         tickopt = {'k>-','ks--'};
-        plot(1:4, mean(Dur),tickopt{iwhichsub});
+%         plot(1:4, mean(Dur),tickopt{iwhichsub});
+        errorbar(1:4,mean(Dur),std(Dur)/sqrt(size(Dur,1)),tickopt{iwhichsub},'MarkerSize',fontsize/2);
         %     plot(1:4, Dur2avr','s-.');
-        ylabel('duration (s)');
-        ylabel('标准化主导方向持续时间(s)');
-        ylabel('Standardized Dominant Duration (s)');
+        ylabel('duration (s)','FontSize',fontsize);
+        ylabel('标准化主导方向持续时间(s)','FontSize',fontsize);
+%         ylabel('Standardized Dominant Duration (s
 
     else
         plot(1:4, mean(Table(:,[1:4])),'rs-');
         plot(1:4, mean(Table(:,[5:8])),'s-');
-        ylabel('number of responses');
+        ylabel('number of responses','FontSize',fontsize);
     end
     %     hold off;
     %     legend('Incong','Cong');
-    xlabel('实验触觉条件');
-    xlabel('Tactile Conditions');
+    xlabel('Tactile Conditions','FontSize',fontsize);
+    xlabel('实验触觉条件','FontSize',fontsize);
     set(gca,'Xtick',1:4);
-    %     set(gca,'XtickLabel',{'一致','不一致','同时', '基线（无触觉刺激）'});
     set(gca,'XtickLabel',{'Incongruent','Congruent','Sync', 'Baseline'});
-
-    % errorbar(1:4,mean(Dur),std(Dur))
+    set(gca,'XtickLabel',{'一致','不一致','同时', '基线（无触觉刺激）'});
+    
 
 end
 legend('Low EC','High EC');
+% legend('观点采择低分','观点采择高分');
+legend('共情关注低分','共情关注高分');
 legend('boxoff')
-print(gcf, '-dpng', [pwd '\..\tmp\mean_standardized_' whichsub{iwhichsub} '.png']);
+% set(gcf,'Units','normalized','Position',[0 0 1 1])
+set(gcf, 'Position', get(0, 'ScreenSize'));
+set(gca,'FontSize',fontsize);
+set(gcf,'PaperPositionMode','auto');
+
+print(gcf, '-dpng', [pwd '\tmp\mean_standardized_' whichsub{iwhichsub} '.png']);
 %     figure
 

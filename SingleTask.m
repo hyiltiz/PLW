@@ -1,6 +1,6 @@
-function wrkspc = OctalTask(is_once_on, Subinfo)
+function wrkspc = SingleTask(is_once_on, Subinfo)
 % octal task, pass in 1 for demo with only one trial, or just run it with no input;
-% displays 8 PLW with emotional face stumuli
+% displays 1 PLW with emotional face stumuli
 
 
 % time setting vatiables
@@ -14,7 +14,7 @@ conf.restpertrial       =  5;           % every x trial a rest
 conf.tiltangle          =  20;           % tilt angle for simulating 3D stereo display
 conf.doubleTactileDiff  =  10;          % flips between taps on one tactile stimuli (double tactile);0 to disable
 conf.clockR             =  .5;         % clock, with the center of the screen as (0,0), in pr coordination system
-conf.nPLWs              = 8;
+conf.nPLWs              = 1;
 
 
 % state control variables
@@ -24,7 +24,7 @@ mode.dotRot_on     = 0;  % Use dot rot or not; depends on octal_on=1;
 mode.colorbalance_on=1;  % balance the color of the target PLW, which is by default red
 mode.mirror_on     = 1;  % use mirror rather that spectacles for binacular rivalry
 mode.many_on       = 0;  % the task is the majority of dots the participant saw
-mode.simpleInOut_on= 0;  % simple InOut exp, with the same tactile stimuli for both foot
+mode.simpleInOut_on= 1;  % simple InOut exp, with the same tactile stimuli for both foot
 mode.english_on    = 0;  % use English for Instructions etc., 0 for Chinese(not supported for now!)
 
 if nargin > 0
