@@ -13,7 +13,7 @@
 % value-right
 % eight subs, delete zhaohongyu(3),fenglili(7),yangzhiqiang(12)
 subs={'lixiaofengMirrorD12-Jan-2013.mat','liujunyangMirrorD13-Jan-2013.mat','ywjMirrorD13-Jan-2013.mat','zhangzitengMirrorD20-Jan-2013.mat','zhangfengqiangMirrorD20-Jan-2013.mat','liuweiMirrorD20-Jan-2013.mat','yumeilingMirrorD19-Jan-2013.mat','wangdanMirrorD19-Jan-2013.mat','yeshaoqiangMirrorD26-Jan-2013.mat','maqianliMirrorD27-Jan-2013.mat','songyuchenMirrorD03-Mar-2013.mat','sundanMirrorD03-Mar-2013.mat','zhaolijianMirrorD02-Mar-2013.mat','guoxinMirrorD02-Mar-2013.mat','zhouyanlingMirrorD03-Mar-2013.mat'};
-
+% subs = {'hejiahuanMirrorD26-Jan-2013.mat', 'zhangliboMirrorD18-Mar-2013.mat'};
 
 Dur=[];
 Data=[];
@@ -144,7 +144,7 @@ end
     %    redPLWinvertcong=(dur1(:,6)+dur2(:,6))/2;
     %    redPLWinvertincong=(dur1(:,8)+dur2(:,8))/2;
 
-    if 0
+    if 1
     figure;
     hold on;
     plot(1:4, dur1(:,1),'rs-');
