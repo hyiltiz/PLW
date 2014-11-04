@@ -16,6 +16,7 @@ try
     mode.english_on = 0;
     conf.instrWait = 20;
     conf.byetime = 3;
+    mode.recordImage = 0;
     % init static choice:end
     
     isForced = 0;
@@ -24,7 +25,7 @@ try
 
     Subinfo = getSubInfo();
 
-    ques.LSAS = StaticChoice('LSAS', mode, conf);
+    ques.LSAS = StaticChoice('test', mode, conf);
 
     if ~ques.LSAS.isOK
         % backdoor, manually continue

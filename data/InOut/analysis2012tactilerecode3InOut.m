@@ -29,10 +29,12 @@ subs={'anshuaiMirrorD_InOut_17-Sep-2013.mat','cuizhenpengMirrorD_InOut_15-Sep-20
 Dur=[];
 Table=[];% collect response switches
 Data=[];
+age = [];
 for isub=1:length(subs)
     Durtemp=[]; % temp for transform
     dur=[]; % store data;
-    load(subs{isub},'Trials');
+    load(subs{isub},'Trials', 'Subinfo');
+    age = [age str2num(Subinfo{2})];
     idx=find(Trials(:,2)==0);
     Trials(idx,:)=[];  % delete the none-response data.
 

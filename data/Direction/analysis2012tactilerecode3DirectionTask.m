@@ -3,7 +3,7 @@
 % Trials(:,2)  response type 1 indicating inwards, while 2 outwards, and 0 both or none.
 % Trials(:,3)   duration
 % Trials(:,4)   is the heading of the red PLW, 0  walking direction is inwards, while 1 is outwards. The other PLW's heading is always in opposite direction.
-% Trials(:,5)  both PLWs are upright (label as 1)
+% Trials(:,5)  0 means the red PLW is upright, while 1 is upside-down. The other PLW is in align with the red PLW.
 % Trials(:,6) is the number of the trial, begins from 1
 % Trials(:,7) is the initial tactile stimuli type.  1-left foot first (two
 % touches-first back and then front); 2-right foot first (two touches)
@@ -13,14 +13,16 @@
 % value-right
 % eight subs, delete zhaohongyu(3),fenglili(7),yangzhiqiang(12)
 subs={'lixiaofengMirrorD12-Jan-2013.mat','liujunyangMirrorD13-Jan-2013.mat','ywjMirrorD13-Jan-2013.mat','zhangzitengMirrorD20-Jan-2013.mat','zhangfengqiangMirrorD20-Jan-2013.mat','liuweiMirrorD20-Jan-2013.mat','yumeilingMirrorD19-Jan-2013.mat','wangdanMirrorD19-Jan-2013.mat','yeshaoqiangMirrorD26-Jan-2013.mat','maqianliMirrorD27-Jan-2013.mat','songyuchenMirrorD03-Mar-2013.mat','sundanMirrorD03-Mar-2013.mat','zhaolijianMirrorD02-Mar-2013.mat','guoxinMirrorD02-Mar-2013.mat','zhouyanlingMirrorD03-Mar-2013.mat'};
-
+% subs = {'hejiahuanMirrorD26-Jan-2013.mat', 'zhangliboMirrorD18-Mar-2013.mat'};
 
 Dur=[];
 Data=[];
+heading = {};
 for isub=1:length(subs)
     Durtemp=[]; % temp for transform
     dur=[]; % store data;
     load(subs{isub},'Trials');
+    heading{isub} = Trials(:,5);
     idx=find(Trials(:,2)==0);
     Trials(idx,:)=[];  % delete the none-response data.
 
@@ -98,22 +100,42 @@ for isub=1:length(subs)
     %    Trials1=Trials(idx1,:); % red PLW is leftwards motion;
     %    idx2 =find(Trials(:,4)==1);
     %    Trials2=Trials(idx2,:); %  red PLW is rightwards motion;
-    [dur g] = grpstats(Trials(:,3),{Trials(:,1),Trials(:,2)},{'mean','gname'}); %  cond: 4; resp: 1-inward; 2-outward
-    for j=1:length(g)
+    [dur, g] = grpstats(Trials(:,3),{Trials(:,11), Trials(:,5)},{'mean' ,'gname'}); %  cond: 4; resp: 1-inward; 2-outward
+    for j=1:size(g,1)
         dur(j,2)=str2num(g{j,1});
         dur(j,3)=str2num(g{j,2});
     end
 
-    for j=1:4 % cond
-        idxtemp=find(dur(:,2)==j);
-        durtemp=dur(idxtemp,:);
-        for resp=1:2 % for four conditions-"congruent","incongruent","bistable","baseline";
-            if isempty(find(durtemp(:,3)==resp))
-                durtemp(size(durtemp,1)+1,:) = [0.001 j resp];
-            end
+%     for j=1:4 % cond, for four conditions: lead, sync, lag, no-tap
+%         idxtemp=find(dur(:,2)==j);
+%         durtemp=dur(idxtemp,:);
+%         for isinv=0:1
+%             idxtemp1=find(durtemp(:,3)==isinv);
+%             durtemp1=durtemp(idxtemp1,:);
+%             for resp=0:1 % "congruent","incongruent", (sync, baseline)
+%                 if isempty(find(durtemp1(:,4)==resp))
+%                     durtemp1(size(durtemp1,1)+1,:) = [0.0001 j isinv resp];
+%                 end
+%             end
+%             Durtemp=[Durtemp;durtemp1];
+%         end
+%     end
+
+for j=0:3 % cond, for four conditions: "congruent","incongruent", (sync, baseline)
+    idxtemp=find(dur(:,2)==j);
+    durtemp=dur(idxtemp,:);
+    for isinv=0:1 % 
+        if isempty(find(durtemp(:,3)==isinv))
+            durtemp(size(durtemp,1)+1,:) = [0.0001 j isinv];
         end
-        Durtemp=[Durtemp;durtemp];
     end
+    Durtemp=[Durtemp;durtemp];
+end
+
+
+    Durtemp = sortrows(Durtemp,[2:size(Durtemp,2)]);
+%     uprightDurtemp = Durtemp(Durtemp(:,3)==0,:);
+%     invertDurtemp = Durtemp(Durtemp(:,3)==1,:);
     dur1=reshape(Durtemp(:,1),[2 4])'; % four column,
     Dur=[Dur;dur1];
     % %    Dur2=[Dur2; dur2];
@@ -122,21 +144,23 @@ for isub=1:length(subs)
     %    redPLWinvertcong=(dur1(:,6)+dur2(:,6))/2;
     %    redPLWinvertincong=(dur1(:,8)+dur2(:,8))/2;
 
+    if 1
     figure;
     hold on;
     plot(1:4, dur1(:,1),'rs-');
     plot(1:4, dur1(:,2),'s-.');
     hold off;
-    legend('Incong','Cong');
+    legend('Upright','Inverted');
 
     xlabel('tactile conditions');
     ylabel('duration (s)');
     set(gca,'Xtick',1:4);
-    set(gca,'XtickLabel',{'TbeforV','Synchronous','TafterV','baseline'});
+    set(gca,'XtickLabel',{'Congruent','Incongruent','bistable','baseline'});
+    end
 end;
 %% Averaged plot
-Dur1=Dur(:,1);
-Dur2=Dur(:,2);
+Dur1=Dur(:,1); %upright
+Dur2=Dur(:,2); %inverted
 Dur1=reshape(Dur1,[4,size(subs,2)]);
 Dur2=reshape(Dur2,[4,size(subs,2)]);
 Dur1=Dur1';
@@ -149,10 +173,9 @@ hold on;
 plot(1:4, Dur1avr','ks-');
 plot(1:4, Dur2avr','ks--');
 hold off;
-legend('Incong','Cong');
+legend('Upright','Inverted');
 xlabel('Tactile Conditions');
 ylabel('Standardized Dominant Duration (s)');
 set(gca,'Xtick',1:4);
-set(gca,'XtickLabel',{'TbeforV','Synchronous','TafterV','Baseline'});
-
+set(gca,'XtickLabel',{'Congruent','Incongruent','bistable','baseline'});
 
