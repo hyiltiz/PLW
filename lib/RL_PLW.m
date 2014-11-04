@@ -366,7 +366,6 @@ try
     Screen('Flip', w);
     if mode.recordImage; recordImage(1,1,[render.task '_instr'],w,render.wsize);end
     %if ~mode.debug_on;Speak(sprintf(instrDB(render.task, mode.english_on)));end
->>>>>>> a5284c0f46ab38d7a4d18708dca91187144ca0e8
     pedalWait(mode.tactile_on, inf, render.kb);
 
     %% Here begins our trial

@@ -15,10 +15,10 @@ seq = genTrials(2,[2 3]); % first-1 from initial rightwards; 2-initial leftwards
 % second, 1-tactile short-long-short, 2-tactile equal; 3-tactile
 % long-short-long.
 %% initialize dio
-dioIn=digitalio('parallel','LPT1');
+% dioIn=digitalio('parallel','LPT1');
 dioOut=digitalio('parallel','LPT1');
 addline(dioOut,0:7,'out');
-addline(dioIn,10:12,'in');
+% addline(dioIn,10:12,'in');
 putvalue(dioOut,0);
 %% audio parameters
 % freq = 44100;
@@ -26,7 +26,7 @@ putvalue(dioOut,0);
 % tone(2,:) = tone(1,:);
 %% Get Subject information
 promptParameters = {'Subject Name', 'Age', 'Gender (F or M?)','Handedness (L or R)','Response direction(L1 or R1)'};
-defaultParameters = {'', '','', 'R',''};
+defaultParameters = {'test', '21','F', 'R','R1'};
 Subinfo = inputdlg(promptParameters, 'Subject Info  ', 1, defaultParameters);
 % initialization of screen
 %%Stimuli duration-Tactile
@@ -59,7 +59,8 @@ try
     drawTextAt(mainWnd,'If you perceive left-ward motion [<-], please press left foot-switch and hold it', cx,cy+50,[200 200 200]);
     drawTextAt(mainWnd,'Press any foot switch to second page...', cx,cy+250,[200 200 200]);
     Screen('Flip', mainWnd);
-    DioWait;
+%     DioWait;
+    KbWait;
     WaitSecs(1);
     
     %%0.2 Display Instructions,the second page;
@@ -67,7 +68,8 @@ try
     drawTextAt(mainWnd,'Please make your responses after the signal ''begins'' appears', cx,cy,[200 200 200]);
     drawTextAt(mainWnd,'Press the footpaddle to start', cx,cy+250,[200 200 200]);
     Screen('Flip', mainWnd);
-    DioWait;
+%     DioWait;
+    KbWait;
     WaitSecs(1);
     
     Screen('FillRect',mainWnd);
@@ -82,7 +84,8 @@ try
             drawTextAt(mainWnd,'Please take a rest', cx,cy+ 20,255);
             drawTextAt(mainWnd,'Press  foot switch to continue...',cx,cy+60,255);%% and then lift the padel
             Screen('Flip', mainWnd);
-            DioWait;
+            KbWait;
+%             DioWait;
             Screen('FillRect',mainWnd);
             Screen('Flip', mainWnd);
         else
@@ -93,7 +96,8 @@ try
             drawTextAt(mainWnd,strTrl,cx,cy-20,255);
             drawTextAt(mainWnd,' foot switch to start...',cx,cy+20,255);
             Screen('Flip', mainWnd);
-            DioWait;
+            KbWait;
+%             DioWait;
             Screen('FillRect',mainWnd);
             Screen('Flip', mainWnd);
         end
@@ -120,7 +124,7 @@ try
         %% seq(iTrl,2)=1,tactile short-long-short temporal structure
         %% seq(iTrl,2)=2,bistable motion
         %% seq(iTrl,2)=3,tactile long-short-long temporal structure
-        
+        tic
         T=70;   %duration 70 seconds
         Tinterval=GetSecs;
         % initTime = GetSecs;
@@ -158,9 +162,9 @@ try
                 end
                 switch tStim(iframe)
                     case 1
-                        putvalue(dioOut,2);%% left tactile
+                        putvalue(dioOut,1);%% left tactile
                     case 2
-                        putvalue(dioOut,8); %% right tactile
+                        putvalue(dioOut,2); %% right tactile
                     case -1
                         putvalue(dioOut,0);
                 end
@@ -180,9 +184,9 @@ try
                     
                     if keyIsDown==0
                         response=0;
-                    elseif find(keyCode)=49
+                    elseif find(keyCode)==49
                         response=1; %left
-                    elseif find(keyCode)=50
+                    elseif find(keyCode)==50
                         response=1; %right
                     end
                     if  response~=prestate
@@ -214,9 +218,9 @@ try
         %                     end
         if keyIsDown==0
             response=0;
-        elseif find(keyCode)=49
+        elseif find(keyCode)==49
             response=1; %left
-        elseif find(keyCode)=50
+        elseif find(keyCode)==50
             response=1; %right
         end
         
@@ -233,6 +237,7 @@ try
         totaltrials=[totaltrials;trials];
         
         putvalue(dioOut,0);
+        toc
     end %% end all trials
     putvalue(dioOut,0);
     %store reponses to trials
