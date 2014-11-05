@@ -15,7 +15,7 @@ conf.restpertrial       =  5;           % every x trial a rest
 conf.tiltangle          =  0;           % tilt angle for simulating 3D stereo display
 conf.doubleTactileDiff  = 10 ;          % flips between taps on one tactile stimuli (double tactile);0 to disable
 conf.clockR             =  .5;          % clock, with the center of the screen as (0,0), in pr coordination system
-
+conf.color              = {[128 128 128]}; %2014/11/05
 
 % state control variables
 mode.octal_on      = 1;

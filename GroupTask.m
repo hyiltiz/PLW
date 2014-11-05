@@ -1,4 +1,4 @@
-function GroupTask
+function GroupTask(isSingle)
 % this wrapper runs serveral procedures:
 % 1)    LSASTask
 % 2.1)  OctalTask  (with PLW )
@@ -6,6 +6,7 @@ function GroupTask
 % 3)    ImEvalTask
 % 4)    IRITask
 
+if nargin==0;isSingle = 0;else isSingle=1; end; % default is OctalTask
 try
     startup;
     backdoor = '12345';

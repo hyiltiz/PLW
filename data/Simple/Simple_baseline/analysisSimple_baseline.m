@@ -11,7 +11,7 @@
 
 % simple task, day 1 and day 2
 subs={'cuihao_Simple_.mat','diaoruochen_Simple_.mat','epar_Simple_.mat','hujiying_Simple_.mat','liuzhao_Simple_.mat','liyawen_Simple_.mat','luobinfeng_Simple_.mat','mesede_Simple_.mat','renshanshan_Simple_.mat','wanghui_Simple_.mat','wanglin_Simple_.mat','wangzhongrui_Simple_.mat','xulihua_Simple_.mat','zhangzehua_Simple_.mat','zhaoyaping_Simple_.mat','zhaoyuan2_Simple_.mat','zhengmei_Simple_.mat','zhengqianning_Simple_.mat','zhoupeng_simple_Simple_.mat','lichen.mat','chenxiyue.mat','penghuilin.mat','fushenjiang.mat','zhouyifan.mat','chenpeikai.mat','yuanhuibang.mat','chenxinyan.mat','chengcheng.mat','chenjun.mat','zhaokai.mat','hujuntao.mat','wangkangda.mat','hanjiayun.mat','libixing.mat','hansiqi.mat'};
-
+subs = {'zhaoyaping_Simple_'};
 M=[];
 durtemp=[];
 for isub=1:length(subs)
@@ -21,6 +21,7 @@ for isub=1:length(subs)
     totaltrials(idx,:)=[];
     totaltrials(:,2)=totaltrials(:,2)/(mean(totaltrials(:,2)));
     [m1,g1] = grpstats(totaltrials(:,2),{totaltrials(:,5)},{'mean','gname'});
+%    grpstats(totaltrials(:,2),{totaltrials(:,1)==totaltrials(:,4), totaltrials(:,5)})
     for j=1:length(g1)
         m1(j,2)=str2num(g1{j,1});
         %         m1(j,3)=str2num(g1{j,2});

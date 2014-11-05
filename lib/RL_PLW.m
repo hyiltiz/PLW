@@ -135,18 +135,17 @@ if true % used for folding mode~conf variables
 
     dataPrefix=[];
 
-      if mode.singlePLW_on
-        dataPrefix = ['Group/'];
-        dataSuffix = [dataSuffix '_Single_'];
-        render.task = 'Single';
-      elseif mode.simpleInOut_on
-        dataSuffix = [dataSuffix '_Simple_'];
-        render.task = 'Simple';
-    elseif mode.dotRot_on
-
+    if mode.dotRot_on
         dataPrefix = ['Group/'];
         dataSuffix = [dataSuffix '_DotRot_'];
         render.task = 'DotRot';
+      elseif mode.singlePLW_on
+        dataPrefix = ['Group/'];
+        dataSuffix = [dataSuffix '_Single_'];
+        render.task = 'Single';
+    elseif mode.simpleInOut_on
+        dataSuffix = [dataSuffix '_Simple_'];
+        render.task = 'Simple';
     elseif mode.imEval_on
         dataPrefix = ['Group/'];
         dataSuffix = [dataSuffix '_ImEval_'];
@@ -493,7 +492,7 @@ try
                 end
                 if ~mode.imEval_on % this does not require anything else on the screen
                     if mode.dotRot_on
-                        Screen('DrawDots', w, data.xymatrix, 3, [255 255 255], [render.cx, render.cy],2);
+                        Screen('DrawDots', w, data.xymatrix, 3, conf.color{1}, [render.cx, render.cy],2);
                     else
                         RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx, render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), conf.color{1}, [0 0], data.maxdot);
                         if ~mode.singlePLW_on
