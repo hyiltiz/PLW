@@ -14,6 +14,7 @@ conf.tiltangle          =  7;           % tilt angle for simulating 3D stereo di
 conf.xshift             =  0;           % shift PLW for using mirror, see mode.mirror_on
 conf.shadowshift        = .4;           % distance between PLWs and their twin shadows
 conf.doubleTactileDiff  = 10 ;          % flips between taps on one tactile stimuli (double tactile);0 to disable
+conf.color              = {[128 128 128],[128 128 128],[128 128 128]}; %2014/11/05
 
 % state control variables
 mode.simpleInOut_on= 1;  % simple InOut exp, with the same tactile stimuli for both foot

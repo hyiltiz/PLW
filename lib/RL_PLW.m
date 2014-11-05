@@ -495,10 +495,10 @@ try
                     if mode.dotRot_on
                         Screen('DrawDots', w, data.xymatrix, 3, [255 255 255], [render.cx, render.cy],2);
                     else
-                        RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx, render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 255 255], [0 0], data.maxdot);
+                        RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx, render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), conf.color{1}, [0 0], data.maxdot);
                         if ~mode.singlePLW_on
-                        RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx, render.cy, data.dotxs, data.dotys, data.moveDirection(flow.Trial, :), [255 255 255], [-0.35 0], data.maxdot);
-                        RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx, render.cy, data.dotx1s,data.doty1s,data.moveDirection(flow.Trial, :), [255 255 255], [+0.35 0], data.maxdot);
+                        RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx, render.cy, data.dotxs, data.dotys, data.moveDirection(flow.Trial, :), conf.color{2}, [-0.35 0], data.maxdot);
+                        RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx, render.cy, data.dotx1s,data.doty1s,data.moveDirection(flow.Trial, :), conf.color{3}, [+0.35 0], data.maxdot);
                       end
                     end
                 end
@@ -506,10 +506,10 @@ try
             else
                 % and here comes the walkers
                 RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx , data.doty , data.moveDirection(flow.Trial, :), [255 0 0], [-conf.xshift-conf.shadowshift 0], data.maxdot);
-                RLonePLW(w,data.initPosition(2) + data.paceRate(2)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx1, data.doty1, data.moveDirection(flow.Trial, :), [0 255 255], [conf.xshift-conf.shadowshift 0], data.maxdot);
+                RLonePLW(w,data.initPosition(2) + data.paceRate(2)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx1, data.doty1, data.moveDirection(flow.Trial, :), [0 128 0], [conf.xshift-conf.shadowshift 0], data.maxdot);
                 if mode.inout_on
                     RLonePLW(w,data.initPosition(1) + data.paceRate(1)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotxs, data.dotys, data.moveDirection(flow.Trial, :), [255 0 0], [-conf.xshift+conf.shadowshift 0], data.maxdot);
-                    RLonePLW(w,data.initPosition(2) + data.paceRate(2)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx1s, data.doty1s, data.moveDirection(flow.Trial, :), [0 255 255], [conf.xshift+conf.shadowshift 0], data.maxdot);
+                    RLonePLW(w,data.initPosition(2) + data.paceRate(2)*data.vTrack(flow.Flip), render.cx , render.cy, data.dotx1s, data.doty1s, data.moveDirection(flow.Trial, :), [0 128 0], [conf.xshift+conf.shadowshift 0], data.maxdot);
                 end
 
             end
