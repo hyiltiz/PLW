@@ -1,4 +1,4 @@
-function PLWTactileBase()
+function PLWTactileBase(isTest, isverbose)
 % As a baseline test for PLW tactile asynchrony manipulation
 %% 14, Mar, 2013, lihan chen
 addpath('./data', './lib', './resources');
@@ -12,6 +12,10 @@ trials = [];
 iCounter = 1;
 Tinterval=0;
 seq = genTrials(2,[2 3]); % first-1 from initial rightwards; 2-initial leftwards;
+if nargin>0
+    % this is test trial
+    seq = [1 1;1 2;2 1];
+end
 % second, 1-tactile short-long-short, 2-tactile equal; 3-tactile
 % long-short-long.
 %% initialize dio
@@ -94,6 +98,17 @@ try
             strTrl = sprintf('Trial No %d',iTrl);
             Screen('Flip', mainWnd);
             drawTextAt(mainWnd,strTrl,cx,cy-20,255);
+            if nargin>1
+                switch iTrl
+                    case 1
+                                    drawTextAt(mainWnd,' direction is: -->',cx,cy+50,255);
+                    case 2
+                                    drawTextAt(mainWnd,' direction is: o  (no direction)',cx,cy+50,255);
+                    case 3
+                                    drawTextAt(mainWnd,' direction is: <--',cx,cy+50,255);
+                end
+                
+            end
             drawTextAt(mainWnd,' foot switch to start...',cx,cy+20,255);
             Screen('Flip', mainWnd);
             KbWait;
@@ -126,6 +141,10 @@ try
         %% seq(iTrl,2)=3,tactile long-short-long temporal structure
         tic
         T=70;   %duration 70 seconds
+        if nargin > 1
+            % verbose
+                    T=40;   %duration 70 seconds
+        end
         Tinterval=GetSecs;
         % initTime = GetSecs;
         if seq(iTrl,1)==1 %% initial tactile: left
