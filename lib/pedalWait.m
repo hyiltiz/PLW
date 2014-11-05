@@ -1,4 +1,5 @@
 function [keyCode t] = pedalWait(tactile_on, time, kb)
+tactile_on = 0;
   if tactile_on
     dioIn=digitalio('parallel','LPT1'); % DAQ, open the LPT1 port
     addline(dioIn,10:12,'in'); % for footswitch input.

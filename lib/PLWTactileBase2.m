@@ -59,7 +59,7 @@ try
     drawTextAt(mainWnd,'If you perceive left-ward motion [<-], please press left foot-switch and hold it', cx,cy+50,[200 200 200]);
     drawTextAt(mainWnd,'Press any foot switch to second page...', cx,cy+250,[200 200 200]);
     Screen('Flip', mainWnd);
-%     DioWait;
+    %     DioWait;
     KbWait;
     WaitSecs(1);
     
@@ -68,7 +68,7 @@ try
     drawTextAt(mainWnd,'Please make your responses after the signal ''begins'' appears', cx,cy,[200 200 200]);
     drawTextAt(mainWnd,'Press the footpaddle to start', cx,cy+250,[200 200 200]);
     Screen('Flip', mainWnd);
-%     DioWait;
+    %     DioWait;
     KbWait;
     WaitSecs(1);
     
@@ -85,7 +85,7 @@ try
             drawTextAt(mainWnd,'Press  foot switch to continue...',cx,cy+60,255);%% and then lift the padel
             Screen('Flip', mainWnd);
             KbWait;
-%             DioWait;
+            %             DioWait;
             Screen('FillRect',mainWnd);
             Screen('Flip', mainWnd);
         else
@@ -97,7 +97,7 @@ try
             drawTextAt(mainWnd,' foot switch to start...',cx,cy+20,255);
             Screen('Flip', mainWnd);
             KbWait;
-%             DioWait;
+            %             DioWait;
             Screen('FillRect',mainWnd);
             Screen('Flip', mainWnd);
         end
@@ -255,6 +255,20 @@ try
     else
         save(['data/', Subinfo{1}],'seq','Subinfo','totaltrials','M' );
     end
+    boxplot(totaltrials(:,2),{totaltrials(:,4)==totaltrials(:,1), totaltrials(:,5)});
+    % initial tactile: left
+    % first tactile leading, short-long-short
+    plot(reshape(grpstats(totaltrials(:,2),{totaltrials(:,4)==totaltrials(:,1), totaltrials(:,5)}),[3 2]));
+%     plot(reshape(grpstats(totaltrials(:,2),{totaltrials(:,4), totaltrials(:,5)}),[3 2]));
+    legend('1->2','2->1');
+    ylabel('Standardized Dominant Duration (s)');
+    hold off;
+    legend('1st->2nd','2nd->1st');
+    xlabel('Tactile Conditions');
+    set(gca,'Xtick',1:3);
+    set(gca,'XtickLabel',{'Short-Long-Short','Synchronous','Long-Short-Long'});
+    legend('boxoff')
+    box off;
     clear all;
 catch
     Screen('CloseAll');
@@ -264,3 +278,4 @@ catch
     disp(whatswrong.message);
     disp(whatswrong.stack.line);
 end
+
