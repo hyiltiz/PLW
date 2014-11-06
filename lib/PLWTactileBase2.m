@@ -165,7 +165,7 @@ try
             end
         end
         
-        prestate=2;
+        prestate=0;
         response=0;
         iCounter = 1;
         trials = [];
@@ -206,7 +206,7 @@ try
                     elseif find(keyCode)==49
                         response=1; %left
                     elseif find(keyCode)==50
-                        response=1; %right
+                        response=2; %right
                     end
                     if  response~=prestate
                         trials(iCounter,1) = prestate;
@@ -240,7 +240,7 @@ try
         elseif find(keyCode)==49
             response=1; %left
         elseif find(keyCode)==50
-            response=1; %right
+            response=2; %right
         end
         
         if  response>0
