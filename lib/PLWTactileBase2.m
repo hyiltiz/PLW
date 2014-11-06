@@ -274,9 +274,82 @@ try
     else
         save(['data/', Subinfo{1}],'seq','Subinfo','totaltrials','M' );
     end
-    boxplot(totaltrials(:,2),{totaltrials(:,4)==totaltrials(:,1), totaltrials(:,5)});
+    boxplot(totaltrials(:,2),{totaltrials(:,1), totaltrials(:,4), totaltrials(:,5)});
     % initial tactile: left
     % first tactile leading, short-long-short
+    
+    
+    load Test
+        totaltrials(totaltrials(:,1)==0,:)=[];
+%     totaltrials(totaltrials(:,2)<0.1,:)=[];
+    totaltrials(:,2)=totaltrials(:,2)/(mean(totaltrials(:,2)));
+    
+    totaltrials(:,end+1)=nan(size(totaltrials,1),1);
+    for iTemporal = 1:numel(unique(totaltrials(:,5)))
+        switch  iTemporal
+            case 1 % SLS
+                %congruent: resp&init diffs while SLS | resp&init same while LSL
+                totaltrials(totaltrials(:,4)==totaltrials(:,1),end)=0;
+                totaltrials(totaltrials(:,4)~=totaltrials(:,1),end)=1;
+            case 2 %bistable
+                % do nothing; already done
+            case 3 %LSL
+                totaltrials(totaltrials(:,4)==totaltrials(:,1),end)=1;
+                totaltrials(totaltrials(:,4)~=totaltrials(:,1),end)=0;
+        end
+    end
+        totaltrials(totaltrials(:,5)==2,end) = 2;
+        [m1,g1] = grpstats(totaltrials(:,2),{totaltrials(:,end)},{'mean','gname'});
+    % % 0: 1st -> 2nd;  0: 2nd <- 1st
+    % 0: incongruent
+    % 1: congruent
+    for j=1:length(g1)
+        m1(j,2)=str2num(g1{j,1});
+    end
+    
+    
+    for k=0:2 % cond: incong, cong, sync
+        idxtemp=find(m1(:,2)==k);
+        %         durtemp=m1(idxtemp,:);
+        %         for resp=1:2 % for four conditions-"congruent","incongruent","bistable","baseline";
+        if isempty(idxtemp)
+            m1(size(m1,1)+1,:) = [0.001 k];
+        end
+        %         end
+    end
+        figure
+        plot(grpstats(totaltrials(:,2),{totaltrials(:,end)}));
+        ylabel('Standardized Dominant Duration (s)');
+        hold off;
+        xlabel('Tactile Conditions');
+        set(gca,'Xtick',1:numel(unique(grpstats(totaltrials(:,2),{totaltrials(:,end)}))));
+        set(gca,'XtickLabel',{'Congruent','Synchronous','Incongruent'});
+        legend('boxoff')
+        box off;
+
+    
+    [m1,g1] = grpstats(totaltrials(:,2),{totaltrials(:,5),totaltrials(:,end)},{'mean','gname'});
+    % % 0: 1st -> 2nd;  0: 2nd <- 1st
+    % 0: incongruent
+    % 1: congruent
+    for j=1:length(g1)
+        m1(j,2)=str2num(g1{j,1});
+        m1(j,3)=str2num(g1{j,2});
+    end
+    
+    
+    for k=1:numel(unique(m1(:,2))) % cond
+        idxtemp=find(m1(:,2)==k);
+        %         durtemp=m1(idxtemp,:);
+        %         for resp=1:2 % for four conditions-"congruent","incongruent","bistable","baseline";
+        if isempty(idxtemp)
+            m1(size(m1,1)+1,:) = [0.001 k];
+        end
+        %         end
+    end
+    
+    
+    
     plot(reshape(grpstats(totaltrials(:,2),{totaltrials(:,4)==totaltrials(:,1), totaltrials(:,5)}),[3 2]));
 %     plot(reshape(grpstats(totaltrials(:,2),{totaltrials(:,4), totaltrials(:,5)}),[3 2]));
     legend('1->2','2->1');
