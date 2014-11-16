@@ -1,7 +1,7 @@
 # Point Light Walkers (PLW) Documentation
 
 ## What it is?
-Point Light Walkers (PLW) is an user-friendly toolbox for MATLAB (or GNU/Octave) that aims to aid biological motion research in psychophysics providing:
+Point Light Walkers (PLW) is a user-friendly toolbox for MATLAB (or GNU/Octave) that aims to aid biological motion research in psychophysics providing:
 
   - support for read/write access to scientific data format HDF5;
   - various straightforward psychopysics experimental design;
