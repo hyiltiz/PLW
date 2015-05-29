@@ -2,8 +2,8 @@ function [tex, dstRect] = addNoise(w, wsize, Track, noisescale, T, isGreyMask, l
 % create the noise, using buffer
 
 %isGreyMask = 0;
-%lagFlip = 3
-isSkip = 1;
+
+isSkip = 0;
 if ~isSkip
     screens=Screen('Screens');
     screenNumber=max(screens);
@@ -12,13 +12,14 @@ if ~isSkip
     noisescale = .15;
     Track = 1:261;
     T=50;
-    isGreyMask=0;
+    isGreyMask=1;
+    lagFlip = 3;
+    kill_dot=.1;
 end
 
 % rectSize = 4;
 % objRect = SetRect(0,0, rectSize, rectSize);
 
-% kill_dot=.1;
 t = .2;
 r = .8;
 % objRect = SetRect(t * wsize(3), t *  wsize(4), r * wsize(3), r * wsize(4));
